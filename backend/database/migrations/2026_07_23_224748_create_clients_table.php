@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('external_id', 255)->unique();
-            $table->foreignId('plan_id')->constrained()->onDelete('protected');
+            $table->foreignId('plan_id')->constrained()->restrictOnDelete();
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('api_key', 255)->unique();

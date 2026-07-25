@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('backup_errors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('backup_id')->constrained()->restrictOnDelete();
+            $table->foreignId('risk_id')->constrained()->restrictOnDelete();
+            $table->string('type', 50);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

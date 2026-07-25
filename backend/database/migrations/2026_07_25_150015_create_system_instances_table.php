@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('system_instances', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('system_id')->constrained()->restrictOnDelete();
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->string('version', 10);
             $table->timestamps();
         });
     }

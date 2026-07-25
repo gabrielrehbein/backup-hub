@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('notification_channels', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 100);
+            $table->json('configuration');
             $table->timestamps();
         });
     }
