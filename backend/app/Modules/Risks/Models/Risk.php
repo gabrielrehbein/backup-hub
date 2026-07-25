@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Modules\Risks\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Risk extends Model
+{
+    /** @use HasFactory<\Database\Factories\RiskFactory> */
+    use HasFactory;
+}
