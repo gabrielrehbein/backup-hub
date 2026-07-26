@@ -42,7 +42,7 @@ class PlanController extends Controller
     public function destroy(int $id)
     {
         $this->planService->delete($id);
-        return JSONResponse::success(null, 'Plano deletado com sucesso');
+        return JSONResponse::success(null, 'Plano deletado com sucesso', 204);
     }
 
     public function update(UpdatePlanRequest $request, int $id){

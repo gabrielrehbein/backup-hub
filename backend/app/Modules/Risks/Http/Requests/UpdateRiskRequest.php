@@ -12,7 +12,7 @@ class UpdateRiskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,10 @@ class UpdateRiskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'description' => ['sometimes', 'string'],
+            'max_delay_limit_in_minutes' => ['sometimes', 'integer', 'min:0'],
+            'max_size_loss_in_percent' => ['sometimes', 'integer', 'between:0,100'],
+            'notifiable' => ['sometimes', 'boolean'],
         ];
     }
 }

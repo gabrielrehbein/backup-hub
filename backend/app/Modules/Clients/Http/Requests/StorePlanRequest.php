@@ -23,7 +23,7 @@ class StorePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:100', 'unique:plans,name'],
             'description' => ['nullable', 'string'],
         ];
     }

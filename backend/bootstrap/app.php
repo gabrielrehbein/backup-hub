@@ -19,16 +19,16 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (NotFoundHttpException $e) {
-            return JSONResponse::error("Recurso não encontrado", 404);
-        });
-        $exceptions->render(function (BadRequestHttpException $e) {
-            return JSONResponse::error($e->getMessage());
-        });
-        $exceptions->render(function (TypeError $e) {
-            return JSONResponse::error("O tipo de dado enviado está incorreto");
-        });
-        $exceptions->render(function (InternalErrorException $e) {
-            return JSONResponse::error("Algo deu errado");
-        });
+        // $exceptions->render(function (NotFoundHttpException $e) {
+        //     return JSONResponse::error("Recurso não encontrado", 404);
+        // });
+        // $exceptions->render(function (BadRequestHttpException $e) {
+        //     return JSONResponse::error($e->getMessage());
+        // });
+        // $exceptions->render(function (TypeError $e) {
+        //     return JSONResponse::error("O tipo de dado enviado está incorreto");
+        // });
+        // $exceptions->render(function (InternalErrorException $e) {
+        //     return JSONResponse::error("Algo deu errado");
+        // });
     })->create();

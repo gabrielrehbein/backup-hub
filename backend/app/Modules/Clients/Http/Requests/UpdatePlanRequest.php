@@ -23,7 +23,7 @@ class UpdatePlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:100'],
+            'name' => ['sometimes', 'string', 'max:100', 'unique:plans,name'],
             'description' => ['sometimes', 'string'],
         ];
     }
