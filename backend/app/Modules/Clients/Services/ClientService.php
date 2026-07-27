@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Modules\Clients\Contracts\Services;
+namespace App\Modules\Clients\Services;
 
 use App\Modules\Clients\Contracts\Repositories\ClientRepositoryInterface;
+use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use App\Modules\Clients\DTOs\CreateClientDTO;
 use App\Modules\Clients\DTOs\ResponseCreateClientWithUnhashedApiKeyDTO;
 use App\Modules\Clients\DTOs\UpdateClientDTO;
@@ -17,21 +18,18 @@ class ClientService implements ClientServiceInterface
         private readonly ClientRepositoryInterface $clientRepository
     ) {}
 
-    public function create(CreateClientDTO $payload): ResponseCreateClientWithUnhashedApiKeyDTO {
-        $UuidApiKey = (string) Str::uuid();
+    public function create(CreateClientDTO $payload): Client {
+        $uuidApiKey = (string) Str::uuid();
 
-        $hashedApiKey = Hash::make($UuidApiKey);
+        $hashedApiKey = Hash::make($uuidApiKey);
 
         $payload->api_key = $hashedApiKey;
 
         $client = $this->clientRepository->create($payload);
 
-        $responseCreateClientWithUnhashedApiKeyDTO = new ResponseCreateClientWithUnhashedApiKeyDTO(
-            $client,
-            $UuidApiKey
-        );
+        $client->api_key = $uuidApiKey;
 
-        return $responseCreateClientWithUnhashedApiKeyDTO;
+        return $client;
     }
 
     public function findAll(): iterable {

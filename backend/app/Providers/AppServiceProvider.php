@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Modules\Clients\Contracts\Repositories\ClientRepositoryInterface;
 use App\Modules\Clients\Contracts\Repositories\PlanRepositoryInterface;
+use App\Modules\Clients\Services\ClientService;
+use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use App\Modules\Clients\Contracts\Services\PlanServiceInterface;
+use App\Modules\Clients\Repositories\ClientEloquentRepository;
 use App\Modules\Clients\Repositories\PlanEloquentRepository;
 use App\Modules\Clients\Services\PlanService;
 
@@ -37,6 +41,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             RiskRepositoryInterface::class,
             RiskEloquentRepository::class
+        );
+
+        $this->app->bind(
+            ClientServiceInterface::class,
+            ClientService::class
+        );
+        $this->app->bind(
+            ClientRepositoryInterface::class,
+            ClientEloquentRepository::class
         );
     }
 

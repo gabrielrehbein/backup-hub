@@ -11,7 +11,7 @@ use App\Modules\Clients\Models\Client;
 class ClientEloquentRepository implements ClientRepositoryInterface
 {
     public function create(CreateClientDTO $payload): Client {
-        return Client::create($payload);
+        return Client::create($payload->toArray());
     }
     public function findAll(): iterable {
         return Client::all();
