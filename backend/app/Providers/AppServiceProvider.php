@@ -15,7 +15,8 @@ use App\Modules\Risks\Contracts\Repositories\RiskRepositoryInterface;
 use App\Modules\Risks\Contracts\Services\RiskServiceInterface;
 use App\Modules\Risks\Repositories\RiskEloquentRepository;
 use App\Modules\Risks\Services\RiskService;
-
+use App\Shared\Security\Actions\UuidApiKeyGenerator;
+use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -50,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ClientRepositoryInterface::class,
             ClientEloquentRepository::class
+        );
+        $this->app->bind(
+            ApiKeyGeneratorInterface::class,
+            UuidApiKeyGenerator::class
         );
     }
 

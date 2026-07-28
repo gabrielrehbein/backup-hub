@@ -11,6 +11,7 @@ use App\Modules\Clients\Models\Client;
 interface ClientServiceInterface
 {
     public function create(CreateClientDTO $payload): Client; //Replaça a api key hasheada pela normal na hora da response
+    public function refreshApiKey(int $id): string;
     public function findAll(): iterable;
     public function delete(int $id): bool;
     public function update(UpdateClientDTO $payload, int $id): Client;

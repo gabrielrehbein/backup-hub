@@ -8,28 +8,38 @@ use App\Modules\Clients\DTOs\CreateClientDTO;
 use App\Modules\Clients\DTOs\ResponseCreateClientWithUnhashedApiKeyDTO;
 use App\Modules\Clients\DTOs\UpdateClientDTO;
 use App\Modules\Clients\Models\Client;
+use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
+use App\Shared\Utils\ApiKeyHelper;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Str;
+use Override;
 
 class ClientService implements ClientServiceInterface
 {
     public function __construct(
-        private readonly ClientRepositoryInterface $clientRepository
+        private readonly ClientRepositoryInterface $clientRepository,
+        private readonly ApiKeyGeneratorInterface $apiKeyGenerator,
     ) {}
 
     public function create(CreateClientDTO $payload): Client {
-        $uuidApiKey = (string) Str::uuid();
+        $apiKeyDTO = $this->apiKeyGenerator->execute();
 
-        $hashedApiKey = Hash::make($uuidApiKey);
-
-        $payload->api_key = $hashedApiKey;
+        $payload->api_key = $apiKeyDTO->hashedApiKey;
 
         $client = $this->clientRepository->create($payload);
 
-        $client->api_key = $uuidApiKey;
+        $client->api_key = $apiKeyDTO->unhashedApiKey;
 
         return $client;
+    }
+
+    public function refreshApiKey(int $id): string
+    {
+        $client = $this->findById($id);
+        $apiKeyDTO = $this->apiKeyGenerator->execute();
+        $client = $this->clientRepository->update(UpdateClientDTO::fromArray(["api_key" => $apiKeyDTO->hashedApiKey]), $client);
+        return $apiKeyDTO->unhashedApiKey;
     }
 
     public function findAll(): iterable {

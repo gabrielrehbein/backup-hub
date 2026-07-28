@@ -9,3 +9,4 @@ Route::get('clients/', [ClientController::class, 'index']);
 Route::delete('clients/{id}', [ClientController::class, 'destroy']);
 Route::get('clients/{id}', [ClientController::class, 'show']);
 Route::patch('clients/{id}', [ClientController::class, 'update']);
+Route::patch('clients/{id}/api-key/refresh', [ClientController::class, 'refreshApiKey']);

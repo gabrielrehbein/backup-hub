@@ -28,6 +28,14 @@ class ClientController extends Controller
         return JSONResponse::success($clientWithUnhashedApiKeyDTO, 'Cliente criado com sucesso', 201);
     }
 
+    public function refreshApiKey(int $id)
+    {
+        $apiKey = $this->clientService->refreshApiKey(
+            $id
+        );
+        return JSONResponse::success(["new_api_key" => $apiKey], 'Api Key atualizada com sucesso');
+    }
+
     public function index()
     {
         $clients = $this->clientService->findAll();
