@@ -7,11 +7,11 @@ use App\Shared\Utils\ArrayHelper;
 class UpdateClientDTO
 {
     public function __construct(
-        readonly public ?string $name,
-        readonly public ?string $external_id,
-        readonly public ?int $plan_id,
-        readonly public ?bool $is_active,
-        readonly public ?string $description,
+        public readonly ?string $name,
+        public readonly ?string $external_id,
+        public readonly ?int $plan_id,
+        public readonly ?bool $is_active,
+        public readonly ?string $description,
     ) {}
 
     public static function fromArray(array $data): self

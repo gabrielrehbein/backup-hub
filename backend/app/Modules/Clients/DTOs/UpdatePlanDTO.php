@@ -6,12 +6,10 @@ use App\Shared\Utils\ArrayHelper;
 
 class UpdatePlanDTO
 {
-
     public function __construct(
-        readonly public ?string $name,
-        readonly public ?string $description = null
-    )
-    {}
+        public readonly ?string $name,
+        public readonly ?string $description = null
+    ) {}
 
     public static function fromArray(array $data): self
     {

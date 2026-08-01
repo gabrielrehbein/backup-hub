@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->text('description')->nullable();
-            $table->integer('level')->unique();
+            $table->integer('level');
             $table->boolean('notifiable')->default(false);
             $table->integer('max_delay_limit_in_minutes');
             $table->integer('max_size_loss_in_percent');

@@ -2,18 +2,17 @@
 
 namespace App\Modules\Clients\DTOs;
 
-
 class CreateClientDTO
 {
     public string $api_key;
 
     public function __construct(
-        readonly public string $name,
-        readonly public string $external_id,
-        readonly public int $plan_id,
+        public readonly string $name,
+        public readonly string $external_id,
+        public readonly int $plan_id,
 
-        readonly public bool $is_active = true,
-        readonly public ?string $description = null,
+        public readonly bool $is_active = true,
+        public readonly ?string $description = null,
     ) {}
 
     public static function fromArray(array $data): self

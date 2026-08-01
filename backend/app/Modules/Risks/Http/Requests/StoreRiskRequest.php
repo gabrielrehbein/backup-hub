@@ -4,6 +4,7 @@ namespace App\Modules\Risks\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRiskRequest extends FormRequest
 {
@@ -23,8 +24,22 @@ class StoreRiskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:risks,name'],
-            'level' => ['required', 'integer', 'min:1', 'unique:risks,level'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('risks')->where(
+                    fn ($query) => $query->where('plan_id', $this->plan_id)
+                )
+            ],
+            'level' => [
+                'required',
+                'integer',
+                'min:1',
+                Rule::unique('risks')->where(
+                    fn ($query) => $query->where('plan_id', $this->plan_id)
+                )
+            ],
             'description' => ['nullable', 'string'],
             'max_delay_limit_in_minutes' => ['required', 'integer', 'min:0'],
             'max_size_loss_in_percent' => ['required', 'integer', 'between:0,100'],
