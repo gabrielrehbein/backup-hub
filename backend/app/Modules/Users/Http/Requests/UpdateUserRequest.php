@@ -2,6 +2,8 @@
 
 namespace App\Modules\Users\Http\Requests;
 
+use App\Modules\Users\Enums\RoleUserEnum;
+use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +26,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:100'],
-            'role' => ['sometimes', 'string', 'in:admin,default'],
+            'role' => ['sometimes', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(RoleUserEnum::cases())],
         ];
     }
 }

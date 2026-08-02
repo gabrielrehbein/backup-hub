@@ -15,6 +15,10 @@ use App\Modules\Risks\Contracts\Repositories\RiskRepositoryInterface;
 use App\Modules\Risks\Contracts\Services\RiskServiceInterface;
 use App\Modules\Risks\Repositories\RiskEloquentRepository;
 use App\Modules\Risks\Services\RiskService;
+use App\Modules\Systems\Contracts\Repositories\SystemRepositoryInterface;
+use App\Modules\Systems\Contracts\Services\SystemServiceInterface;
+use App\Modules\Systems\Repositories\SystemEloquentRepository;
+use App\Modules\Systems\Services\SystemService;
 use App\Modules\Users\Contracts\Repositories\UserRepositoryInterface;
 use App\Modules\Users\Contracts\Services\UserServiceInterface;
 use App\Modules\Users\Repositories\UserEloquentRepository;
@@ -68,6 +72,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             UserRepositoryInterface::class,
             UserEloquentRepository::class
+        );
+
+        $this->app->bind(
+            SystemServiceInterface::class,
+            SystemService::class
+        );
+        $this->app->bind(
+            SystemRepositoryInterface::class,
+            SystemEloquentRepository::class
         );
 
     }

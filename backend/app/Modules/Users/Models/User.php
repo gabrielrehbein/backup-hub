@@ -3,6 +3,8 @@
 namespace App\Modules\Users\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Modules\Users\Enums\RoleUserEnum;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,6 +29,9 @@ class User extends Authenticatable
         'role'
     ];
 
+    protected $casts = [
+        'role' => RoleUserEnum::class,
+    ];
     /**
      * The attributes that should be hidden for serialization.
      *

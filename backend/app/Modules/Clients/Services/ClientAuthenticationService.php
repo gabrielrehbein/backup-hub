@@ -17,7 +17,7 @@ class ClientAuthenticationService implements ClientAuthenticationServiceInterfac
 
     public function authenticate(int $externalId, string $apiKey): Client
     {
-        $client = $this->clientRepository->findById($externalId);
+        $client = $this->clientRepository->findByExternalId($externalId);
 
         if(!$client->is_active){
             throw new ClientInactiveHttpException();

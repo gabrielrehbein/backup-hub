@@ -2,6 +2,8 @@
 
 namespace App\Modules\Users\Http\Requests;
 
+use App\Modules\Users\Enums\RoleUserEnum;
+use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -26,7 +28,7 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['sometimes', 'string', 'in:admin,default'],
+            'role' => ['sometimes', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(RoleUserEnum::cases())],
         ];
     }
 }

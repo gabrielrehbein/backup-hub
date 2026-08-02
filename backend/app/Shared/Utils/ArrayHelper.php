@@ -10,4 +10,9 @@ class ArrayHelper
             static fn ($value) => $value !== null
         );
     }
+
+    public static function arrayToFormRequestValidation(array $array): string
+    {
+        return implode(',', array_map(fn($value) => $value->value, $array));
+    }
 }
