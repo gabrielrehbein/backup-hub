@@ -51,9 +51,10 @@ class ClientService implements ClientServiceInterface
         );
     }
     public function update(UpdateClientDTO $payload, int $id): Client {
+        $client = $this->findById($id);
         return $this->clientRepository->update(
             $payload,
-            $this->clientRepository->findById($id)
+            $client
         );
     }
 
