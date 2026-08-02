@@ -20,7 +20,7 @@ class CreateUserDTO
             name: $data['name'],
             email: $data['email'],
             password: $data['password'],
-            role: $data['role'],
+            role: RoleUserEnum::from($data['role'] ?? RoleUserEnum::DEFAULT->value),
         );
     }
 
@@ -30,7 +30,7 @@ class CreateUserDTO
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->password,
-            'role' => $this->role,
+            'role' => $this->role?->value,
         ];
     }
 

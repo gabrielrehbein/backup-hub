@@ -10,8 +10,6 @@ class UpdateUserDTO
 
     public function __construct(
         private readonly ?string $name,
-        private readonly ?string $email,
-        private readonly ?string $password,
         private readonly ?RoleUserEnum $role,
     ){}
 
@@ -19,8 +17,6 @@ class UpdateUserDTO
     {
         return new self(
             name: $data['name'] ?? null,
-            email: $data['email'] ?? null,
-            password: $data['password'] ?? null,
             role: $data['role'] ?? null,
         );
     }
@@ -29,11 +25,7 @@ class UpdateUserDTO
     {
         return ArrayHelper::removeNullValues([
             'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password,
             'role' => $this->role,
         ]);
     }
-
-
 }
