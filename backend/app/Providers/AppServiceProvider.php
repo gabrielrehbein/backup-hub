@@ -15,9 +15,13 @@ use App\Modules\Risks\Contracts\Repositories\RiskRepositoryInterface;
 use App\Modules\Risks\Contracts\Services\RiskServiceInterface;
 use App\Modules\Risks\Repositories\RiskEloquentRepository;
 use App\Modules\Risks\Services\RiskService;
+use App\Modules\Systems\Contracts\Repositories\SystemInstanceRepositoryInterface;
 use App\Modules\Systems\Contracts\Repositories\SystemRepositoryInterface;
+use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
 use App\Modules\Systems\Contracts\Services\SystemServiceInterface;
 use App\Modules\Systems\Repositories\SystemEloquentRepository;
+use App\Modules\Systems\Repositories\SystemInstanceEloquentRepository;
+use App\Modules\Systems\Services\SystemInstanceService;
 use App\Modules\Systems\Services\SystemService;
 use App\Modules\Users\Contracts\Repositories\UserRepositoryInterface;
 use App\Modules\Users\Contracts\Services\UserServiceInterface;
@@ -81,6 +85,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             SystemRepositoryInterface::class,
             SystemEloquentRepository::class
+        );
+
+        $this->app->bind(
+            SystemInstanceServiceInterface::class,
+            SystemInstanceService::class
+        );
+        $this->app->bind(
+            SystemInstanceRepositoryInterface::class,
+            SystemInstanceEloquentRepository::class
         );
 
     }

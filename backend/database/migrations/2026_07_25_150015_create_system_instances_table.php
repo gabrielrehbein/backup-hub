@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('system_id')->constrained()->restrictOnDelete();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
-            $table->string('version', 10);
+            $table->string('version', 30);
             $table->timestamps();
         });
     }
