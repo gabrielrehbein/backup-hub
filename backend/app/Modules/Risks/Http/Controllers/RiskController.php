@@ -9,6 +9,9 @@ use App\Modules\Risks\Http\Requests\StoreRiskRequest;
 use App\Modules\Risks\Http\Requests\UpdateRiskRequest;
 use App\Shared\Http\Controllers\Controller;
 use App\Shared\Http\Responses\JSONResponse;
+use App\Shared\Utils\BuildResponseMessage;
+use App\Shared\Utils\ResourceEnum;
+
 
 class RiskController extends Controller
 {
@@ -18,14 +21,14 @@ class RiskController extends Controller
     {
         $risks = $this->riskService->findAll();
 
-        return JSONResponse::success($risks, 'Riscos recuperados com sucesso');
+        return JSONResponse::success($risks, BuildResponseMessage::findAll(ResourceEnum::RISK), 200);
     }
 
     public function show(int $id)
     {
         $risk = $this->riskService->findById($id);
 
-        return JSONResponse::success($risk, 'Risco recuperado com sucesso');
+        return JSONResponse::success($risk, BuildResponseMessage::findOne(ResourceEnum::RISK), 200);
     }
 
     public function store(StoreRiskRequest $request)
@@ -34,7 +37,7 @@ class RiskController extends Controller
             CreateRiskDTO::fromArray($request->toArray())
         );
 
-        return JSONResponse::success($risk, 'Risco criado com sucesso', 201);
+        return JSONResponse::success($risk, BuildResponseMessage::create(ResourceEnum::RISK), 201);
     }
 
     public function update(UpdateRiskRequest $request, int $id)
@@ -44,20 +47,20 @@ class RiskController extends Controller
             $id
         );
 
-        return JSONResponse::success($risk, 'Risco modificado com sucesso', 200);
+        return JSONResponse::success($risk, BuildResponseMessage::update(ResourceEnum::RISK), 200);
     }
 
     public function destroy(int $id)
     {
         $this->riskService->delete($id);
 
-        return JSONResponse::success(null, 'Risco excluido com sucesso', 204);
+        return JSONResponse::success(null, BuildResponseMessage::delete(ResourceEnum::RISK), 204);
     }
 
     public function listByPlan(int $planId)
     {
         $risks = $this->riskService->findByPlan($planId);
 
-        return JSONResponse::success($risks, 'Riscos recuperados com sucesso', 200);
+        return JSONResponse::success($risks, 'Riscos por plano listados com sucesso', 200);
     }
 }

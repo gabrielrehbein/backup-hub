@@ -9,6 +9,8 @@ use App\Modules\Systems\DTOs\UpdateSystemDTO;
 use App\Modules\Systems\Http\Requests\UpdateSystemRequest;
 use App\Shared\Http\Controllers\Controller;
 use App\Shared\Http\Responses\JSONResponse;
+use App\Shared\Utils\BuildResponseMessage;
+use App\Shared\Utils\ResourceEnum;
 use Illuminate\Http\Request;
 
 
@@ -18,49 +20,37 @@ class SystemController extends Controller
     public function __construct(
         private readonly SystemServiceInterface $systemService,
     ){}
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $systems = $this->systemService->findAll();
-        return JSONResponse::success($systems, "Sistemas recuperados com sucesso");
+        return JSONResponse::success($systems, BuildResponseMessage::findAll(ResourceEnum::SYSTEM), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreSystemRequest $request)
     {
         $system = $this->systemService->create(CreateSystemDTO::fromArray($request->validated()));
-        return JSONResponse::success($system, "Sistema criado com sucesso", 201);
+        return JSONResponse::success($system, BuildResponseMessage::create(ResourceEnum::SYSTEM), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         $system = $this->systemService->findById($id);
-        return JSONResponse::success($system, "Sistema recuperado com sucesso");
+        return JSONResponse::success($system, BuildResponseMessage::findOne(ResourceEnum::SYSTEM), 200);
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateSystemRequest $request, string $id)
     {
         $system = $this->systemService->update(UpdateSystemDTO::fromArray($request->validated()), $id);
-        return JSONResponse::success($system, "Sistema atualizado com sucesso");
+        return JSONResponse::success($system, BuildResponseMessage::update(ResourceEnum::SYSTEM), 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         $this->systemService->delete($id);
-        return JSONResponse::success(null, "Sistema removido com sucesso", 204);
+        return JSONResponse::success(null, BuildResponseMessage::delete(ResourceEnum::SYSTEM), 204);
     }
 }

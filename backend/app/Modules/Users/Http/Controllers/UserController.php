@@ -8,7 +8,8 @@ use App\Modules\Users\DTOs\UpdateUserDTO;
 use App\Modules\Users\Http\Requests\StoreUserRequest;
 use App\Modules\Users\Http\Requests\UpdateUserRequest;
 use App\Shared\Http\Responses\JSONResponse;
-
+use App\Shared\Utils\BuildResponseMessage;
+use App\Shared\Utils\ResourceEnum;
 
 class UserController
 {
@@ -20,37 +21,30 @@ class UserController
     public function index()
     {
         $users = $this->userService->findAll();
-        return JSONResponse::success($users, 'Usuários recuperados com sucesso');
+        return JSONResponse::success($users, BuildResponseMessage::findAll(ResourceEnum::USER), 200);
     }
-
 
     public function store(StoreUserRequest $request)
     {
         $user = $this->userService->create(CreateUserDTO::fromArray($request->validated()));
-        return JSONResponse::success($user, 'Usuário criado com sucesso', 201);
+        return JSONResponse::success($user, BuildResponseMessage::create(ResourceEnum::USER), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $user = $this->userService->findById($id);
-        return JSONResponse::success($user, 'Usuário recuperado com sucesso');
+        return JSONResponse::success($user, BuildResponseMessage::findOne(ResourceEnum::USER), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateUserRequest $request, int $id)
     {
         $user = $this->userService->update(UpdateUserDTO::fromArray($request->validated()), $id);
-        return JSONResponse::success($user, 'Usuário atualizado com sucesso');
+        return JSONResponse::success($user, BuildResponseMessage::update(ResourceEnum::USER), 200);
     }
 
     public function destroy(string $id)
     {
         $this->userService->delete($id);
-        return JSONResponse::success(null, 'Usuário deletado com sucesso', 204);
+        return JSONResponse::success(null, BuildResponseMessage::delete(ResourceEnum::USER), 204);
     }
 }
