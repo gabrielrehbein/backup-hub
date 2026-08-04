@@ -2,12 +2,14 @@
 
 namespace App\Modules\Systems\Http\Requests;
 
+use App\Modules\Systems\DTOs\CreateSystemDTO;
 use App\Modules\Systems\Enums\SystemCategoryEnum;
+use App\Shared\Http\Request\BaseFormRequest;
 use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSystemRequest extends FormRequest
+class StoreSystemRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,4 +32,9 @@ class StoreSystemRequest extends FormRequest
                 'category' => ['required', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(SystemCategoryEnum::cases())],
             ];
         }
+
+    public function toDTO(): object
+    {
+        return CreateSystemDTO::fromArray($this->validated());
+    }
 }

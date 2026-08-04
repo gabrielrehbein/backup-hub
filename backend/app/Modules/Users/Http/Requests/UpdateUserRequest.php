@@ -2,12 +2,14 @@
 
 namespace App\Modules\Users\Http\Requests;
 
+use App\Modules\Users\DTOs\UpdateUserDTO;
 use App\Modules\Users\Enums\RoleUserEnum;
+use App\Shared\Http\Request\BaseFormRequest;
 use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+
+class UpdateUserRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,5 +30,10 @@ class UpdateUserRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:100'],
             'role' => ['sometimes', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(RoleUserEnum::cases())],
         ];
+    }
+
+    public function toDTO(): object
+    {
+        return UpdateUserDTO::fromArray($this->validated());
     }
 }

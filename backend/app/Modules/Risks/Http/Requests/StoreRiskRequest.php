@@ -2,11 +2,13 @@
 
 namespace App\Modules\Risks\Http\Requests;
 
+use App\Modules\Risks\DTOs\CreateRiskDTO;
+use App\Shared\Http\Request\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreRiskRequest extends FormRequest
+class StoreRiskRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -46,5 +48,10 @@ class StoreRiskRequest extends FormRequest
             'plan_id' => ['required', 'integer', 'exists:plans,id'],
             'notifiable' => ['sometimes', 'boolean'],
         ];
+    }
+
+    public function toDTO(): object
+    {
+        return CreateRiskDTO::fromArray($this->validated());
     }
 }

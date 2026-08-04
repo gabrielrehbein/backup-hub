@@ -2,10 +2,12 @@
 
 namespace App\Modules\Clients\Http\Requests;
 
+use App\Modules\Clients\DTOs\CreatePlanDTO;
+use App\Shared\Http\Request\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StorePlanRequest extends FormRequest
+
+class StorePlanRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,5 +28,10 @@ class StorePlanRequest extends FormRequest
             'name' => ['required', 'string', 'max:100', 'unique:plans,name'],
             'description' => ['nullable', 'string'],
         ];
+    }
+
+    public function toDTO(): object
+    {
+        return CreatePlanDTO::fromArray($this->validated());
     }
 }

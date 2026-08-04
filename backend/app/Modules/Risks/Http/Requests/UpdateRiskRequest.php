@@ -2,10 +2,12 @@
 
 namespace App\Modules\Risks\Http\Requests;
 
+use App\Modules\Risks\DTOs\UpdateRiskConfigDTO;
+use App\Shared\Http\Request\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRiskRequest extends FormRequest
+
+class UpdateRiskRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,5 +30,9 @@ class UpdateRiskRequest extends FormRequest
             'max_size_loss_in_percent' => ['sometimes', 'integer', 'between:0,100'],
             'notifiable' => ['sometimes', 'boolean'],
         ];
+    }
+    public function toDTO(): object
+    {
+        return UpdateRiskConfigDTO::fromArray($this->validated());
     }
 }
