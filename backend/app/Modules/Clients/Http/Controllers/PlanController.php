@@ -22,7 +22,7 @@ class PlanController extends Controller
     public function store(StorePlanRequest $request)
     {
         $plan = $this->planService->create(
-            CreatePlanDTO::fromArray($request->toArray())
+            $request->toDTO()
         );
         return JSONResponse::success(
             $plan,
@@ -62,7 +62,7 @@ class PlanController extends Controller
     }
 
     public function update(UpdatePlanRequest $request, int $id){
-        $planDTO = UpdatePlanDTO::fromArray($request->validated());
+        $planDTO = $request->toDTO();
         $plan = $this->planService->update($planDTO, $id);
         return JSONResponse::success(
             $plan,

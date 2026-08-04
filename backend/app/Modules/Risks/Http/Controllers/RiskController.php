@@ -34,7 +34,7 @@ class RiskController extends Controller
     public function store(StoreRiskRequest $request)
     {
         $risk = $this->riskService->create(
-            CreateRiskDTO::fromArray($request->toArray())
+            $request->toDTO()
         );
 
         return JSONResponse::success($risk, BuildResponseMessage::create(ResourceEnum::RISK), 201);
@@ -43,7 +43,7 @@ class RiskController extends Controller
     public function update(UpdateRiskRequest $request, int $id)
     {
         $risk = $this->riskService->update(
-            UpdateRiskConfigDTO::fromArray($request->toArray()),
+            $request->toDTO(),
             $id
         );
 

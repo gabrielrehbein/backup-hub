@@ -28,7 +28,9 @@ class SystemInstanceController extends Controller
 
     public function store(StoreSystemRequest $request)
     {
-        $system = $this->systemInstanceService->create(CreateSystemInstanceDTO::fromArray($request->validated()));
+        $system = $this->systemInstanceService->create(
+            $request->toDTO()
+        );
         return JSONResponse::success($system, BuildResponseMessage::create(ResourceEnum::SYSTEM_INSTANCE), 201);
     }
 
@@ -41,7 +43,7 @@ class SystemInstanceController extends Controller
 
     public function update(UpdateSystemRequest $request, string $id)
     {
-        $system = $this->systemInstanceService->update(UpdateSystemInstanceDTO::fromArray($request->validated()), $id);
+        $system = $this->systemInstanceService->update($request->toDTO(), $id);
         return JSONResponse::success($system, BuildResponseMessage::update(ResourceEnum::SYSTEM_INSTANCE), 200);
     }
 

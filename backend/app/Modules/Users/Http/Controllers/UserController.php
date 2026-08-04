@@ -26,7 +26,9 @@ class UserController
 
     public function store(StoreUserRequest $request)
     {
-        $user = $this->userService->create(CreateUserDTO::fromArray($request->validated()));
+        $user = $this->userService->create(
+            $request->toDTO()
+        );
         return JSONResponse::success($user, BuildResponseMessage::create(ResourceEnum::USER), 201);
     }
 
@@ -38,7 +40,10 @@ class UserController
 
     public function update(UpdateUserRequest $request, int $id)
     {
-        $user = $this->userService->update(UpdateUserDTO::fromArray($request->validated()), $id);
+        $user = $this->userService->update(
+            $request->toDTO(),
+            $id
+        );
         return JSONResponse::success($user, BuildResponseMessage::update(ResourceEnum::USER), 200);
     }
 

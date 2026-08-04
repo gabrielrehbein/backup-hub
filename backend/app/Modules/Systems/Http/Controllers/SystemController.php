@@ -29,7 +29,9 @@ class SystemController extends Controller
 
     public function store(StoreSystemRequest $request)
     {
-        $system = $this->systemService->create(CreateSystemDTO::fromArray($request->validated()));
+        $system = $this->systemService->create(
+            $request->toDTO()
+        );
         return JSONResponse::success($system, BuildResponseMessage::create(ResourceEnum::SYSTEM), 201);
     }
 
@@ -43,7 +45,7 @@ class SystemController extends Controller
 
     public function update(UpdateSystemRequest $request, string $id)
     {
-        $system = $this->systemService->update(UpdateSystemDTO::fromArray($request->validated()), $id);
+        $system = $this->systemService->update($request->toDTO(), $id);
         return JSONResponse::success($system, BuildResponseMessage::update(ResourceEnum::SYSTEM), 200);
     }
 

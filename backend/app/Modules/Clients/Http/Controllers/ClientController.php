@@ -24,7 +24,7 @@ class ClientController extends Controller
     public function store(StoreClientRequest $request)
     {
         $clientWithUnhashedApiKeyDTO = $this->clientService->create(
-            CreateClientDTO::fromArray($request->toArray())
+            $request->toDTO()
         );
         return JSONResponse::success(
             $clientWithUnhashedApiKeyDTO,
@@ -72,8 +72,7 @@ class ClientController extends Controller
     }
 
     public function update(UpdateClientRequest $request, int $id){
-        $clientDTO = UpdateClientDTO::fromArray($request->validated());
-        $client = $this->clientService->update($clientDTO, $id);
+        $client = $this->clientService->update($request->toDTO(), $id);
         return JSONResponse::success(
             new PublicClientResource($client),
             BuildResponseMessage::update(ResourceEnum::CLIENT),
