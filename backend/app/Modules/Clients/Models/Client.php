@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Modules\Clients\Models;
+
+use App\Modules\Clients\Database\Factories\ClientFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,5 +25,10 @@ class Client extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    protected static function newFactory()
+    {
+        return ClientFactory::new();
     }
 }

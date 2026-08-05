@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Modules\Clients\Database\Factories;
 
-use App\Plan;
+use App\Modules\Clients\Models\Plan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,10 +15,14 @@ class PlanFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = Plan::class;
+
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->sentence(),
+            'description' => fake()->sentence(),
         ];
     }
 }
