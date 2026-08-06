@@ -7,9 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Backup extends Model
 {
-    /**
-     * Create a new class instance.
-     */
-    /** @use HasFactory<\Database\Factories\BackupFactory> */
+
     use HasFactory;
+
+    protected $fillable = [
+        'file_size_kb',
+        'generated_at',
+        'is_local',
+        'system_instance_id',
+        'source_ip',
+        'file_path',
+        'version'
+    ];
+
+    
 }

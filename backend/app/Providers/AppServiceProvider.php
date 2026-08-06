@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
+use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
+use App\Modules\Backups\Repositories\BackupEloquentRepository;
+use App\Modules\Backups\Services\BackupService;
 use App\Modules\Clients\Contracts\Repositories\ClientRepositoryInterface;
 use App\Modules\Clients\Contracts\Repositories\PlanRepositoryInterface;
 use App\Modules\Clients\Services\ClientService;
@@ -94,6 +98,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             SystemInstanceRepositoryInterface::class,
             SystemInstanceEloquentRepository::class
+        );
+
+        $this->app->bind(
+            BackupServiceInterface::class,
+            BackupService::class
+        );
+        $this->app->bind(
+            BackupRepositoryInterface::class,
+            BackupEloquentRepository::class
         );
 
     }

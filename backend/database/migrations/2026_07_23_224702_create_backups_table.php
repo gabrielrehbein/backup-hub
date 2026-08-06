@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('backups', function (Blueprint $table) {
             $table->id();
             $table->foreignId('system_instance_id')->constrained()->onDelete('cascade');
-            $table->bigInteger('file_size_in_bytes');
+            $table->bigInteger('file_size_kb');
             $table->string('file_path', 255);
-            $table->string('source_id', 40);
+            $table->boolean('is_local');
+            $table->string('source_ip', 40);
             $table->string('version', 10);
             $table->dateTime('generated_at');
             $table->timestamps();

@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Modules\Backups\Contracts\Repositories;
+
+use App\Modules\Backups\DTOs\BackupFilterDTO;
+use App\Modules\Backups\DTOs\CreateBackupDTO;
+use App\Modules\Backups\DTOs\UpdateBackupDTO;
+use App\Modules\Backups\Models\Backup;
+
+interface BackupRepositoryInterface
+{
+    public function list(BackupFilterDTO $filters): iterable;
+    public function create(CreateBackupDTO $payload): Backup;
+    public function findById(int $id): ?Backup;
+    public function update(UpdateBackupDTO $payload, Backup $backup): Backup;
+}

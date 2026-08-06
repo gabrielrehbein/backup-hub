@@ -6,6 +6,7 @@ use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
 use App\Modules\Systems\Http\Requests\StoreSystemRequest;
 use App\Modules\Systems\DTOs\CreateSystemInstanceDTO;
 use App\Modules\Systems\DTOs\UpdateSystemInstanceDTO;
+use App\Modules\Systems\Http\Requests\StoreSystemInstanceRequest;
 use App\Modules\Systems\Http\Requests\UpdateSystemRequest;
 use App\Shared\Http\Controllers\Controller;
 use App\Shared\Http\Responses\JSONResponse;
@@ -26,7 +27,7 @@ class SystemInstanceController extends Controller
         return JSONResponse::success($systems, BuildResponseMessage::findAll(ResourceEnum::SYSTEM_INSTANCE), 200);
     }
 
-    public function store(StoreSystemRequest $request)
+    public function store(StoreSystemInstanceRequest $request)
     {
         $system = $this->systemInstanceService->create(
             $request->toDTO()
