@@ -6,5 +6,5 @@ use App\Modules\Clients\Models\Client;
 
 interface ClientAuthenticationServiceInterface
 {
-    public function authenticate(int $clientId, string $apiKey): Client;
+    public function isValidAPIKey(string $externalClientId, string $apiKey): bool;
 }

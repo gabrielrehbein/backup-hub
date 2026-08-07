@@ -15,9 +15,9 @@ class ClientAuthenticationService implements ClientAuthenticationServiceInterfac
         private ClientRepositoryInterface $clientRepository
     ) {}
 
-    public function authenticate(int $externalId, string $apiKey): Client
+    public function isValidAPIKey(string $externalClientId, string $apiKey): bool
     {
-        $client = $this->clientRepository->findByExternalId($externalId);
+        $client = $this->clientRepository->findByExternalId($externalClientId);
 
         if(!$client->is_active){
             throw new ClientInactiveHttpException();
@@ -26,6 +26,6 @@ class ClientAuthenticationService implements ClientAuthenticationServiceInterfac
             throw new InvalidApiKeyHttpException();
         }
 
-        return $client;
+        return true;
     }
 }

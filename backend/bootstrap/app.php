@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Shared\Http\Middleware\CheckClientAPIKey;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         //
+    })
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'client.auth' => CheckClientAPIKey::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // $exceptions->render(function (NotFoundHttpException $e) {
@@ -31,4 +37,5 @@ return Application::configure(basePath: dirname(__DIR__))
         // $exceptions->render(function (InternalErrorException $e) {
         //     return JSONResponse::error("Algo deu errado");
         // });
+
     })->create();

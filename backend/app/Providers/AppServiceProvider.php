@@ -34,6 +34,8 @@ use App\Modules\Users\Services\UserService;
 use App\Shared\Security\Actions\UuidApiKeyGenerator;
 use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Clients\Contracts\Services\ClientAuthenticationServiceInterface;
+use App\Modules\Clients\Services\ClientAuthenticationService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -107,6 +109,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             BackupRepositoryInterface::class,
             BackupEloquentRepository::class
+        );
+        $this->app->bind(
+            ClientAuthenticationServiceInterface::class,
+            ClientAuthenticationService::class
         );
 
     }
