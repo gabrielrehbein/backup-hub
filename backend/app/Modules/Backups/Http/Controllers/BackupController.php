@@ -9,6 +9,7 @@ use App\Shared\Http\Responses\JSONResponse;
 use App\Shared\Utils\BuildResponseMessage;
 use App\Shared\Utils\ResourceEnum;
 use App\Modules\Backups\Http\Requests\FilterBackupRequest;
+use App\Modules\Backups\Http\Resources\BackupResource;
 
 class BackupController extends Controller
 {
@@ -18,9 +19,15 @@ class BackupController extends Controller
 
     public function index(FilterBackupRequest $request)
     {
+        
         $filters = $request->toDTO();
         $backups = $this->backupService->list($filters);
 
+        $backups->getCollection()->transform(
+            fn ($backup) => new BackupResource($backup)
+        );
+
+        
         return JSONResponse::success(
             $backups,
             BuildResponseMessage::findAll(ResourceEnum::BACKUP),

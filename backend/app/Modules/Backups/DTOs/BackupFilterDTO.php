@@ -2,6 +2,7 @@
 
 namespace App\Modules\Backups\DTOs;
 
+use App\Modules\Backups\Enums\SizeTypeEnum;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Shared\Utils\ArrayHelper;
 use Carbon\CarbonImmutable;
@@ -20,6 +21,7 @@ class BackupFilterDTO
         public readonly ?int $clientId,
         public readonly ?RiskTypeEnum $riskType,
         public readonly ?int $perPage,
+        public readonly ?SizeTypeEnum $returnInSizeType,
     ){}
 
     public function toArray(){
@@ -34,6 +36,7 @@ class BackupFilterDTO
             'client_id' => $this->clientId,
             'risk_type' => $this->riskType?->value,
             'per_page' => $this->perPage,
+            'return_in_size_type' => $this->returnInSizeType,
         ]);
     }
 
@@ -49,7 +52,8 @@ class BackupFilterDTO
             $data['risk_id'] ?? null,
             $data['client_id'] ?? null,
             isset($data['risk_type']) ? RiskTypeEnum::from($data['risk_type']) : null,
-            $data['per_page'] ?? null
+            $data['per_page'] ?? null,
+            $data['return_in_size_type'] ?? null,
         );
     }
 }

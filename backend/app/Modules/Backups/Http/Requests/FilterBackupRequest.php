@@ -3,7 +3,9 @@
 namespace App\Modules\Backups\Http\Requests;
 
 use App\Modules\Backups\DTOs\BackupFilterDTO;
+use App\Modules\Backups\Enums\SizeTypeEnum;
 use App\Shared\Http\Request\BaseFormRequest;
+use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -35,6 +37,7 @@ class FilterBackupRequest extends BaseFormRequest
             'client_id' => ['sometimes', 'integer'],
             'risk_type' => ['sometimes', 'string'],
             'per_page' => ['sometimes', 'integer', 'min:1'],
+            'return_in_size_type' => ['sometimes', 'in:' . ArrayHelper::arrayToFormRequestValidation(SizeTypeEnum::cases())],
         ];
     }
 
@@ -51,6 +54,7 @@ class FilterBackupRequest extends BaseFormRequest
             clientId: $this->validated('client_id'),
             riskType: $this->validated('risk_type'),
             perPage: $this->validated('per_page'),
+            returnInSizeType: $this->validated('return_in_size_type') ? SizeTypeEnum::from($this->validated('return_in_size_type')) : null,
         );
     }
 

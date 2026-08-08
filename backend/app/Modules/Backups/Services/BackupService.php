@@ -11,6 +11,7 @@ use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
 
+
 class BackupService implements BackupServiceInterface
 {
     public function __construct(
@@ -19,7 +20,8 @@ class BackupService implements BackupServiceInterface
 
     public function list(BackupFilterDTO $filters): iterable
     {
-        return $this->backupRepository->list($filters);
+        $backups = $this->backupRepository->list($filters);
+        return $backups;
     }
 
     public function create(CreateBackupRequestDTO $payload): Backup
