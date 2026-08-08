@@ -28,6 +28,12 @@ class ClientEloquentRepository implements ClientRepositoryInterface
         }
         return $client;
     }
+    public function refreshApiKey(string $apiKey, Client $client): Client
+    {
+        $client->api_key = $apiKey;
+        $client->save();
+        return $client;
+    }
     public function findById(int $id): Client {
         return Client::findOrFail($id);
     }

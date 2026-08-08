@@ -37,8 +37,14 @@ class ClientService implements ClientServiceInterface
     public function refreshApiKey(int $id): string
     {
         $client = $this->findById($id);
+
         $apiKeyDTO = $this->apiKeyGenerator->execute();
-        $client = $this->clientRepository->update(UpdateClientDTO::fromArray(["api_key" => $apiKeyDTO->hashedApiKey]), $client);
+
+        $this->clientRepository->refreshApiKey(
+            $apiKeyDTO->hashedApiKey,
+            $client
+        );
+    
         return $apiKeyDTO->unhashedApiKey;
     }
 
