@@ -19,6 +19,7 @@ class BackupFilterDTO
         public readonly ?int $riskId,
         public readonly ?int $clientId,
         public readonly ?RiskTypeEnum $riskType,
+        public readonly ?int $perPage,
     ){}
 
     public function toArray(){
@@ -31,7 +32,8 @@ class BackupFilterDTO
             'system_instance_id' => $this->systemInstanceId,
             'risk_id' => $this->riskId,
             'client_id' => $this->clientId,
-            'risk_type' => $this->riskType?->value
+            'risk_type' => $this->riskType?->value,
+            'per_page' => $this->perPage,
         ]);
     }
 
@@ -46,7 +48,8 @@ class BackupFilterDTO
             $data['system_instance_id'] ?? null,
             $data['risk_id'] ?? null,
             $data['client_id'] ?? null,
-            isset($data['risk_type']) ? RiskTypeEnum::from($data['risk_type']) : null
+            isset($data['risk_type']) ? RiskTypeEnum::from($data['risk_type']) : null,
+            $data['per_page'] ?? null
         );
     }
 }

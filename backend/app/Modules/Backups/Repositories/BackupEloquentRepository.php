@@ -11,8 +11,12 @@ use App\Modules\Backups\Models\Backup;
 
 class BackupEloquentRepository implements BackupRepositoryInterface
 {
+    private const DEFAULT_QUANTITY_BY_PAGE = 20;
+    
     public function list(BackupFilterDTO $filters): iterable
     {
+        $perPage = $filters->perPage ?? self::DEFAULT_QUANTITY_BY_PAGE;
+
         return Backup::query()
             ->when($filters->startGeneratedAt, function ($query) use ($filters) {
                 $query->where('generated_at', '>=', $filters->startGeneratedAt);
@@ -23,16 +27,16 @@ class BackupEloquentRepository implements BackupRepositoryInterface
             ->when($filters->isLocal !== null, function ($query) use ($filters) {
                 $query->where('is_local', $filters->isLocal);
             })
-            ->when($filters->minSize, function ($query) use ($filters) {
+            ->when($filters->minSize !== null, function ($query) use ($filters) {
                 $query->where('file_size_kb', '>=', $filters->minSize);
             })
-            ->when($filters->maxSize, function ($query) use ($filters) {
+            ->when($filters->maxSize !== null, function ($query) use ($filters) {
                 $query->where('file_size_kb', '<=', $filters->maxSize);
             })
-            ->when($filters->systemInstanceId, function ($query) use ($filters) {
+            ->when($filters->systemInstanceId !== null, function ($query) use ($filters) {
                 $query->where('system_instance_id', $filters->systemInstanceId);
             })
-            ->paginate(20);
+            ->paginate($perPage);
     }
 
     public function create(CreateBackupDTO $payload): Backup

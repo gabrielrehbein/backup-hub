@@ -33,7 +33,8 @@ class FilterBackupRequest extends BaseFormRequest
             'system_instance_id' => ['sometimes', 'integer'],
             'risk_id' => ['sometimes', 'integer'],
             'client_id' => ['sometimes', 'integer'],
-            'risk_type' => ['sometimes', 'string']
+            'risk_type' => ['sometimes', 'string'],
+            'per_page' => ['sometimes', 'integer', 'min:1'],
         ];
     }
 
@@ -48,7 +49,8 @@ class FilterBackupRequest extends BaseFormRequest
             systemInstanceId: $this->validated('system_instance_id'),
             riskId: $this->validated('risk_id'),
             clientId: $this->validated('client_id'),
-            riskType: $this->validated('risk_type')
+            riskType: $this->validated('risk_type'),
+            perPage: $this->validated('per_page'),
         );
     }
 
