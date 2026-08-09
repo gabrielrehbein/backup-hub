@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\BackupError;
+use App\Modules\Backups\Models\BackupRisk;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<BackupError>
+ * @extends Factory<BackupRisk>
  */
-class BackupErrorFactory extends Factory
+class BackupRiskFactory extends Factory
 {
     /**
      * Define the model's default state.

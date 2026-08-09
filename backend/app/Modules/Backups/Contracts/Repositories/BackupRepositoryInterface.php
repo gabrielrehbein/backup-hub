@@ -11,6 +11,6 @@ interface BackupRepositoryInterface
 {
     public function list(BackupFilterDTO $filters): iterable;
     public function create(CreateBackupDTO $payload): Backup;
-    public function findById(int $id): ?Backup;
+    public function findById(int $id): Backup;
     public function update(UpdateBackupDTO $payload, Backup $backup): Backup;
 }

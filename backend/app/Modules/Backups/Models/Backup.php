@@ -4,6 +4,10 @@ namespace App\Modules\Backups\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Modules\Backups\Models\BackupRisk;
+use App\Modules\Systems\Models\SystemInstance;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Backup extends Model
 {
@@ -20,5 +24,13 @@ class Backup extends Model
         'version'
     ];
 
+    public function risks(): HasMany
+    {
+        return $this->hasMany(BackupRisk::class);
+    }
+
+    public function instances(): BelongsTo {
+        return $this->belongsTo(SystemInstance::class);
+    }
     
 }
