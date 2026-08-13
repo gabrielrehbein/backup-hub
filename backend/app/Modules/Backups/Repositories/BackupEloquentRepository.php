@@ -8,12 +8,11 @@ use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
-use Override;
 
 class BackupEloquentRepository implements BackupRepositoryInterface
 {
     private const DEFAULT_QUANTITY_BY_PAGE = 20;
-    
+
     public function list(BackupFilterDTO $filters): iterable
     {
         $perPage = $filters->perPage ?? self::DEFAULT_QUANTITY_BY_PAGE;
@@ -59,65 +58,73 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         return $backup;
     }
 
-    public function findLastBackupWithoutRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType): ?Backup
-    {
-        return Backup::query()
-            ->where("backups.system_instance_id", $systemInstanceId)
-            ->whereNotExists(function ($query) use ($riskType) {
-                $query->selectRaw(1)
-                    ->from("backup_risks")
-                    ->whereColumn("backup_risks.backup_id", "backups.id")
-                    ->where("backup_risks.is_active", true);
-                
-                $query->where("backup_risks.type", $riskType->value);
-
-            })
-            ->select('backups.*')
-            ->orderByDesc("backups.generated_at")
-            ->first();
-    }
-
     public function findLastBackupWithoutAnyRisk(int $systemInstanceId): ?Backup
     {
         return Backup::query()
-            ->where("backups.system_instance_id", $systemInstanceId)
+            ->where('backups.system_instance_id', $systemInstanceId)
             ->whereNotExists(
-                function($query) {
+                function ($query) {
                     $query->selectRaw(1)
-                    ->from("backup_risks")
-                    ->whereColumn("backup_risks.backup_id", "backups.id")
-                    ->where("backup_risks.is_active", true);
+                        ->from('backup_risks')
+                        ->whereColumn('backup_risks.backup_id', 'backups.id')
+                        ->where('backup_risks.is_active', true);
                 }
             )
-            ->select("backups.*")
-            ->orderByDesc("backups.generated_at")
+            ->select('backups.*')
+            ->orderByDesc('backups.generated_at')
             ->first();
     }
 
-    public function findLastBackupWithRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType): ?Backup {
+    public function findLastBackupWithRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType): ?Backup
+    {
         return Backup::query()
-            ->where("backups.system_instance_id", $systemInstanceId)
+            ->where('backups.system_instance_id', $systemInstanceId)
             ->whereExists(
-                function($query) use ($riskType) {
+                function ($query) use ($riskType) {
                     $query->selectRaw(1)
-                    ->from("backup_risks")
-                    ->whereColumn("backup_risks.backup_id", "backups.id")
-                    ->where("backup_risks.type", $riskType)
-                    ->where("is_active", true);
+                        ->from('backup_risks')
+                        ->whereColumn('backup_risks.backup_id', 'backups.id')
+                        ->where('backup_risks.type', $riskType)
+                        ->where('backup_risks.is_active', true);
                 }
             )
-            ->select("backups.*")
-            ->orderByDesc("backups.generated_at")
+            ->select('backups.*')
+            ->orderByDesc('backups.generated_at')
             ->first();
     }
 
-    public function deactivateRisk(int $backupId, RiskTypeEnum $riskType): int {
+    public function findLastBackupWithoutRiskByRiskType(
+        int $systemInstanceId,
+        RiskTypeEnum $riskType,
+        ?int $excludeBackupId = null
+    ): ?Backup {
+        return Backup::query()
+            ->where('backups.system_instance_id', $systemInstanceId)
+            ->when(
+                $excludeBackupId !== null,
+                fn ($query) => $query->where('backups.id', '<>', $excludeBackupId)
+            )
+            ->whereNotExists(function ($query) use ($riskType) {
+                $query->selectRaw(1)
+                    ->from('backup_risks')
+                    ->whereColumn('backup_risks.backup_id', 'backups.id')
+                    ->where('backup_risks.type', $riskType->value)
+                    ->where('backup_risks.is_active', true);
+            })
+            ->select('backups.*')
+            ->orderByDesc('backups.generated_at')
+            ->first();
+    }
+
+    public function deactivateRisk(int $backupId, RiskTypeEnum $riskType): int
+    {
         $backup = $this->findById($backupId);
+
         return $backup
             ->risks()
-            ->where("risk_type", $riskType->value)
+            ->where('risk_type', $riskType->value)
             ->update(
-                ["is_active" => false]
+                ['is_active' => false]
             );
     }
 }

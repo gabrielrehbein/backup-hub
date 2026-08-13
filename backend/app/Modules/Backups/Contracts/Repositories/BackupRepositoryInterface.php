@@ -14,7 +14,7 @@ interface BackupRepositoryInterface
     public function create(CreateBackupDTO $payload): Backup;
     public function findById(int $id): Backup;
     public function update(UpdateBackupDTO $payload, Backup $backup): Backup;
-    public function findLastBackupWithoutRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType): ?Backup;
+    public function findLastBackupWithoutRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType, ?int $excludeBackupId): ?Backup;
     public function findLastBackupWithoutAnyRisk(int $systemInstanceId): ?Backup;
     public function findLastBackupWithRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType): ?Backup;
     public function deactivateRisk(int $backupId, RiskTypeEnum $riskType): int;
