@@ -1,11 +1,11 @@
 
 import Header from "./components/Header";
-import { BackupsTodayChart } from "./modules/dashboard/components/BackupsTodayChart";
-import { ClientsRiskByPlan } from "./modules/dashboard/components/ClientsRiskByPlan";
-import { RecentBackups } from "./modules/dashboard/components/RecentBackups";
-import { SummaryCard } from "./modules/dashboard/components/SummaryCard";
-import { getMockDashboardData } from "./modules/dashboard/mocks/dashboard.mock";
-import { Dashboard } from "./modules/dashboard/types/metrics.types";
+import { BackupsTodayChart } from "../modules/dashboard/components/BackupsTodayChart";
+import { ClientsRiskByPlan } from "../modules/dashboard/components/ClientsRiskByPlan";
+import { RecentBackups } from "../modules/dashboard/components/RecentBackups";
+import { SummaryCard } from "../modules/dashboard/components/SummaryCard";
+import { getMockDashboardData } from "../modules/dashboard/mocks/dashboard.mock";
+import { Dashboard } from "../modules/dashboard/types/metrics.types";
 
 function Container({ children }: { children: React.ReactNode }) {
     return (
