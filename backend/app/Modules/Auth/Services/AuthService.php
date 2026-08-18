@@ -17,7 +17,11 @@ class AuthService implements AuthServiceInterface
         }
 
         $token = Auth::user()
-            ->createToken("backup-hub-api");
+            ->createToken(
+                "backup-hub-api", 
+                ['*'], 
+                now()->addDays(7)
+            );
 
         return [
             'token' => $token->plainTextToken,
