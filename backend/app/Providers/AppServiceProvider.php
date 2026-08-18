@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Modules\Auth\Contracts\Services\AuthServiceInterface;
+use App\Modules\Auth\Services\AuthService;
 use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
@@ -125,6 +127,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ClientAuthenticationServiceInterface::class,
             ClientAuthenticationService::class
+        );
+
+        $this->app->bind(
+            AuthServiceInterface::class,
+            AuthService::class
         );
 
     }

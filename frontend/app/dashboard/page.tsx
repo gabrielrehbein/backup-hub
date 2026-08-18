@@ -91,15 +91,14 @@ export default async function DashboardPage() {
 
             </section>
 
+            <section className="w-full flex flex-col gap-6">
+                <BackupsTodayChart backupsGeneratedToday={dashboard.backupsGeneratedToday}/>
+            </section>
 
             <section className="w-full flex flex-col gap-6">
-
-                <BackupsTodayChart backupsGeneratedToday={dashboard.backupsGeneratedToday}/>
-
                 <ClientsRiskByPlan
                     plans={dashboard.clientsWithMostBackupRiskByPlan}
                 />
-
             </section>
 
 

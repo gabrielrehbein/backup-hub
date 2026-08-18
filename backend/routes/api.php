@@ -8,3 +8,4 @@ require base_path('app/Modules/Users/Routes/userRoutes.php');
 require base_path('app/Modules/Systems/Routes/systemRoutes.php');
 require base_path('app/Modules/Systems/Routes/systemInstanceRoutes.php');
 require base_path('app/Modules/Backups/Routes/backupRoutes.php');
+require base_path('app/Modules/Auth/Routes/authRoutes.php');
