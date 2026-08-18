@@ -17,10 +17,12 @@ class AuthService implements AuthServiceInterface
         }
 
         $token = Auth::user()
-            ->createToken("backup-hub-api")
-            ->plainTextToken;
+            ->createToken("backup-hub-api");
 
-        return ['token' => $token];
+        return [
+            'token' => $token->plainTextToken,
+            'abilities' => $token->accessToken->abilities,
+        ];
     }
 
     public function logout(User $user): void
