@@ -1,3 +1,5 @@
+"use client";
+
 import { getMockDashboardData } from "@/modules/dashboard/mocks/dashboard.mock";
 import { Dashboard } from "@/modules/dashboard/types/metrics.types";
 import { Container } from "../components/Container";
@@ -6,37 +8,60 @@ import { SummaryCard } from "@/modules/dashboard/components/SummaryCard";
 import { BackupsTodayChart } from "@/modules/dashboard/components/BackupsTodayChart";
 import { ClientsRiskByPlan } from "@/modules/dashboard/components/ClientsRiskByPlan";
 import { RecentBackups } from "@/modules/dashboard/components/RecentBackups";
+import { useEffect, useState } from "react";
+import { AuthService } from "@/modules/auth/services/auth.service";
+import { PublicUserType } from "@/modules/user/types/public-user-type";
+import { redirect } from "next/navigation";
 
 
 
-export default async function DashboardPage() {
-    const dashboard: Dashboard = await getMockDashboardData();
+export default function DashboardPage() {
+    const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+    const [user, setUser] = useState<PublicUserType | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const dashData = await getMockDashboardData();
+            setDashboard(dashData);
+
+            const authService = new AuthService();
+            const user = await authService.getAuthUser();
+
+            !user && redirect("/auth/login");
+
+            setUser(user);
+
+        };
+        fetchData();
+    }, []);
+
+
 
     return (
         <Container>
 
-            <Header />
+            <Header username={user?.name} />
 
             <section className="w-full flex flex-col gap-6">
 
                 <div className="flex gap-6">
                     <SummaryCard
                         title="Total de clientes"
-                        value={dashboard.summary.total_clients}
+                        value={dashboard?.summary.total_clients || 0}
                         description="Clientes monitorados"
                         size="large"
                     />
 
                     <SummaryCard
                         title="Total de backups"
-                        value={dashboard.summary.total_backups}
+                        value={dashboard?.summary.total_backups || 0}
                         description="Backups registrados"
                         size="large"
                     />
 
                     <SummaryCard
                         title="Backups em risco"
-                        value={dashboard.summary.risk_backups}
+                        value={dashboard?.summary.risk_backups || 0}
                         description="Necessitam atenção"
                         size="large"
                         type="danger"
@@ -55,7 +80,7 @@ export default async function DashboardPage() {
                     <SummaryCard
                         title="Risco baixo"
                         value={
-                            dashboard.riskDistribution.find(
+                            dashboard?.riskDistribution.find(
                                 risk => risk.name.toLowerCase() === "low"
                             )?.quantity || 0
                         }
@@ -67,7 +92,7 @@ export default async function DashboardPage() {
                     <SummaryCard
                         title="Risco médio"
                         value={
-                            dashboard.riskDistribution.find(
+                            dashboard?.riskDistribution.find(
                                 risk => risk.name.toLowerCase() === "medium"
                             )?.quantity || 0
                         }
@@ -79,7 +104,7 @@ export default async function DashboardPage() {
                     <SummaryCard
                         title="Risco alto"
                         value={
-                            dashboard.riskDistribution.find(
+                            dashboard?.riskDistribution.find(
                                 risk => risk.name.toLowerCase() === "high"
                             )?.quantity || 0
                         }
@@ -92,23 +117,27 @@ export default async function DashboardPage() {
             </section>
 
             <section className="w-full flex flex-col gap-6">
-                <BackupsTodayChart backupsGeneratedToday={dashboard.backupsGeneratedToday}/>
+                {dashboard && (
+                    <BackupsTodayChart
+                        backupsGeneratedToday={dashboard.backupsGeneratedToday}
+                    />
+                )}
             </section>
 
             <section className="w-full flex flex-col gap-6">
                 <ClientsRiskByPlan
-                    plans={dashboard.clientsWithMostBackupRiskByPlan}
+                    plans={dashboard?.clientsWithMostBackupRiskByPlan || []}
                 />
             </section>
 
 
             <RecentBackups
-                backups={dashboard.recentBackups.local}
+                backups={dashboard?.recentBackups.local || []}
                 backupsType="local"
             />
 
             <RecentBackups
-                backups={dashboard.recentBackups.remote}
+                backups={dashboard?.recentBackups.remote || []}
                 backupsType="remote"
             />
 

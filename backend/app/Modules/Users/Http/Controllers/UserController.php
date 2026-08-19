@@ -3,13 +3,13 @@
 namespace App\Modules\Users\Http\Controllers;
 
 use App\Modules\Users\Contracts\Services\UserServiceInterface;
-use App\Modules\Users\DTOs\CreateUserDTO;
-use App\Modules\Users\DTOs\UpdateUserDTO;
 use App\Modules\Users\Http\Requests\StoreUserRequest;
 use App\Modules\Users\Http\Requests\UpdateUserRequest;
 use App\Shared\Http\Responses\JSONResponse;
 use App\Shared\Utils\BuildResponseMessage;
 use App\Shared\Utils\ResourceEnum;
+use Illuminate\Http\Request;
+
 
 class UserController
 {
@@ -22,6 +22,12 @@ class UserController
     {
         $users = $this->userService->findAll();
         return JSONResponse::success($users, BuildResponseMessage::findAll(ResourceEnum::USER), 200);
+    }
+
+    public function me(Request $request)
+    {
+        $user = $request->user();
+        return JSONResponse::success($user, BuildResponseMessage::findOne(ResourceEnum::USER), 200);
     }
 
     public function store(StoreUserRequest $request)

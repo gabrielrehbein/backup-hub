@@ -7,7 +7,7 @@ type ButtonProps = {
     size?: "small" | "medium" | "large";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({ children, className, variant = "primary", size = "medium", ...props }: ButtonProps) {
+export function Button({ children, className, variant = "primary", size = "medium", disabled, ...props }: ButtonProps) {
     let baseClasses = "cursor-pointer transition text-white rounded px-4 py-2 font-bold flex items-center gap-2 justify-center";
     let sizeClasses = "";
     let variantClasses = "";
@@ -32,15 +32,21 @@ export function Button({ children, className, variant = "primary", size = "mediu
             sizeClasses = "w-22 text-base";
             break;
         case "large":
-            sizeClasses = "w-32 text-lg";
+            sizeClasses = "w-full text-lg";
             break;
     }
 
+    let disabledClasses = "";
+
+    if (disabled) {
+        disabledClasses = "bg-slate-400 hover:bg-slate-400 cursor-not-allowed";
+    }
 
 
     return (
         <button
-            className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className ?? ""}`}
+            className={`${baseClasses} ${variantClasses} ${sizeClasses} ${disabledClasses}`}
+            disabled={disabled}
             {...props}
         >
             {children}
