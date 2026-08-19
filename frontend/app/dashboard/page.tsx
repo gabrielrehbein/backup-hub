@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import { PublicUserType } from "@/modules/user/types/public-user-type";
 import { redirect } from "next/navigation";
+import { DashboardService } from "@/modules/dashboard/services/dashboard.service";
 
 
 
@@ -21,8 +22,10 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const dashData = await getMockDashboardData();
-            setDashboard(dashData);
+
+            const dashboardService = new DashboardService();
+            const metrics = await dashboardService.getMetrics();
+            setDashboard(metrics.data);
 
             const authService = new AuthService();
             const user = await authService.getAuthUser();
