@@ -7,14 +7,23 @@ use App\Modules\Clients\Contracts\Services\PlanServiceInterface;
 use App\Modules\Clients\DTOs\CreatePlanDTO;
 use App\Modules\Clients\DTOs\UpdatePlanDTO;
 use App\Modules\Clients\Models\Plan;
+use App\Modules\Risks\Contracts\Services\RiskServiceInterface;
+
 
 class PlanService implements PlanServiceInterface
 {
-    public function __construct(private readonly PlanRepositoryInterface $planRepository) {}
+    public function __construct(
+        private readonly PlanRepositoryInterface $planRepository,
+        private readonly RiskServiceInterface $riskService
+    ){}
 
     public function create(CreatePlanDTO $payload): Plan
     {
-        return $this->planRepository->create($payload);
+        $plan = $this->planRepository->create($payload);
+
+        $this->riskService->createDefaultRisksForPlan($plan->id);
+
+        return $plan;
     }
 
     public function findAll(): iterable

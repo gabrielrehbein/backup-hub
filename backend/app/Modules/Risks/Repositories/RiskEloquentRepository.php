@@ -42,8 +42,8 @@ class RiskEloquentRepository implements RiskRepositoryInterface
         return Risk::findOrFail($id);
     }
 
-    public function findByPlan(Plan $plan): iterable
+    public function findByPlan(int $planId): iterable
     {
-        return $plan->risks()->get();
+        return Risk::where('plan_id', $planId)->get();
     }
 }

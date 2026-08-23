@@ -20,7 +20,6 @@ class RiskController extends Controller
     public function index()
     {
         $risks = $this->riskService->findAll();
-
         return JSONResponse::success($risks, BuildResponseMessage::findAll(ResourceEnum::RISK), 200);
     }
 

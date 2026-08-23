@@ -14,4 +14,5 @@ interface RiskServiceInterface
     public function findById(int $id): Risk;
     public function update(UpdateRiskConfigDTO $payload, int $id): Risk;
     public function findByPlan(int $planId): iterable;
+    public function createDefaultRisksForPlan(int $planId): array;
 }

@@ -15,5 +15,5 @@ interface RiskRepositoryInterface
     public function delete(Risk $risk);
     public function findById(int $id): Risk;
     public function update(UpdateRiskConfigDTO $payload, Risk $risk): Risk;
-    public function findByPlan(Plan $plan): iterable;
+    public function findByPlan(int $planId): iterable;
 }
