@@ -50,4 +50,19 @@ class BackupService implements BackupServiceInterface
 
         return $this->backupRepository->update($payload, $backup);
     }
+
+    public function getTotalBackups(): int
+    {
+        return $this->backupRepository->getTotalBackups();
+    }
+
+    public function findBackupsGeneratedToday(): iterable
+    {
+        return $this->backupRepository->findBackupsGeneratedToday();
+    }
+
+    public function getTotalBackupsGeneratedToday(): int
+    {
+        return $this->backupRepository->getTotalBackupsGeneratedToday();
+    }
 }

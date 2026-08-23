@@ -127,4 +127,23 @@ class BackupEloquentRepository implements BackupRepositoryInterface
                 ['is_active' => false]
             );
     }
+
+    public function getTotalBackups(): int
+    {
+        return Backup::count();
+    }
+
+    public function findBackupsGeneratedToday(): iterable
+    {
+        return Backup::query()
+            ->whereDate('generated_at', now()->toDateString())
+            ->get();
+    }
+
+    public function getTotalBackupsGeneratedToday(): int
+    {
+        return Backup::query()
+            ->whereDate('generated_at', now()->toDateString())
+            ->count();
+    }
 }

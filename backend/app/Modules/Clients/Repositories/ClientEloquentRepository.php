@@ -40,4 +40,8 @@ class ClientEloquentRepository implements ClientRepositoryInterface
     public function findByExternalId(string $externalId): Client {
         return Client::firstWhere("external_id", $externalId);
     }
+
+    public function getTotalClients(): int {
+        return Client::count();
+    }
 }

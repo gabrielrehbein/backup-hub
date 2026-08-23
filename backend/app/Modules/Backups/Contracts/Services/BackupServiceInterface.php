@@ -14,4 +14,7 @@ interface BackupServiceInterface
     public function create(CreateBackupRequestDTO $payload): Backup;
     public function findById(int $id): ?Backup;
     public function update(UpdateBackupDTO $payload, int $id): Backup;
+    public function getTotalBackups(): int;
+    public function findBackupsGeneratedToday(): iterable;
+    public function getTotalBackupsGeneratedToday(): int;
 }

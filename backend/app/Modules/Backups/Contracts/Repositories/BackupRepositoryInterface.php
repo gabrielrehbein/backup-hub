@@ -18,4 +18,7 @@ interface BackupRepositoryInterface
     public function findLastBackupWithoutAnyRisk(int $systemInstanceId): ?Backup;
     public function findLastBackupWithRiskByRiskType(int $systemInstanceId, RiskTypeEnum $riskType): ?Backup;
     public function deactivateRisk(int $backupId, RiskTypeEnum $riskType): int;
+    public function getTotalBackups(): int;
+    public function findBackupsGeneratedToday(): iterable;
+    public function getTotalBackupsGeneratedToday(): int;
 }

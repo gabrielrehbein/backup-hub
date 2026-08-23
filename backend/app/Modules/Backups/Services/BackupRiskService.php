@@ -45,4 +45,9 @@ class BackupRiskService implements BackupRiskServiceInterface
 
         return $backupRisk;
     }
+
+    public function getTotalBackupRisks(?int $backupId = null, ?int $riskTypeId = null): int
+    {
+        return $this->backupRiskRepository->getTotalBackupRisks($backupId, $riskTypeId);
+    }
 }

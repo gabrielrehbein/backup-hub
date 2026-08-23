@@ -64,4 +64,16 @@ class BackupRiskEloquentRepository implements BackupRiskRepositoryInterface
 
         return $backupRisk;
     }
+
+    public function getTotalBackupRisks(?int $backupId = null, ?int $riskTypeId = null): int
+    {
+        return BackupRisk::query()
+            ->when($backupId !== null, function ($query) use ($backupId) {
+                $query->where('backup_id', $backupId);
+            })
+            ->when($riskTypeId !== null, function ($query) use ($riskTypeId) {
+                $query->where('risk_id', $riskTypeId);
+            })
+            ->count();
+    }
 }

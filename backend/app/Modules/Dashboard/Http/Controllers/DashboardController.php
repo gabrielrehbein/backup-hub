@@ -2,20 +2,29 @@
 
 namespace App\Modules\Dashboard\Http\Controllers;
 
+use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
+use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Shared\Http\Responses\JSONResponse;
+use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use Illuminate\Http\Request;
 
 
 class DashboardController
 {
+    public function __construct(
+        private readonly ClientServiceInterface $clientService,
+        private readonly BackupServiceInterface $backupService,
+        private readonly BackupRiskServiceInterface $backupRiskService,
+    ){}
+
     public function getMetrics(Request $request)
     {
         $data = [
             'summary' => [
-                'total_clients' => 645,
-                'total_backups' => 43244,
-                'risk_backups' => 45,
-                'backups_generated_today' => 5,
+                'total_clients' => $this->clientService->getTotalClients(),
+                'total_backups' => $this->backupService->getTotalBackups(),
+                'risk_backups' => $this->backupRiskService->getTotalBackupRisks(),
+                'backups_generated_today' => $this->backupService->getTotalBackupsGeneratedToday(),
             ],
 
             'riskDistribution' => [

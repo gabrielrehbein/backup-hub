@@ -71,4 +71,8 @@ class ClientService implements ClientServiceInterface
     public function findByExternalId(string $externalId): Client {
         return $this->clientRepository->findByExternalId($externalId);
     }
+
+    public function getTotalClients(): int {
+        return $this->clientRepository->getTotalClients();
+    }
 }

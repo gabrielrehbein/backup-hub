@@ -17,4 +17,5 @@ interface ClientServiceInterface
     public function update(UpdateClientDTO $payload, int $id): Client;
     public function findById(int $id): Client;
     public function findByExternalId(string $externalId): Client;
+    public function getTotalClients(): int;
 }
