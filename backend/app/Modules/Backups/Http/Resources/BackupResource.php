@@ -20,6 +20,7 @@ class BackupResource extends JsonResource
                 $this->file_size_kb,
                 $sizeType ? SizeTypeEnum::from($sizeType) : SizeTypeEnum::KB
             ),
+            'risk' => $this->risk,
             'size_type' => $sizeType ? SizeTypeEnum::from($sizeType)->value : SizeTypeEnum::KB->value,
             'generated_at' => $this->generated_at,
             'source_ip' => $this->source_ip,

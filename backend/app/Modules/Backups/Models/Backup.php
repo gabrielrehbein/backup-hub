@@ -24,6 +24,10 @@ class Backup extends Model
         'version'
     ];
 
+    protected $appends = [
+        'risk'
+    ];
+
     public function risks(): HasMany
     {
         return $this->hasMany(BackupRisk::class);
@@ -31,6 +35,26 @@ class Backup extends Model
 
     public function instances(): BelongsTo {
         return $this->belongsTo(SystemInstance::class);
+    }
+
+    public function getRiskAttribute(){
+        $risks = $this->risks()
+            ->where('is_active', true)
+            ->get();
+
+        $riskQuantity = $risks->count();
+
+        if ($riskQuantity === 0) {
+            return 0;
+        }
+
+        $totalRisksLevel = 0;
+
+        foreach ($risks as $risk) {
+            $totalRisksLevel += $risk->riskType->level;
+        }
+
+        return $totalRisksLevel / $riskQuantity;
     }
     
 }
