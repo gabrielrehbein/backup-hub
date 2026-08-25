@@ -13,6 +13,7 @@ import { AuthService } from "@/modules/auth/services/auth.service";
 import { PublicUserType } from "@/modules/user/types/public-user-type";
 import { redirect } from "next/navigation";
 import { DashboardService } from "@/modules/dashboard/services/dashboard.service";
+import { DatabaseXIcon, TimerIcon } from "lucide-react";
 
 
 
@@ -46,7 +47,7 @@ export default function DashboardPage() {
             <Header username={user?.name} />
 
             <section className="w-full flex flex-col gap-6">
-
+                <h2 className="text-2xl text-slate-900 ml-2">Resumo</h2>
                 <div className="flex gap-6">
                     <SummaryCard
                         title="Total de clientes"
@@ -72,6 +73,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex gap-6">
+                    
                     <SummaryCard
                         title="Sem risco"
                         value={600}
@@ -115,9 +117,30 @@ export default function DashboardPage() {
                         size="large"
                         type="danger"
                     />
-                </div>
+                </div>                
 
             </section>
+
+           <section className="w-full flex flex-col gap-6">
+                <h2 className="text-2xl text-slate-900 ml-2">Risco por tipo</h2>
+                <div className="flex gap-6 w-full justify-between">
+                    <SummaryCard 
+                        title={dashboard?.riskByType[0].type.toUpperCase() === "SIZE" ? "Tamanho" : "N/A"}
+                        value={dashboard?.riskByType[0].quantity ?? 0}
+                        description="Riscos por tamanho"
+                        size="large"
+                        icon={<TimerIcon size={"80px"} opacity={0.2}/>}
+                        
+                    />
+                    <SummaryCard 
+                        title={dashboard?.riskByType[1].type.toUpperCase() === "TIME" ? "Tempo" : "N/A"}
+                        value={dashboard?.riskByType[1].quantity ?? 0}
+                        description="Riscos por tempo"
+                        size="large"
+                        icon={<DatabaseXIcon size={"80px"} opacity={0.2}/>}
+                    />
+                </div>
+           </section>
 
             <section className="w-full flex flex-col gap-6">
                 {dashboard && (

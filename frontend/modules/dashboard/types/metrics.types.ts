@@ -2,7 +2,6 @@ export interface DashboardSummary {
     total_clients: number;
     total_backups: number;
     risk_backups: number;
-    backups_generated_today: number;
 }
 
 export type RiskType = "TIME" | "SIZE";
@@ -28,6 +27,7 @@ export interface Backup {
     generatedAt: Date;
     fileSize: number;
     sizeUnit: SizeUnit;
+    risk: number;
     ipSource: string;
     filePath: string;
     isLocal: boolean;

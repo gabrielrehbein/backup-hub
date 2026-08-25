@@ -5,6 +5,7 @@ type SummaryCardProps = {
     description: string;
     type?: "danger" | "info" | "success" | "warning";
     size?: "small" | "medium" | "large";
+    icon?: React.ReactNode;
 };
 
 export function SummaryCard({
@@ -13,6 +14,7 @@ export function SummaryCard({
     description,
     type,
     size = "small",
+    icon,
 }: SummaryCardProps) {
     return (
         <div
@@ -24,29 +26,48 @@ export function SummaryCard({
                         : "w-1/3 p-8"
             }`}
         >
-            <p className="text-sm font-medium text-slate-500">
-                {title}
-            </p>
+            <div className="flex justify-between items-center">
+                <div>
+                <p className="text-sm font-medium text-slate-500">
+                    {title}
+                </p>
 
-            <p
-                className={`mt-2 text-3xl font-bold ${
-                    type === "danger"
-                        ? "text-red-600"
-                        : type === "info"
-                            ? "text-blue-600"
-                            : type === "success"
-                                ? "text-green-600"
-                                : type === "warning"
-                                    ? "text-yellow-600"
-                                    : "text-slate-900"
-                }`}
-            >
-                {value.toLocaleString("pt-BR")}
-            </p>
-
+                <p
+                    className={`mt-2 text-3xl font-bold ${
+                        type === "danger"
+                            ? "text-red-600"
+                            : type === "info"
+                                ? "text-blue-600"
+                                : type === "success"
+                                    ? "text-green-600"
+                                    : type === "warning"
+                                        ? "text-yellow-600"
+                                        : "text-slate-900"
+                    }`}
+                >
+                    {value.toLocaleString("pt-BR")}
+                </p>
+                </div>
+                <div
+                    className={`max-h-14 ${
+                        type === "danger"
+                            ? "text-red-600"
+                            : type === "info"
+                                ? "text-blue-600"
+                                : type === "success"
+                                    ? "text-green-600"
+                                    : type === "warning"
+                                        ? "text-yellow-600"
+                                        : "text-slate-900"
+                    }`}
+                >
+                    {icon && icon}
+                </div>
+            </div>
             <p className="mt-1 text-xs text-slate-400">
                 {description}
             </p>
+
         </div>
     );
 }

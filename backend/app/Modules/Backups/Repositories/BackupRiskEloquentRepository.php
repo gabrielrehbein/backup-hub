@@ -2,6 +2,9 @@
 
 namespace App\Modules\Backups\Repositories;
 
+use App\Modules\Backups\DTOs\ErrorTypeQuantityDTO;
+use App\Modules\Risks\Enums\RiskTypeEnum;
+
 use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
@@ -75,5 +78,26 @@ class BackupRiskEloquentRepository implements BackupRiskRepositoryInterface
                 $query->where('risk_id', $riskTypeId);
             })
             ->count();
+    }
+
+
+    public function getTotalBackupRisksByType(?int $backupId = null): array
+    {
+        //SEMPRE RETORNA UMA LISTA COM TODOS OS TIPOS DE RISCO, MESMO QUE A QUANTIDADE SEJA 0
+        $result = BackupRisk::query()
+            ->selectRaw('type, COUNT(*) as quantity')
+            ->when($backupId !== null, function ($query) use ($backupId) {
+                $query->where('backup_id', $backupId);
+            })
+            ->groupBy('type')
+            ->get()
+            ->map(function ($item) {
+                return new ErrorTypeQuantityDTO(
+                    type: RiskTypeEnum::from($item->type),
+                    quantity: $item->quantity,
+                );
+            })
+            ->toArray();
+        return $result;
     }
 }

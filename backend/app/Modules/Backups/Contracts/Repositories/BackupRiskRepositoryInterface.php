@@ -14,4 +14,5 @@ interface BackupRiskRepositoryInterface
     public function findById(int $id): BackupRisk;
     public function update(UpdateBackupRiskDTO $payload, BackupRisk $backupRisk): BackupRisk;
     public function getTotalBackupRisks(?int $backupId = null, ?int $riskTypeId = null): int;
+    public function getTotalBackupRisksByType(?int $backupId = null): array;
 }

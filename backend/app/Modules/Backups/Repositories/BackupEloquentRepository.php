@@ -143,7 +143,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
     public function getTotalBackupsGeneratedToday(): int
     {
         return Backup::query()
-            ->whereDate('generated_at', now()->toDateString())
+            ->whereDate('generated_at', today()->toDateString())
             ->count();
     }
 }

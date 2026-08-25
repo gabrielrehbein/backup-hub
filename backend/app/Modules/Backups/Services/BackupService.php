@@ -63,6 +63,7 @@ class BackupService implements BackupServiceInterface
 
     public function getTotalBackupsGeneratedToday(): int
     {
-        return $this->backupRepository->getTotalBackupsGeneratedToday();
+        $result = $this->backupRepository->getTotalBackupsGeneratedToday();
+        return $result;
     }
 }

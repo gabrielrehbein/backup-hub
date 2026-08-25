@@ -22,7 +22,7 @@ export function LoginForm() {
         setLoading(false);
         if(!response) {
             setLoading(false);
-            toast.error("E-mail ou senha inválidos");
+            toast.error("E-mail ou senha inválido(s)");
             return;
         }
         redirect("/dashboard");

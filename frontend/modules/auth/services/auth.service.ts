@@ -6,6 +6,7 @@ export class AuthService {
 
     public async login(loginDTO: LoginDTO): Promise<boolean> {
        
+        try {
         const response = await fetch(`${this.baseUrl}/tokens/create`, {
             method: 'POST',
             headers: {
@@ -16,12 +17,13 @@ export class AuthService {
 
         const data = await response.json();
 
-        localStorage.setItem('backup-hub-token', data.data.token || '');
-
-
-        console.log('Response:', data);
+        localStorage.setItem('backup-hub-token', await data.data.token || '');
 
         return response.ok;
+        } catch (error) {
+            console.error('Login error:', error);
+            return false;
+        }
     }
 
     public async logout(): Promise<boolean> {

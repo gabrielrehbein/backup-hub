@@ -24,7 +24,6 @@ class DashboardController
                 'total_clients' => $this->clientService->getTotalClients(),
                 'total_backups' => $this->backupService->getTotalBackups(),
                 'risk_backups' => $this->backupRiskService->getTotalBackupRisks(),
-                'backups_generated_today' => $this->backupService->getTotalBackupsGeneratedToday(),
             ],
 
             'riskDistribution' => [
@@ -43,23 +42,9 @@ class DashboardController
                     'level' => 3,
                     'quantity' => 10,
                 ],
-                [
-                    'name' => 'Critical',
-                    'level' => 4,
-                    'quantity' => 5,
-                ],
             ],
 
-            'riskByType' => [
-                [
-                    'type' => 'TIME',
-                    'quantity' => 30,
-                ],
-                [
-                    'type' => 'SIZE',
-                    'quantity' => 15,
-                ],
-            ],
+            'riskByType' => $this->backupRiskService->getTotalBackupRisksByType(),
 
             'recentBackups' => [
                 'local' => [
@@ -115,7 +100,7 @@ class DashboardController
                     ['hour' => 23, 'quantity' => 0],
                 ],
 
-                'total' => 65,
+                'total' => $this->backupService->getTotalBackupsGeneratedToday(),
             ],
 
             'clientsWithMostBackupRiskByPlan' => [
