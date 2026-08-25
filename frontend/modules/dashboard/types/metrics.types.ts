@@ -23,14 +23,14 @@ export type BackupsGeneratedToday = {
     total: number;
 };
 export interface Backup {
-    clientName: string;
-    generatedAt: Date;
-    fileSize: number;
-    sizeUnit: SizeUnit;
+    client_name: string;
+    generated_at: Date;
+    size: number;
+    size_type: SizeUnit;
     risk: number;
-    ipSource: string;
-    filePath: string;
-    isLocal: boolean;
+    source_ip: string;
+    file_path: string;
+    is_local: boolean;
 }
 
 export interface RecentBackups {

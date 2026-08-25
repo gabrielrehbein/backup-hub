@@ -7,6 +7,7 @@ use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Shared\Http\Responses\JSONResponse;
 use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use Illuminate\Http\Request;
+use App\Modules\Backups\Http\Resources\LastBackupsResource;
 
 
 class DashboardController
@@ -47,29 +48,8 @@ class DashboardController
             'riskByType' => $this->backupRiskService->getTotalBackupRisksByType(),
 
             'recentBackups' => [
-                'local' => [
-                    [
-                        'clientName' => 'Center Aço',
-                        'generatedAt' => now(),
-                        'fileSize' => 374,
-                        'sizeUnit' => 'MB',
-                        'ipSource' => '192.168.1.1',
-                        'filePath' => 'C:\\MC_Copia',
-                        'isLocal' => true,
-                    ],
-                ],
-
-                'remote' => [
-                    [
-                        'clientName' => 'Center Mix',
-                        'generatedAt' => now(),
-                        'fileSize' => 123,
-                        'sizeUnit' => 'MB',
-                        'ipSource' => '192.168.1.2',
-                        'filePath' => '/home/1529_centermix/CENTER_MIX',
-                        'isLocal' => false,
-                    ],
-                ],
+                'local' => LastBackupsResource::collection($this->backupService->findLastBackups(10, true)),
+                'remote' => LastBackupsResource::collection($this->backupService->findLastBackups(10, false)),
             ],
 
             'backupsGeneratedToday' => [

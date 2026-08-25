@@ -57,42 +57,44 @@ export function RecentBackups({
                     </thead>
 
                     <tbody className="divide-y divide-slate-100">
-
-                        {backups.map((backup, index) => (
-
-                            <tr
-                                key={`${backup.clientName}-${index}`}
-                                className="hover:bg-slate-50"
-                            >
-
-                                <td className="px-6 py-4 font-medium text-slate-800">
-                                    {backup.clientName}
+                        {backups.length === 0 ? (
+                            <tr>
+                                <td colSpan={6} className="px-6 py-4 text-slate-500">
+                                    Nenhum backup encontrado.
                                 </td>
-
-                                <td className="px-6 py-4 text-slate-500">
-                                    {formatDate(backup.generatedAt, "dd/MM/yyyy 'às' HH'h'mm")}
-                                </td>
-
-                                <td className="px-6 py-4 text-slate-700">
-                                    {backup.fileSize} {backup.sizeUnit}
-                                </td>
-
-                                <td className="px-6 py-4 font-mono text-xs text-slate-500">
-                                    {backup.ipSource}
-                                </td>
-
-                                <td className="px-6 py-4 font-mono text-xs text-slate-500">
-                                    {backup.filePath}
-                                </td>
-
-                                <td className="px-6 py-4 text-slate-700">
-                                    {backup.isLocal ? "Local" : "Remoto"}
-                                </td>
-
                             </tr>
+                        ) : (
+                            backups.map((backup, index) => (
+                                <tr
+                                    key={`${backup.client_name}-${index}`}
+                                    className="hover:bg-slate-50"
+                                >
+                                    <td className="px-6 py-4 font-medium text-slate-800">
+                                        {backup.client_name}
+                                    </td>
 
-                        ))}
+                                    <td className="px-6 py-4 text-slate-500">
+                                        {backup.generated_at ? new Date(backup.generated_at).toLocaleString() : 'sem data'}
+                                    </td>
 
+                                    <td className="px-6 py-4 text-slate-700">
+                                        {backup.size} {backup.size_type.toUpperCase()}
+                                    </td>
+
+                                    <td className="px-6 py-4 font-mono text-xs text-slate-500">
+                                        {backup.source_ip}
+                                    </td>
+
+                                    <td className="px-6 py-4 font-mono text-xs text-slate-500">
+                                        {backup.file_path}
+                                    </td>
+
+                                    <td className="px-6 py-4 text-slate-700">
+                                        {backup.is_local ? "Local" : "Remoto"}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
 
                 </table>

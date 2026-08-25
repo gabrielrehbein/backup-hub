@@ -51,7 +51,7 @@ class Backup extends Model
         $totalRisksLevel = 0;
 
         foreach ($risks as $risk) {
-            $totalRisksLevel += $risk->riskType->level;
+            $totalRisksLevel += $risk->riskType->level ?? 0;
         }
 
         return $totalRisksLevel / $riskQuantity;

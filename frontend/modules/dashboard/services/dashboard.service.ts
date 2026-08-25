@@ -1,6 +1,8 @@
 export class DashboardService {
     public async getMetrics() {
-        const response = await fetch("http://localhost:8000/api/dashboard/metrics", {
+        const sizeType = "mb";
+
+        const response = await fetch(`http://localhost:8000/api/dashboard/metrics?return_in_size_type=${sizeType}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

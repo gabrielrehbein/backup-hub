@@ -66,4 +66,9 @@ class BackupService implements BackupServiceInterface
         $result = $this->backupRepository->getTotalBackupsGeneratedToday();
         return $result;
     }
+
+    public function findLastBackups(int $limit, ?bool $isLocal): iterable
+    {
+        return $this->backupRepository->findLastBackups($limit, $isLocal);
+    }
 }

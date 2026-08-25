@@ -146,4 +146,17 @@ class BackupEloquentRepository implements BackupRepositoryInterface
             ->whereDate('generated_at', today()->toDateString())
             ->count();
     }
+
+    public function findLastBackups(int $limit, ?bool $isLocal): iterable
+    {
+        $result = Backup::with("instances.clients")
+            ->when($isLocal !== null, function ($query) use ($isLocal) {
+                $query->where("is_local", $isLocal);
+            })
+            ->orderByDesc("generated_at")
+            ->limit($limit)
+            ->get();
+
+        return $result;
+    }
 }
