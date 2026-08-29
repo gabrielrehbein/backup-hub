@@ -129,15 +129,14 @@ export default function DashboardPage() {
                         value={dashboard?.riskByType[0].quantity ?? 0}
                         description="Riscos por tamanho"
                         size="large"
-                        icon={<TimerIcon size={"80px"} opacity={0.2}/>}
-                        
+                        icon={<DatabaseXIcon size={"80px"} opacity={0.2}/>}
                     />
                     <SummaryCard 
                         title={dashboard?.riskByType[1].type.toUpperCase() === "TIME" ? "Tempo" : "N/A"}
                         value={dashboard?.riskByType[1].quantity ?? 0}
                         description="Riscos por tempo"
                         size="large"
-                        icon={<DatabaseXIcon size={"80px"} opacity={0.2}/>}
+                        icon={<TimerIcon size={"80px"} opacity={0.2}/>}
                     />
                 </div>
            </section>

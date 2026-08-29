@@ -3,6 +3,7 @@
 namespace App\Modules\Backups\Services;
 
 use App\Modules\Backups\Actions\SizeConveterAction;
+use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\DTOs\BackupFilterDTO;
@@ -26,6 +27,9 @@ class BackupService implements BackupServiceInterface
 
     public function create(CreateBackupRequestDTO $payload): Backup
     {
+        if($payload->generatedAt > now()) {
+            throw new BackupInFutureHttpException();
+        }
         $convertedFileSize = SizeConveterAction::toKb($payload->fileSize, $payload->sizeType);
         $BackupDTOWithConvertedSize = new CreateBackupDTO(
             fileSize: $convertedFileSize,

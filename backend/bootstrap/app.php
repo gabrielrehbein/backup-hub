@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Shared\Http\Responses\JSONResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -37,5 +38,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // $exceptions->render(function (InternalErrorException $e) {
         //     return JSONResponse::error("Algo deu errado");
         // });
+        $exceptions->render(function (BackupInFutureHttpException $e) {
+            return JSONResponse::error($e->getMessage(), $e->getStatusCode());
+        });
 
     })->create();
