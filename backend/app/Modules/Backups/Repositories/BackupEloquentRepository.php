@@ -159,4 +159,9 @@ class BackupEloquentRepository implements BackupRepositoryInterface
 
         return $result;
     }
+
+    public function findLastBackupsByClient(): iterable
+    {
+        return [];
+    }
 }

@@ -22,4 +22,5 @@ interface BackupRepositoryInterface
     public function findBackupsGeneratedToday(): iterable;
     public function getTotalBackupsGeneratedToday(): int;
     public function findLastBackups(int $limit, ?bool $isLocal): iterable;
+    public function findLastBackupsByClient(): iterable;
 }
