@@ -15,6 +15,7 @@ use App\Modules\Backups\Repositories\BackupEloquentRepository;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Backups\Services\BackupRiskService;
 use App\Modules\Notifications\Actions\NotifyBackupWithRisk;
+use App\Modules\Notifications\Services\SendNotificationService;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Modules\Systems\Models\SystemInstance;
 
@@ -29,14 +30,13 @@ class BackupController extends Controller
         $backupRiskService = new BackupRiskService(
             new BackupRiskEloquentRepository(),
             new BackupEloquentRepository(),
-            new NotifyBackupWithRisk(),
         );
 
         $br = $backupRiskService->create(
             new CreateBackupRiskDTO(
-                2,
+                4,
                 3,
-                RiskTypeEnum::TIME,
+                RiskTypeEnum::SIZE,
                 true,
                 0,
                 13240,
@@ -44,6 +44,19 @@ class BackupController extends Controller
             )
         );
 
+        $notificationService = new SendNotificationService(
+            new NotifyBackupWithRisk(
+                $br,
+                "gabadev63@gmail.com"
+            ),
+        );
+        $notificationService->addNotificationMethod(
+            new NotifyBackupWithRisk(
+                $br,
+                "gabrielrehbei@gmail.com"
+            )
+        );
+        $notificationService->sendNotifications();
 
         return JSONResponse::success(
             null,

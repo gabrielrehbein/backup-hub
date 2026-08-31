@@ -11,6 +11,7 @@ use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
 use App\Modules\Backups\Errors\RiskTypeIsUniqueByBackupHttpException;
 use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Contracts\Strategies\Notifiable;
+use App\Modules\Notifications\Services\SendNotificationService;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 
 class BackupRiskService implements BackupRiskServiceInterface
@@ -18,15 +19,8 @@ class BackupRiskService implements BackupRiskServiceInterface
     public function __construct(
         private readonly BackupRiskRepositoryInterface $backupRiskRepository,
         private readonly BackupRepositoryInterface $backupRepository,
-        private readonly Notifiable $notify,
     ) {}
 
-    private function notifyIfNeeded(BackupRisk $backupRisk): void
-    {
-        if($backupRisk->risk->notifiable && $backupRisk->is_active){
-            $this->notify->send($backupRisk);
-        }
-    }
 
     private function backupWithRiskAlreadyExists(int $backupId, RiskTypeEnum $riskType): bool {
         return $this->backupRepository->existsByRiskType($backupId, $riskType);
@@ -43,7 +37,6 @@ class BackupRiskService implements BackupRiskServiceInterface
             throw new RiskTypeIsUniqueByBackupHttpException();
         }
         $backupRisk = $this->backupRiskRepository->create($payload);
-        $this->notifyIfNeeded($backupRisk);
         return $backupRisk;
     }
 
@@ -57,7 +50,6 @@ class BackupRiskService implements BackupRiskServiceInterface
         $backupRisk = $this->findById($id);
 
         $updatedBackupRisk = $this->backupRiskRepository->update($payload, $backupRisk);
-        $this->notifyIfNeeded($updatedBackupRisk);
         return $updatedBackupRisk;
     }
 
@@ -66,7 +58,6 @@ class BackupRiskService implements BackupRiskServiceInterface
         $backupRisk = $this->findById($id);
         $backupRisk->is_active = ! $backupRisk->is_active;
         $backupRisk->save();
-        $this->notifyIfNeeded($backupRisk);
 
         return $backupRisk;
     }
