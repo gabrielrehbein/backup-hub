@@ -2,18 +2,22 @@
 
 namespace App\Modules\Backups\Services;
 
+use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
 use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
+use App\Modules\Backups\Errors\RiskTypeIsUniqueByBackupHttpException;
 use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Contracts\Strategies\Notifiable;
+use App\Modules\Risks\Enums\RiskTypeEnum;
 
 class BackupRiskService implements BackupRiskServiceInterface
 {
     public function __construct(
         private readonly BackupRiskRepositoryInterface $backupRiskRepository,
+        private readonly BackupRepositoryInterface $backupRepository,
         private readonly Notifiable $notify,
     ) {}
 
@@ -24,6 +28,10 @@ class BackupRiskService implements BackupRiskServiceInterface
         }
     }
 
+    private function backupWithRiskAlreadyExists(int $backupId, RiskTypeEnum $riskType): bool {
+        return $this->backupRepository->existsByRiskType($backupId, $riskType);
+    }
+
     public function list(FilterBackupRiskDTO $filters): iterable
     {
         return $this->backupRiskRepository->list($filters);
@@ -31,6 +39,9 @@ class BackupRiskService implements BackupRiskServiceInterface
 
     public function create(CreateBackupRiskDTO $payload): BackupRisk
     {
+        if ($this->backupWithRiskAlreadyExists($payload->backupId, $payload->type)){
+            throw new RiskTypeIsUniqueByBackupHttpException();
+        }
         $backupRisk = $this->backupRiskRepository->create($payload);
         $this->notifyIfNeeded($backupRisk);
         return $backupRisk;

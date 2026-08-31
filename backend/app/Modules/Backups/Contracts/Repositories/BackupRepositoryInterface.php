@@ -23,4 +23,5 @@ interface BackupRepositoryInterface
     public function getTotalBackupsGeneratedToday(): int;
     public function findLastBackups(int $limit, ?bool $isLocal): iterable;
     public function findLastBackupsByClient(): iterable;
+    public function existsByRiskType(?int $backupId, RiskTypeEnum $riskType, bool $onlyActive = true): bool;
 }

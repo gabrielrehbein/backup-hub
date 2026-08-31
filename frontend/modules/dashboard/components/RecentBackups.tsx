@@ -1,5 +1,6 @@
 import { formatDate } from "date-fns";
 import { Backup } from "../types/metrics.types";
+import { CircleCheckIcon, CircleXIcon } from "lucide-react";
 
 type RecentBackupsProps = {
     backups: Backup[];
@@ -34,6 +35,10 @@ export function RecentBackups({
                             </th>
 
                             <th className="px-6 py-3 font-medium text-slate-500">
+                                Sistema
+                            </th>
+
+                            <th className="px-6 py-3 font-medium text-slate-500">
                                 Gerado em
                             </th>
 
@@ -50,7 +55,7 @@ export function RecentBackups({
                             </th>
 
                             <th className="px-6 py-3 font-medium text-slate-500">
-                                Local
+                                Remoto
                             </th>
                         </tr>
 
@@ -72,6 +77,9 @@ export function RecentBackups({
                                     <td className="px-6 py-4 font-medium text-slate-800">
                                         {backup.client_name}
                                     </td>
+                                    <td className="px-6 py-4 font-medium text-slate-800">
+                                        {backup.system_name}
+                                    </td>
 
                                     <td className="px-6 py-4 text-slate-500">
                                         {backup.generated_at ? new Date(backup.generated_at).toLocaleString() : 'sem data'}
@@ -90,7 +98,7 @@ export function RecentBackups({
                                     </td>
 
                                     <td className="px-6 py-4 text-slate-700">
-                                        {backup.is_local ? "Local" : "Remoto"}
+                                        {backup.is_local ? <CircleXIcon color="#cb1a1a" size={"20px"} /> : <CircleCheckIcon color="#1ccc0f" size={"20px"}/>}
                                     </td>
                                 </tr>
                             ))

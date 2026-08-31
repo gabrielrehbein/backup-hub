@@ -26,11 +26,11 @@ class LastBackupsResource extends JsonResource
             'source_ip' => $this->source_ip,
             'is_local' => $this->is_local,
             'system_instance_id' => $this->system_instance_id,
-            'client_name' => $this->whenLoaded('system_instances', function () {
+            'client_name' => $this->whenLoaded('instances', function () {
                 return $this->instances->client->name;
             }),
-            'system_name' => $this->whenLoaded('system_instances', function () {
-                return $this->instances->name;
+            'system_name' => $this->whenLoaded('instances', function () {
+                return $this->instances->system->name;
             }),
             'version' => $this->version,
             'file_path' => $this->file_path,

@@ -149,7 +149,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
 
     public function findLastBackups(int $limit, ?bool $isLocal): iterable
     {
-        $result = Backup::with("instances.clients")
+        $result = Backup::with("instances.client")
             ->when($isLocal !== null, function ($query) use ($isLocal) {
                 $query->where("is_local", $isLocal);
             })
@@ -163,5 +163,19 @@ class BackupEloquentRepository implements BackupRepositoryInterface
     public function findLastBackupsByClient(): iterable
     {
         return [];
+    }
+
+    public function existsByRiskType(?int $backupId, RiskTypeEnum $riskType, bool $onlyActive = true): bool {
+        return Backup::query()
+            ->when($backupId !== null, function ($query) use ($backupId) {
+                $query->where("backups.id", $backupId);
+            })
+            ->whereHas('risks', function ($query) use ($riskType, $onlyActive) {
+                $query->where('type', $riskType->value);
+                if ($onlyActive) {
+                    $query->where('is_active', true);
+                }
+            })
+            ->exists();
     }
 }

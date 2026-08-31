@@ -11,6 +11,7 @@ use App\Shared\Utils\BuildResponseMessage;
 use App\Shared\Utils\ResourceEnum;
 use App\Modules\Backups\Http\Requests\FilterBackupRequest;
 use App\Modules\Backups\Http\Resources\BackupResource;
+use App\Modules\Backups\Repositories\BackupEloquentRepository;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Backups\Services\BackupRiskService;
 use App\Modules\Notifications\Actions\NotifyBackupWithRisk;
@@ -27,17 +28,18 @@ class BackupController extends Controller
     {
         $backupRiskService = new BackupRiskService(
             new BackupRiskEloquentRepository(),
-            new NotifyBackupWithRisk()
+            new BackupEloquentRepository(),
+            new NotifyBackupWithRisk(),
         );
 
         $br = $backupRiskService->create(
             new CreateBackupRiskDTO(
-                1,
+                2,
                 3,
                 RiskTypeEnum::TIME,
                 true,
-                2500,
                 0,
+                13240,
                 ""
             )
         );

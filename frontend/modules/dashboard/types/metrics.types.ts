@@ -24,6 +24,7 @@ export type BackupsGeneratedToday = {
 };
 export interface Backup {
     client_name: string;
+    system_name: string;
     generated_at: Date;
     size: number;
     size_type: SizeUnit;
