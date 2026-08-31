@@ -34,7 +34,11 @@ class Backup extends Model
     }
 
     public function instances(): BelongsTo {
-        return $this->belongsTo(SystemInstance::class);
+        return $this->belongsTo(
+            SystemInstance::class,
+            'system_instance_id',
+            'id'
+        );
     }
 
     public function getRiskAttribute(){

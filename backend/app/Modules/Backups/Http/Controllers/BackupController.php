@@ -3,6 +3,7 @@
 namespace App\Modules\Backups\Http\Controllers;
 
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
+use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\Http\Requests\StoreBackupRequest;
 use App\Shared\Http\Controllers\Controller;
 use App\Shared\Http\Responses\JSONResponse;
@@ -10,12 +11,44 @@ use App\Shared\Utils\BuildResponseMessage;
 use App\Shared\Utils\ResourceEnum;
 use App\Modules\Backups\Http\Requests\FilterBackupRequest;
 use App\Modules\Backups\Http\Resources\BackupResource;
+use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
+use App\Modules\Backups\Services\BackupRiskService;
+use App\Modules\Notifications\Actions\NotifyBackupWithRisk;
+use App\Modules\Risks\Enums\RiskTypeEnum;
+use App\Modules\Systems\Models\SystemInstance;
 
 class BackupController extends Controller
 {
     public function __construct(
         private readonly BackupServiceInterface $backupService
     ) {}
+
+    public function testRisk()
+    {
+        $backupRiskService = new BackupRiskService(
+            new BackupRiskEloquentRepository(),
+            new NotifyBackupWithRisk()
+        );
+
+        $br = $backupRiskService->create(
+            new CreateBackupRiskDTO(
+                1,
+                3,
+                RiskTypeEnum::TIME,
+                true,
+                2500,
+                0,
+                ""
+            )
+        );
+
+
+        return JSONResponse::success(
+            null,
+            "teste",
+            200
+        );
+    }
 
     public function index(FilterBackupRequest $request)
     {

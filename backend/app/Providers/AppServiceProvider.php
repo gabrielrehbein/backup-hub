@@ -44,6 +44,8 @@ use App\Modules\Clients\Contracts\Services\ClientAuthenticationServiceInterface;
 use App\Modules\Clients\Services\ClientAuthenticationService;
 use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
 use App\Modules\Dashboard\Services\DashboardService;
+use App\Modules\Notifications\Actions\NotifyBackupWithRisk;
+use App\Modules\Notifications\Contracts\Strategies\Notifiable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -139,6 +141,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             DashboardServiceInterface::class,
             DashboardService::class
+        );
+        $this->app->bind(
+            Notifiable::class,
+            NotifyBackupWithRisk::class
         );
 
     }

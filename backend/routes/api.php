@@ -10,3 +10,8 @@ require base_path('app/Modules/Systems/Routes/systemInstanceRoutes.php');
 require base_path('app/Modules/Backups/Routes/backupRoutes.php');
 require base_path('app/Modules/Auth/Routes/authRoutes.php');
 require base_path('app/Modules/Dashboard/Routes/dashboardRoutes.php');
+
+use App\Modules\Notifications\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('/notifications/send', [NotificationController::class, 'send']);

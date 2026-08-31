@@ -3,6 +3,7 @@
 namespace App\Modules\Clients\Models;
 
 use App\Modules\Clients\Database\Factories\ClientFactory;
+use App\Modules\Systems\Models\SystemInstance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,11 @@ class Client extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    public function instances()
+    {
+        return $this->hasMany(SystemInstance::class);
     }
 
     protected static function newFactory()

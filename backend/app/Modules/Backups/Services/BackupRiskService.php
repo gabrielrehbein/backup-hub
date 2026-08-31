@@ -8,12 +8,21 @@ use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
 use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
 use App\Modules\Backups\Models\BackupRisk;
+use App\Modules\Notifications\Contracts\Strategies\Notifiable;
 
 class BackupRiskService implements BackupRiskServiceInterface
 {
     public function __construct(
-        private readonly BackupRiskRepositoryInterface $backupRiskRepository
+        private readonly BackupRiskRepositoryInterface $backupRiskRepository,
+        private readonly Notifiable $notify,
     ) {}
+
+    private function notifyIfNeeded(BackupRisk $backupRisk): void
+    {
+        if($backupRisk->risk->notifiable && $backupRisk->is_active){
+            $this->notify->send($backupRisk);
+        }
+    }
 
     public function list(FilterBackupRiskDTO $filters): iterable
     {
@@ -22,7 +31,9 @@ class BackupRiskService implements BackupRiskServiceInterface
 
     public function create(CreateBackupRiskDTO $payload): BackupRisk
     {
-        return $this->backupRiskRepository->create($payload);
+        $backupRisk = $this->backupRiskRepository->create($payload);
+        $this->notifyIfNeeded($backupRisk);
+        return $backupRisk;
     }
 
     public function findById(int $id): BackupRisk
@@ -34,7 +45,9 @@ class BackupRiskService implements BackupRiskServiceInterface
     {
         $backupRisk = $this->findById($id);
 
-        return $this->backupRiskRepository->update($payload, $backupRisk);
+        $updatedBackupRisk = $this->backupRiskRepository->update($payload, $backupRisk);
+        $this->notifyIfNeeded($updatedBackupRisk);
+        return $updatedBackupRisk;
     }
 
     public function toggleIsActive(int $id): BackupRisk
@@ -42,6 +55,7 @@ class BackupRiskService implements BackupRiskServiceInterface
         $backupRisk = $this->findById($id);
         $backupRisk->is_active = ! $backupRisk->is_active;
         $backupRisk->save();
+        $this->notifyIfNeeded($backupRisk);
 
         return $backupRisk;
     }
