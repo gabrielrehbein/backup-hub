@@ -3,6 +3,7 @@
 namespace App\Modules\Backups\Services;
 
 use App\Modules\Backups\Actions\SizeConveterAction;
+use App\Modules\Backups\Actions\VerifyBackupSizeAction;
 use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
@@ -11,7 +12,9 @@ use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
-
+use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
+use App\Modules\Notifications\Services\SendNotificationService;
+use App\Modules\Systems\Repositories\SystemInstanceEloquentRepository;
 
 class BackupService implements BackupServiceInterface
 {
@@ -40,7 +43,18 @@ class BackupService implements BackupServiceInterface
             filePath: $payload->filePath,
             version: $payload->version
         );
-        return $this->backupRepository->create($BackupDTOWithConvertedSize);
+        $backup = $this->backupRepository->create($BackupDTOWithConvertedSize);
+        $verifyBackupSizeAction = new VerifyBackupSizeAction(
+            $this->backupRepository,
+            new BackupRiskService(
+                new BackupRiskEloquentRepository(),
+                $this->backupRepository,
+                new SendNotificationService()
+            ),
+            new SystemInstanceEloquentRepository(),
+        );
+        $verifyBackupSizeAction->execute($backup);
+        return $backup;
     }
 
     public function findById(int $id): Backup
