@@ -2,21 +2,19 @@
 
 namespace App\Modules\Notifications\Services;
 
-use App\Modules\Notifications\Contracts\Strategies\NotifiableStrategy;
+use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
+use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
 
-class SendNotificationService
+
+class SendNotificationService implements NotificationServiceInterface
 {
     private array $notificationMethods = [];
 
-    public function __construct(
-        NotifiableStrategy $notifiable
-    ){
-        $this->notificationMethods[] = $notifiable;
-    }
+    public function __construct(){}
 
-    public function addNotificationMethod(NotifiableStrategy $notifiable): void
+    public function addNotificationMethod(NotifyMethodStrategy $method): void
     {
-        $this->notificationMethods[] = $notifiable;
+        $this->notificationMethods[] = $method;
     }
 
     public function getNotificationMethods(): array

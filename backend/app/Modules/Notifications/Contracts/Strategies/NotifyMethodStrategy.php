@@ -2,7 +2,7 @@
 
 namespace App\Modules\Notifications\Contracts\Strategies;
 
-interface NotifiableStrategy
+interface NotifyMethodStrategy
 {
     public function send();
 }

@@ -5,9 +5,10 @@ namespace App\Modules\Notifications\Actions;
 use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Mail\BackupRiskMail;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\Notifications\Contracts\Strategies\NotifiableStrategy;
+use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
 
-class NotifyBackupWithRiskByMail implements NotifiableStrategy
+
+class NotifyBackupRiskByMail implements NotifyMethodStrategy
 {
     private string $to;
     private BackupRisk $content;
