@@ -99,7 +99,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         ?int $excludeBackupId = null
     ): ?Backup {
         return Backup::query()
-            ->where('backups.system_instance_id', $systemInstanceId)
+            ->whereColumn('backups.system_instance_id', '=', $systemInstanceId)
             ->when(
                 $excludeBackupId !== null,
                 fn ($query) => $query->where('backups.id', '<>', $excludeBackupId)

@@ -28,15 +28,18 @@ class VerifyBackupSizeAction
 
     private function calculateSizeLossPercentage(Backup $currentBackup, ?Backup $lastSizeValidBackup): float
     {
-        if (
-            (!$lastSizeValidBackup or $lastSizeValidBackup->file_size_kb === 0 or $currentBackup->file_size_kb === 0) 
-            or 
-            ($currentBackup->file_size_kb >= $lastSizeValidBackup->file_size_kb)
-        ) {
+        if(!$lastSizeValidBackup){
+            return 0;
+        }
+        if( $currentBackup->file_size_kb >= $lastSizeValidBackup->file_size_kb){
+            return 0;
+        }
+        if ($currentBackup->file_size_kb === 0 || $lastSizeValidBackup->file_size_kb === 0) {
             return 0;
         }
 
         $sizeDifference = $lastSizeValidBackup->file_size_kb - $currentBackup->file_size_kb;
+
         return ($sizeDifference / $lastSizeValidBackup->file_size_kb) * 100;
     }
 
@@ -58,14 +61,15 @@ class VerifyBackupSizeAction
 
         $risks = $this->systemInstanceRepository
             ->findById($backup->system_instance_id)
-            ->client()
-            ->plan()
+            ->client
+            ->plan
             ->risks()
-            ->orderByDesc('level')->get();
+            ->orderByDesc('level')
+            ->get();
 
         // Avalia os riscos de tamanho do backup e cria um novo risco se necessário
         foreach ($risks as $risk) { 
-            if($risk->max_size_loss_in_percent >= $sizeLossPercentage){
+            if($sizeLossPercentage > $risk->max_size_loss_in_percent){
                 $createBackupRiskDTO = new CreateBackupRiskDTO(
                     backupId: $backup->id,
                     riskId: $risk->id,

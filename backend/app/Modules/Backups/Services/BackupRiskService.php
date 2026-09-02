@@ -63,7 +63,9 @@ class BackupRiskService implements BackupRiskServiceInterface
     public function update(UpdateBackupRiskDTO $payload, int $id): BackupRisk
     {
         $backupRisk = $this->findById($id);
-
+        if ($payload->type !== $backupRisk->risk->type && $this->backupWithRiskAlreadyExists($payload->backupId, $payload->type)){
+            throw new RiskTypeIsUniqueByBackupHttpException();
+        }
         $updatedBackupRisk = $this->backupRiskRepository->update($payload, $backupRisk);
         $this->notifyIfNeeded($updatedBackupRisk);
         return $updatedBackupRisk;
