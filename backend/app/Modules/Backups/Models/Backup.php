@@ -30,7 +30,7 @@ class Backup extends Model
 
     public function risks(): HasMany
     {
-        return $this->hasMany(BackupRisk::class);
+        return $this->hasMany(BackupRisk::class,);
     }
 
     public function instances(): BelongsTo {
@@ -42,11 +42,9 @@ class Backup extends Model
     }
 
     public function getRiskAttribute(){
-        $risks = $this->risks()
-            ->where('is_active', true)
-            ->get();
+        $backupRisks = $this->risks()->where('is_active', true)->get();
 
-        $riskQuantity = $risks->count();
+        $riskQuantity = $backupRisks->count();
 
         if ($riskQuantity === 0) {
             return 0;
@@ -54,8 +52,8 @@ class Backup extends Model
 
         $totalRisksLevel = 0;
 
-        foreach ($risks as $risk) {
-            $totalRisksLevel += $risk->riskType->level ?? 0;
+        foreach ($backupRisks as $backupRisk) {
+            $totalRisksLevel += $backupRisk->risk->level ?? 0;
         }
 
         return $totalRisksLevel / $riskQuantity;
