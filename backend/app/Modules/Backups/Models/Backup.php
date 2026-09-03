@@ -44,19 +44,9 @@ class Backup extends Model
     public function getRiskAttribute(){
         $backupRisks = $this->risks()->where('is_active', true)->get();
 
-        $riskQuantity = $backupRisks->count();
+        $totalRisk = $backupRisks->sum(fn($backupRisk) => $backupRisk->risk->level ?? 0);
 
-        if ($riskQuantity === 0) {
-            return 0;
-        }
-
-        $totalRisksLevel = 0;
-
-        foreach ($backupRisks as $backupRisk) {
-            $totalRisksLevel += $backupRisk->risk->level ?? 0;
-        }
-
-        return $totalRisksLevel / $riskQuantity;
+        return $totalRisk;
     }
     
 }

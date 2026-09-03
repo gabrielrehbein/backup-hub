@@ -52,6 +52,10 @@ class VerifyBackupSizeAction
             $backup->id
         );
 
+        if($lastSizeValidBackup === null){
+            return;
+        }
+
         // Calcula o tamanho perdido desde o último backup válido para o mesmo sistema
         $sizeLossPercentage = $this->calculateSizeLossPercentage($backup, $lastSizeValidBackup);
 

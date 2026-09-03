@@ -14,6 +14,7 @@ use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Notifications\Services\SendNotificationService;
+use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Modules\Systems\Repositories\SystemInstanceEloquentRepository;
 
 class BackupService implements BackupServiceInterface
@@ -54,6 +55,19 @@ class BackupService implements BackupServiceInterface
             new SystemInstanceEloquentRepository(),
         );
         $verifyBackupSizeAction->execute($backup);
+
+        $backupWithTimeRisk = $this->backupRepository->findLastBackupWithRiskByRiskType(
+            $backup->system_instance_id,
+            RiskTypeEnum::TIME,
+        );
+
+        if($backupWithTimeRisk) {
+            $this->backupRepository->deactivateRisk(
+                $backupWithTimeRisk->id,
+                RiskTypeEnum::TIME
+            );
+        }
+
         return $backup;
     }
 
@@ -64,6 +78,9 @@ class BackupService implements BackupServiceInterface
 
     public function update(UpdateBackupDTO $payload, int $id): Backup
     {
+        if($payload->generatedAt > now()) {
+            throw new BackupInFutureHttpException();
+        }
         $backup = $this->backupRepository->findById($id);
 
         return $this->backupRepository->update($payload, $backup);
