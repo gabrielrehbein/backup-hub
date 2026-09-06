@@ -12,6 +12,8 @@ require base_path('app/Modules/Auth/Routes/authRoutes.php');
 require base_path('app/Modules/Dashboard/Routes/dashboardRoutes.php');
 
 use App\Modules\Notifications\Http\Controllers\NotificationController;
+use App\Shared\Http\Controllers\SeederController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/notifications/send', [NotificationController::class, 'send']);
+Route::post('/seed', [SeederController::class, 'seed']);
