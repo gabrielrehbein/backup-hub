@@ -17,4 +17,5 @@ interface ClientRepositoryInterface
     public function findByExternalId(string $externalId): Client;
     public function refreshApiKey(string $apiKey, Client $client): Client;
     public function getTotalClients(): int;
+    public function findByApiKeyIdentifier(string $apiKey): Client;
 }

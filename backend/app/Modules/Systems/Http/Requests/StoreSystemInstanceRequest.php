@@ -28,8 +28,8 @@ class StoreSystemInstanceRequest extends BaseFormRequest
     {
         return [
             'version' => ['required', 'string', 'max:30'],
-            'client_id' => ['required', 'integer', 'exists:clients,id', 'unique:system_instances,client_id,system_id'],
-            'system_id' => ['required', 'integer', 'exists:systems,id', 'unique:system_instances,client_id,system_id'],
+            'client_id' => ['required', 'integer', 'exists:clients,id'],
+            'system_id' => ['required', 'integer', 'exists:systems,id'],
         ];
     }
 

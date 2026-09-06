@@ -44,4 +44,8 @@ class ClientEloquentRepository implements ClientRepositoryInterface
     public function getTotalClients(): int {
         return Client::count();
     }
+
+    public function findByApiKeyIdentifier(string $identifier): Client {
+        return Client::firstWhere("api_key", "like", $identifier . ".%");
+    }
 }

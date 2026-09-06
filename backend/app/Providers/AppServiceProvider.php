@@ -41,14 +41,26 @@ use App\Shared\Security\Actions\UuidApiKeyGenerator;
 use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Modules\Clients\Contracts\Services\ClientAuthenticationServiceInterface;
+use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Services\ClientAuthenticationService;
 use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
 use App\Modules\Dashboard\Services\DashboardService;
+use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
 use App\Modules\Notifications\Actions\NotifyBackupWithRisk;
 use App\Modules\Notifications\Contracts\Strategies\Notifiable;
+use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
+use App\Modules\Systems\Models\SystemInstance;
+use App\Modules\Systems\Policies\SystemInstancePolicy;
+use App\Shared\Security\Actions\UuidApiKeyWithIdentifierGenerator;
+
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
+    protected $policies = [
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Modules\Backups\Models\Backup' => 'App\Modules\Backups\Policies\BackupPolicy',
+    ];
     /**
      * Register any application services.
      */
@@ -82,7 +94,7 @@ class AppServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             ApiKeyGeneratorInterface::class,
-            UuidApiKeyGenerator::class
+            UuidApiKeyWithIdentifierGenerator::class
         );
 
         $this->app->bind(
@@ -143,8 +155,8 @@ class AppServiceProvider extends ServiceProvider
             DashboardService::class
         );
         $this->app->bind(
-            Notifiable::class,
-            NotifyBackupWithRisk::class
+            NotifyMethodStrategy::class,
+            NotifyBackupRiskByMail::class
         );
 
     }
@@ -154,6 +166,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('uploadBackup', function (
+            Client $client,
+            SystemInstance $instance
+        ): bool {
+            return $instance->client_id === $client->id;
+        });
+
     }
 }

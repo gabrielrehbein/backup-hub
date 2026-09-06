@@ -21,19 +21,21 @@ class CheckClientAPIKey
     public function handle(Request $request, Closure $next): Response
     {
         $apiKey = $request->header('X-API-KEY');
-        $externalClientId = $request->input('external_client_id');
 
-        if (empty($apiKey) || empty($externalClientId)) {
+        if (empty($apiKey)) {
             return JSONResponse::error(
-                'API Key e external_client_id são obrigatórios.',
+                'API Key é obrigatória.',
                 400
             );
         }
 
-        if (!$this->clientAuthService->isValidAPIKey($externalClientId, $apiKey)) {
+        $client = $this->clientAuthService->isValidAPIKey($apiKey);
+
+        if (!$client) {
             return JSONResponse::error('A chave de API é inválida.', 401);
         }
 
+        $request->attributes->set('client', $client);
         return $next($request);
     }
 }

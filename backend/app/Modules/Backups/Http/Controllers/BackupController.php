@@ -4,6 +4,7 @@ namespace App\Modules\Backups\Http\Controllers;
 
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
+use App\Modules\Backups\Errors\InstanceNotBelongsToClientHttpException;
 use App\Modules\Backups\Http\Requests\StoreBackupRequest;
 use App\Shared\Http\Controllers\Controller;
 use App\Shared\Http\Responses\JSONResponse;
@@ -17,12 +18,15 @@ use App\Modules\Backups\Services\BackupRiskService;
 use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
 use App\Modules\Notifications\Services\SendNotificationService;
 use App\Modules\Risks\Enums\RiskTypeEnum;
-
+use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\UnauthorizedException;
 
 class BackupController extends Controller
 {
     public function __construct(
-        private readonly BackupServiceInterface $backupService
+        private readonly BackupServiceInterface $backupService,
+        private readonly SystemInstanceServiceInterface $systemInstanceService
     ) {}
 
     public function testRisk()
@@ -73,6 +77,15 @@ class BackupController extends Controller
 
     public function store(StoreBackupRequest $request)
     {
+        $createBackupDTO = $request->toDTO();
+        $client = $request->attributes->get('client');
+        
+        $systemInstance = $this->systemInstanceService->findById($createBackupDTO->systemInstanceId);
+
+        if ($client->id !== $systemInstance->client_id) {
+            throw new InstanceNotBelongsToClientHttpException();
+        }
+
         $backup = $this->backupService->create($request->toDTO());
         return JSONResponse::success(
             $backup,

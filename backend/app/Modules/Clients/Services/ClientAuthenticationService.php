@@ -15,17 +15,23 @@ class ClientAuthenticationService implements ClientAuthenticationServiceInterfac
         private ClientRepositoryInterface $clientRepository
     ) {}
 
-    public function isValidAPIKey(string $externalClientId, string $apiKey): bool
+    public function isValidAPIKey(string $apiKey): Client
     {
-        $client = $this->clientRepository->findByExternalId($externalClientId);
+        $identifier = explode('.', $apiKey, 2)[0];
+        $key = explode('.', $apiKey, 2)[1];
+
+        $client = $this->clientRepository->findByApiKeyIdentifier($identifier);
+
+        $clientIdentifier = explode('.', $client->api_key, 2)[0];
+        $clientKey = explode('.', $client->api_key, 2)[1];
 
         if(!$client->is_active){
             throw new ClientInactiveHttpException();
         }
-        if (!Hash::check($apiKey, $client->api_key)) {
+        if ($identifier !== $clientIdentifier || !Hash::check($key, $clientKey)) {
             throw new InvalidApiKeyHttpException();
         }
 
-        return true;
+        return $client;
     }
 }
