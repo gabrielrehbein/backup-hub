@@ -147,11 +147,17 @@ class BackupEloquentRepository implements BackupRepositoryInterface
             ->count();
     }
 
-    public function findLastBackups(int $limit, ?bool $isLocal): iterable
+    public function findLastBackups(int $limit, ?bool $isLocal = null, ?int $excludeBackupId = null, ?int $systemInstanceId = null): iterable
     {
         $result = Backup::with("instances.client")
             ->when($isLocal !== null, function ($query) use ($isLocal) {
                 $query->where("is_local", $isLocal);
+            })
+            ->when($excludeBackupId !== null, function ($query) use ($excludeBackupId) {
+                $query->where("backups.id", "<>", $excludeBackupId);
+            })
+            ->when($systemInstanceId !== null, function ($query) use ($systemInstanceId) {
+                $query->where("backups.system_instance_id", $systemInstanceId);
             })
             ->orderByDesc("generated_at")
             ->limit($limit)

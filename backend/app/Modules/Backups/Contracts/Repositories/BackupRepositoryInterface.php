@@ -21,7 +21,7 @@ interface BackupRepositoryInterface
     public function getTotalBackups(): int;
     public function findBackupsGeneratedToday(): iterable;
     public function getTotalBackupsGeneratedToday(): int;
-    public function findLastBackups(int $limit, ?bool $isLocal): iterable;
+    public function findLastBackups(int $limit, ?bool $isLocal = null, ?int $excludeBackupId = null, ?int $systemInstanceId = null): iterable;
     public function findLastBackupsByClient(): iterable;
     public function existsByRiskType(?int $backupId, RiskTypeEnum $riskType, bool $onlyActive = true): bool;
 }
