@@ -55,6 +55,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         if ($backup->isDirty()) {
             $backup->save();
         }
+
         return $backup;
     }
 
@@ -149,17 +150,17 @@ class BackupEloquentRepository implements BackupRepositoryInterface
 
     public function findLastBackups(int $limit, ?bool $isLocal = null, ?int $excludeBackupId = null, ?int $systemInstanceId = null): iterable
     {
-        $result = Backup::with("instances.client")
+        $result = Backup::with('instances.client')
             ->when($isLocal !== null, function ($query) use ($isLocal) {
-                $query->where("is_local", $isLocal);
+                $query->where('is_local', $isLocal);
             })
             ->when($excludeBackupId !== null, function ($query) use ($excludeBackupId) {
-                $query->where("backups.id", "<>", $excludeBackupId);
+                $query->where('backups.id', '<>', $excludeBackupId);
             })
             ->when($systemInstanceId !== null, function ($query) use ($systemInstanceId) {
-                $query->where("backups.system_instance_id", $systemInstanceId);
+                $query->where('backups.system_instance_id', $systemInstanceId);
             })
-            ->orderByDesc("generated_at")
+            ->orderByDesc('generated_at')
             ->limit($limit)
             ->get();
 
@@ -171,10 +172,11 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         return [];
     }
 
-    public function existsByRiskType(?int $backupId, RiskTypeEnum $riskType, bool $onlyActive = true): bool {
+    public function existsByRiskType(?int $backupId, RiskTypeEnum $riskType, bool $onlyActive = true): bool
+    {
         return Backup::query()
             ->when($backupId !== null, function ($query) use ($backupId) {
-                $query->where("backups.id", $backupId);
+                $query->where('backups.id', $backupId);
             })
             ->whereHas('risks', function ($query) use ($riskType, $onlyActive) {
                 $query->where('type', $riskType->value);
@@ -183,5 +185,16 @@ class BackupEloquentRepository implements BackupRepositoryInterface
                 }
             })
             ->exists();
+    }
+
+    public function listLastBackupsGroupedBySystemInstance(): iterable
+    {
+        return Backup::query()
+            ->whereRaw('generated_at = (
+        SELECT MAX(b2.generated_at)
+        FROM backups b2
+        WHERE b2.system_instance_id = backups.system_instance_id
+    )')
+            ->get();
     }
 }

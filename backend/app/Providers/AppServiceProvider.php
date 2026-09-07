@@ -47,8 +47,10 @@ use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
 use App\Modules\Dashboard\Services\DashboardService;
 use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
 use App\Modules\Notifications\Actions\NotifyBackupWithRisk;
+use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
 use App\Modules\Notifications\Contracts\Strategies\Notifiable;
 use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
+use App\Modules\Notifications\Services\SendNotificationService;
 use App\Modules\Systems\Models\SystemInstance;
 use App\Modules\Systems\Policies\SystemInstancePolicy;
 use App\Shared\Security\Actions\UuidApiKeyWithIdentifierGenerator;
@@ -157,6 +159,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             NotifyMethodStrategy::class,
             NotifyBackupRiskByMail::class
+        );
+        $this->app->bind(
+            NotificationServiceInterface::class,
+            SendNotificationService::class
         );
 
     }

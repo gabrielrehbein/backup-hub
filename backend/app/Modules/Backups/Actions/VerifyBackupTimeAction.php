@@ -39,7 +39,7 @@ class VerifyBackupTimeAction
 
     }
 
-    public function execute(Backup $backup)
+    public function execute(Backup $backup): bool
     {
         // Pega último backup do mesmo sistema
         $lastValidBackup = $this->backupRepository->findLastBackups(
@@ -52,7 +52,7 @@ class VerifyBackupTimeAction
         $lastValidBackup = $lastValidBackup->first();
 
         if($lastValidBackup === null){
-            return;
+            return true;
         }
 
         // Calcula o tempo em minutos perdido desde o último backup para o mesmo sistema
@@ -80,10 +80,10 @@ class VerifyBackupTimeAction
                     description: $this->buildRiskMessage($backup, RiskTypeEnum::TIME, $timeDifferenceInMinutes) 
                 );
                 $this->backupRiskService->create($createBackupRiskDTO);
-
-                break;
+                return false;
             }
         }
 
+        return true;
     }
 }
