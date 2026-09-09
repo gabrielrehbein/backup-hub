@@ -27,36 +27,16 @@ class VerifyBackupTimeAction
         };
     }
 
-    private function calculateTimeDifferenceInMinutes(Backup $currentBackup, ?Backup $lastValidBackup): float
+    private function calculateTimeDifferenceInMinutes(Backup $backup): float
     {
-        if(!$lastValidBackup){
-            return 0;
-        }
-        $currentBackupTime = Carbon::parse($currentBackup->generated_at);
-        $lastValidBackupTime = Carbon::parse($lastValidBackup->generated_at);
-
-        return $currentBackupTime->diffInMinutes($lastValidBackupTime);
-
+        return (float) $backup->generated_at->diffInMinutes(Carbon::now());
     }
 
     public function execute(Backup $backup): bool
     {
-        // Pega último backup do mesmo sistema
-        $lastValidBackup = $this->backupRepository->findLastBackups(
-            1,
-            null,
-            $backup->id,
-            $backup->system_instance_id
-        );
-
-        $lastValidBackup = $lastValidBackup->first();
-
-        if($lastValidBackup === null){
-            return true;
-        }
 
         // Calcula o tempo em minutos perdido desde o último backup para o mesmo sistema
-        $timeDifferenceInMinutes = $this->calculateTimeDifferenceInMinutes($backup, $lastValidBackup);
+        $timeDifferenceInMinutes = $this->calculateTimeDifferenceInMinutes($backup);
 
 
         $risks = $this->systemInstanceRepository
@@ -68,7 +48,7 @@ class VerifyBackupTimeAction
             ->get();
 
         // Avalia os riscos de tempo do backup e cria um novo risco se necessário
-        foreach ($risks as $risk) { 
+        foreach ($risks as $risk) {
             if($timeDifferenceInMinutes > $risk->max_delay_limit_in_minutes){
                 $createBackupRiskDTO = new CreateBackupRiskDTO(
                     backupId: $backup->id,
@@ -77,7 +57,7 @@ class VerifyBackupTimeAction
                     isActive: true,
                     delayInMinutes: $timeDifferenceInMinutes,
                     sizeLossPercent: 0,
-                    description: $this->buildRiskMessage($backup, RiskTypeEnum::TIME, $timeDifferenceInMinutes) 
+                    description: $this->buildRiskMessage($backup, RiskTypeEnum::TIME, $timeDifferenceInMinutes)
                 );
                 $this->backupRiskService->create($createBackupRiskDTO);
                 return false;

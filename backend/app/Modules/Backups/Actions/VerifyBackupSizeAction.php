@@ -45,6 +45,7 @@ class VerifyBackupSizeAction
 
     public function execute(Backup $backup)
     {
+
         // Pega último backup válido sem risco de tamanho para o mesmo sistema
         $lastSizeValidBackup = $this->backupRepository->findLastBackupWithoutRiskByRiskType(
             $backup->system_instance_id,
@@ -72,7 +73,7 @@ class VerifyBackupSizeAction
             ->get();
 
         // Avalia os riscos de tamanho do backup e cria um novo risco se necessário
-        foreach ($risks as $risk) { 
+        foreach ($risks as $risk) {
             if($sizeLossPercentage > $risk->max_size_loss_in_percent){
                 $createBackupRiskDTO = new CreateBackupRiskDTO(
                     backupId: $backup->id,
@@ -81,7 +82,7 @@ class VerifyBackupSizeAction
                     isActive: true,
                     delayInMinutes: 0,
                     sizeLossPercent: $sizeLossPercentage,
-                    description: $this->buildRiskMessage($backup, RiskTypeEnum::SIZE, $lastSizeValidBackup->file_size_kb) 
+                    description: $this->buildRiskMessage($backup, RiskTypeEnum::SIZE, $lastSizeValidBackup->file_size_kb)
                 );
                 $this->backupRiskService->create($createBackupRiskDTO);
 

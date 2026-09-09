@@ -24,6 +24,10 @@ class Backup extends Model
         'version'
     ];
 
+    protected $casts = [
+        'generated_at' => 'datetime',
+    ];
+
     protected $appends = [
         'risk'
     ];
@@ -48,5 +52,5 @@ class Backup extends Model
 
         return $totalRisk;
     }
-    
+
 }

@@ -8,6 +8,7 @@ use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
+use Illuminate\Support\Facades\DB;
 
 class BackupEloquentRepository implements BackupRepositoryInterface
 {
@@ -100,7 +101,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         ?int $excludeBackupId = null
     ): ?Backup {
         return Backup::query()
-            ->whereColumn('backups.system_instance_id', '=', $systemInstanceId)
+            ->where('backups.system_instance_id', $systemInstanceId)
             ->when(
                 $excludeBackupId !== null,
                 fn ($query) => $query->where('backups.id', '<>', $excludeBackupId)
@@ -123,7 +124,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
 
         return $backup
             ->risks()
-            ->where('risk_type', $riskType->value)
+            ->where('type', $riskType->value)
             ->update(
                 ['is_active' => false]
             );
@@ -186,15 +187,16 @@ class BackupEloquentRepository implements BackupRepositoryInterface
             })
             ->exists();
     }
-
     public function listLastBackupsGroupedBySystemInstance(): iterable
     {
-        return Backup::query()
-            ->whereRaw('generated_at = (
-        SELECT MAX(b2.generated_at)
-        FROM backups b2
-        WHERE b2.system_instance_id = backups.system_instance_id
-    )')
-            ->get();
+        $results = DB::select(
+            "SELECT DISTINCT ON (system_instance_id) *
+             FROM backups
+             ORDER BY system_instance_id, generated_at DESC"
+        );
+
+        // Converte o array de stdClass em uma coleção de modelos Backup
+        return Backup::hydrate($results);
     }
+
 }
