@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class UuidApiKeyGenerator implements ApiKeyGeneratorInterface
 {
-    public function execute(): UnhashedAndHashedApiKeyDTO {
+    public static function execute(): UnhashedAndHashedApiKeyDTO {
         $unhashedApiKey = (string) Str::uuid();
         $hashedApiKey = Hash::make($unhashedApiKey);
 

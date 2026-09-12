@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 150)->unique();
             $table->string('description', 255)->nullable();
-            $table->string('category', 50);
+            $table->foreignId('category_id')->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

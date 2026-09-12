@@ -6,5 +6,5 @@ use App\Shared\Security\DTOs\UnhashedAndHashedApiKeyDTO;
 
 interface ApiKeyGeneratorInterface
 {
-    public function execute(): UnhashedAndHashedApiKeyDTO;
+    public static function execute(): UnhashedAndHashedApiKeyDTO;
 }

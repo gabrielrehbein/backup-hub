@@ -8,7 +8,7 @@ use App\Modules\Clients\DTOs\CreatePlanDTO;
 use App\Modules\Clients\DTOs\UpdatePlanDTO;
 use App\Modules\Clients\Models\Plan;
 use App\Modules\Risks\Contracts\Services\RiskServiceInterface;
-
+use Illuminate\Support\Facades\DB;
 
 class PlanService implements PlanServiceInterface
 {
@@ -19,11 +19,13 @@ class PlanService implements PlanServiceInterface
 
     public function create(CreatePlanDTO $payload): Plan
     {
-        $plan = $this->planRepository->create($payload);
+        return DB::transaction(function () use ($payload) {
+            $plan = $this->planRepository->create($payload);
 
-        $this->riskService->createDefaultRisksForPlan($plan->id);
+            $this->riskService->createDefaultRisksForPlan($plan->id);
 
-        return $plan;
+            return $plan;
+        });
     }
 
     public function findAll(): iterable

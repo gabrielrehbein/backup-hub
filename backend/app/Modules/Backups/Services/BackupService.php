@@ -10,12 +10,14 @@ use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
+use App\Modules\Backups\Errors\BackupSaveHttpException;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Notifications\Services\SendNotificationService;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Modules\Systems\Repositories\SystemInstanceEloquentRepository;
+use Illuminate\Support\Facades\DB;
 
 class BackupService implements BackupServiceInterface
 {
@@ -31,45 +33,48 @@ class BackupService implements BackupServiceInterface
 
     public function create(CreateBackupRequestDTO $payload): Backup
     {
-
-        if($payload->generatedAt > now()) {
-            throw new BackupInFutureHttpException();
-        }
-        $convertedFileSize = SizeConveterAction::toKb($payload->fileSize, $payload->sizeType);
-        $BackupDTOWithConvertedSize = new CreateBackupDTO(
-            fileSize: $convertedFileSize,
-            generatedAt: $payload->generatedAt,
-            isLocal: $payload->isLocal,
-            systemInstanceId: $payload->systemInstanceId,
-            sourceIp: $payload->sourceIp,
-            filePath: $payload->filePath,
-            version: $payload->version
-        );
-        $backup = $this->backupRepository->create($BackupDTOWithConvertedSize);
-        $verifyBackupSizeAction = new VerifyBackupSizeAction(
-            $this->backupRepository,
-            new BackupRiskService(
-                new BackupRiskEloquentRepository(),
-                $this->backupRepository,
-                new SendNotificationService()
-            ),
-            new SystemInstanceEloquentRepository(),
-        );
-        $verifyBackupSizeAction->execute($backup);
-
-        $backupWithTimeRisk = $this->backupRepository->findLastBackupWithRiskByRiskType(
-            $backup->system_instance_id,
-            RiskTypeEnum::TIME,
-        );
-
-        if($backupWithTimeRisk) {
-            $this->backupRepository->deactivateRisk(
-                $backupWithTimeRisk->id,
-                RiskTypeEnum::TIME
+        return DB::transaction(function () use ($payload) {
+            if($payload->generatedAt > now()) {
+                throw new BackupInFutureHttpException();
+            }
+            $convertedFileSize = SizeConveterAction::toKb($payload->fileSize, $payload->sizeType);
+            $BackupDTOWithConvertedSize = new CreateBackupDTO(
+                fileSize: $convertedFileSize,
+                generatedAt: $payload->generatedAt,
+                isLocal: $payload->isLocal,
+                systemInstanceId: $payload->systemInstanceId,
+                sourceIp: $payload->sourceIp,
+                filePath: $payload->filePath,
+                version: $payload->version
             );
-        }
 
-        return $backup;
+            $backup = $this->backupRepository->create($BackupDTOWithConvertedSize);
+            $verifyBackupSizeAction = new VerifyBackupSizeAction(
+                $this->backupRepository,
+                new BackupRiskService(
+                    new BackupRiskEloquentRepository(),
+                    $this->backupRepository,
+                    new SendNotificationService()
+                ),
+                new SystemInstanceEloquentRepository(),
+            );
+            $verifyBackupSizeAction->execute($backup);
+
+            $backupWithTimeRisk = $this->backupRepository->findLastBackupWithRiskByRiskType(
+                $backup->system_instance_id,
+                RiskTypeEnum::TIME,
+            );
+
+            if($backupWithTimeRisk) {
+                $this->backupRepository->deactivateRisk(
+                    $backupWithTimeRisk->id,
+                    RiskTypeEnum::TIME
+                );
+            }
+
+
+            return $backup;
+        });
     }
 
     public function findById(int $id): Backup
@@ -79,12 +84,27 @@ class BackupService implements BackupServiceInterface
 
     public function update(UpdateBackupDTO $payload, int $id): Backup
     {
-        if($payload->generatedAt > now()) {
-            throw new BackupInFutureHttpException();
-        }
-        $backup = $this->backupRepository->findById($id);
+        return DB::transaction(function () use ($payload, $id) {
+            if($payload->generatedAt > now()) {
+                throw new BackupInFutureHttpException();
+            }
+            $backup = $this->backupRepository->findById($id);
 
-        return $this->backupRepository->update($payload, $backup);
+            $backupUpdated = $this->backupRepository->update($payload, $backup);
+
+            $verifyBackupSizeAction = new VerifyBackupSizeAction(
+                $this->backupRepository,
+                new BackupRiskService(
+                    new BackupRiskEloquentRepository(),
+                    $this->backupRepository,
+                    new SendNotificationService()
+                ),
+                new SystemInstanceEloquentRepository(),
+            );
+            $verifyBackupSizeAction->execute($backup);
+
+            return $backupUpdated;
+        });
     }
 
     public function getTotalBackups(): int

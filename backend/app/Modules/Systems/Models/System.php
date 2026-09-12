@@ -6,6 +6,7 @@ use App\Modules\Systems\Enums\SystemCategoryEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class System extends Model
 {
     /** @use HasFactory<\Database\Factories\SystemFactory> */
@@ -14,7 +15,7 @@ class System extends Model
     protected $fillable = [
         'name',
         'description',
-        'category',
+        'category_id',
     ];
 
     protected $casts = [
@@ -24,5 +25,9 @@ class System extends Model
     public function instances()
     {
         return $this->hasMany(SystemInstance::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
     }
 }
