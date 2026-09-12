@@ -29,7 +29,7 @@ export function Button({ children, className, variant = "primary", size = "mediu
             sizeClasses = "w-12  text-sm";
             break;
         case "medium":
-            sizeClasses = "w-22 text-base";
+            sizeClasses = "w-26 text-base";
             break;
         case "large":
             sizeClasses = "w-full text-lg";

@@ -4,6 +4,7 @@ import { LogOutIcon } from "lucide-react";
 import { Button } from "./Button";
 import { redirect } from "next/navigation";
 import { AuthService } from "@/modules/auth/services/auth.service";
+import { useAuth } from "@/modules/auth/providers/AuthProvider";
 
 type HeaderProps = {
     username?: string;
@@ -11,10 +12,17 @@ type HeaderProps = {
 
 export default function Header({ username }: HeaderProps) {
 
+    const { isAdmin } = useAuth();
+    console.log("isAdmin:", isAdmin);
+
     async function handleLogout() {
         const authService = new AuthService();
         await authService.logout();
         redirect("/auth/login");
+    }
+
+    async function handleAdmin() {
+        redirect("/admin");
     }
 
     return (
@@ -33,14 +41,24 @@ export default function Header({ username }: HeaderProps) {
                     Visão geral dos backups monitorados
                 </p>
             </div>
-            <div>
+            <div className="flex items-center gap-6">
+                {isAdmin && (
+                    
+                <Button
+                        variant="primary"
+                        size="medium"
+                        onClick={handleAdmin}
+                    >
+                        Admin
+                </Button>
+                )}
                 <Button
                     variant="danger"
                     size="medium"
                     onClick={handleLogout}
                 >
                     Sair
-                    <LogOutIcon />
+                    <LogOutIcon size={20}/>
                 </Button>
             </div>
         </header>

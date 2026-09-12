@@ -83,21 +83,23 @@ class BackupRiskEloquentRepository implements BackupRiskRepositoryInterface
 
     public function getTotalBackupRisksByType(?int $backupId = null): array
     {
-        //SEMPRE RETORNA UMA LISTA COM TODOS OS TIPOS DE RISCO, MESMO QUE A QUANTIDADE SEJA 0
         $result = BackupRisk::query()
-            ->selectRaw('type, COUNT(*) as quantity')
-            ->when($backupId !== null, function ($query) use ($backupId) {
-                $query->where('backup_id', $backupId);
-            })
-            ->groupBy('type')
-            ->get()
-            ->map(function ($item) {
-                return new ErrorTypeQuantityDTO(
-                    type: RiskTypeEnum::from($item->type),
-                    quantity: $item->quantity,
-                );
-            })
-            ->toArray();
-        return $result;
+        ->selectRaw('type, COUNT(*) as quantity')
+        ->when($backupId !== null, function ($query) use ($backupId) {
+            $query->where('backup_id', $backupId);
+        })
+        ->groupBy('type')
+        ->pluck('quantity', 'type');
+
+        return [
+            new ErrorTypeQuantityDTO(
+                type: RiskTypeEnum::TIME,
+                quantity: $result[RiskTypeEnum::TIME->value] ?? 0,
+            ),
+            new ErrorTypeQuantityDTO(
+                type: RiskTypeEnum::SIZE,
+                quantity: $result[RiskTypeEnum::SIZE->value] ?? 0,
+            ),
+        ];
     }
 }

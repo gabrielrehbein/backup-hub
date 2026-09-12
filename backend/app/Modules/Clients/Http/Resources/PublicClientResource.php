@@ -11,6 +11,7 @@ class PublicClientResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'external_id' => $this->external_id,
             'plan' => [
