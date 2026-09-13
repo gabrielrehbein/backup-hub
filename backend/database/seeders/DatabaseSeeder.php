@@ -9,6 +9,7 @@ use App\Modules\Risks\Seeders\RiskSeeder;
 use App\Modules\Systems\Seeders\CategorySeeder;
 use App\Modules\Systems\Seeders\SystemInstanceSeeder;
 use App\Modules\Systems\Seeders\SystemSeeder;
+use App\Modules\Users\Seeders\UserSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             RiskSeeder::class,
             ClientSeeder::class,
             SystemInstanceSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
