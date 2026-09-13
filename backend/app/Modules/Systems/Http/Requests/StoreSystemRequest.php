@@ -29,7 +29,7 @@ class StoreSystemRequest extends BaseFormRequest
             return [
                 'name' => ['required', 'string', 'max:100'],
                 'description' => ['nullable', 'string'],
-                'category' => ['required', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(SystemCategoryEnum::cases())],
+                'category_id' => ['required', 'integer', 'exists:categories,id'],
             ];
         }
 

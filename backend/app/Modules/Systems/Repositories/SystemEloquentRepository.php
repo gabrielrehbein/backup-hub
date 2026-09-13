@@ -39,8 +39,8 @@ class SystemEloquentRepository implements SystemRepositoryInterface
         return System::findOrFail($id);
     }
 
-    public function findByCategory(SystemCategoryEnum $category): iterable
+    public function findByCategory(int $categoryId): iterable
     {
-        return System::where('category', $category->value)->get();
+        return System::where('category', $categoryId)->get();
     }
 }

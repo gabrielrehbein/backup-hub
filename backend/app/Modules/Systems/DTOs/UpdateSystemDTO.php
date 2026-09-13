@@ -10,17 +10,16 @@ class UpdateSystemDTO
     public function __construct(
         public readonly ?string $name,
         public readonly ?string $description,
-        public readonly ?SystemCategoryEnum $category,
+        public readonly ?int $category_id,
     ){}
 
     public static function fromArray(array $data): self
     {
-        $category = isset($data['category']) ? SystemCategoryEnum::from($data['category']) : null;
 
         return new self(
             name: $data['name'] ?? null,
             description: $data['description'] ?? null,
-            category: $category,
+            category_id: $data["category"] ?? null,
         );
     }
 
@@ -29,7 +28,7 @@ class UpdateSystemDTO
         return ArrayHelper::removeNullValues([
             'name' => $this->name,
             'description' => $this->description,
-            'category' => $this->category?->value,
+            'category_id' => $this->category_id,
         ]);
     }
 }

@@ -14,5 +14,5 @@ interface SystemRepositoryInterface
     public function delete(System $system): bool;
     public function update(UpdateSystemDTO $payload, System $system): System;
     public function findById(int $id): System;
-    public function findByCategory(SystemCategoryEnum $category): iterable;
+    public function findByCategory(int $categoryId): iterable;
 }

@@ -29,6 +29,7 @@ class StoreUserRequest extends BaseFormRequest
         return [
             'name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'phone:BR', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['sometimes', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(RoleUserEnum::cases())],
         ];

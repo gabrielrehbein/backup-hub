@@ -9,7 +9,7 @@ class CreateSystemDTO
     public function __construct(
         public readonly string $name,
         public readonly ?string $description,
-        public readonly SystemCategoryEnum $category,
+        public readonly int $category_id,
     ){}
 
     public static function fromArray(array $data): self
@@ -17,7 +17,7 @@ class CreateSystemDTO
         return new self(
             name: $data['name'],
             description: $data['description'] ?? null,
-            category: SystemCategoryEnum::from($data['category']),
+            category_id: $data["category_id"],
         );
     }
 
@@ -26,7 +26,7 @@ class CreateSystemDTO
         return [
             'name' => $this->name,
             'description' => $this->description,
-            'category' => $this->category->value,
+            'category_id' => $this->category_id,
         ];
     }
 }

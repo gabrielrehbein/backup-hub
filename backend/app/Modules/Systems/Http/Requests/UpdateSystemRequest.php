@@ -29,7 +29,7 @@ class UpdateSystemRequest extends BaseFormRequest
             return [
                 'name' => ['sometimes', 'string', 'max:100'],
                 'description' => ['sometimes', 'string'],
-                'category' => ['sometimes', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(SystemCategoryEnum::cases())],
+                'category_id' => ['required', 'integer', 'exists:categories,id'],
             ];
         }
 
