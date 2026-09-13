@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('plan_id')->constrained()->restrictOnDelete();
             $table->string('name', 100);
             $table->text('description')->nullable();
-            $table->string('api_key', 255)->unique();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('system_id')->constrained()->restrictOnDelete();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->string('api_key', 255)->unique();
             $table->string('version', 30);
             $table->timestamps();
         });
