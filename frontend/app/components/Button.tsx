@@ -3,12 +3,12 @@
 type ButtonProps = {
     children: React.ReactNode;
     className?: string;
-    variant?: "primary" | "secondary" | "danger";
+    variant?: "primary" | "secondary" | "danger" | "ghost";
     size?: "small" | "medium" | "large";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({ children, className, variant = "primary", size = "medium", disabled, ...props }: ButtonProps) {
-    let baseClasses = "cursor-pointer transition text-white rounded px-4 py-2 font-bold flex items-center gap-2 justify-center";
+    const baseClasses = "cursor-pointer transition text-white rounded px-4 py-2 font-bold flex items-center gap-2 justify-center";
     let sizeClasses = "";
     let variantClasses = "";
 
@@ -21,6 +21,8 @@ export function Button({ children, className, variant = "primary", size = "mediu
             break;
         case "danger":
             variantClasses = "bg-red-500 hover:bg-red-700";
+        case "ghost":
+            variantClasses = "bg-gray-200 text-gray-800";
             break;
     }
 
