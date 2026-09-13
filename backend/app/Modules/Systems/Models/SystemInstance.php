@@ -12,6 +12,7 @@ class SystemInstance extends Model
         'system_id',
         'client_id',
         'version',
+        'api_key',
     ];
 
     public function system()

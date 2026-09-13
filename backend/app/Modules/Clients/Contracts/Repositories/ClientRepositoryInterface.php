@@ -15,7 +15,5 @@ interface ClientRepositoryInterface
     public function update(UpdateClientDTO $payload, Client $client): Client;
     public function findById(int $id): Client;
     public function findByExternalId(string $externalId): Client;
-    public function refreshApiKey(string $apiKey, Client $client): Client;
     public function getTotalClients(): int;
-    public function findByApiKeyIdentifier(string $apiKey): Client;
 }

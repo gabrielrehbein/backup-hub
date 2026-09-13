@@ -7,6 +7,8 @@ use App\Modules\Systems\Enums\SystemCategoryEnum;
 
 class CreateSystemInstanceDTO
 {
+    public string $apiKey;
+
     public function __construct(
         public readonly string $version,
         public readonly int $clientId,
@@ -28,6 +30,7 @@ class CreateSystemInstanceDTO
             'version' => $this->version,
             'client_id' => $this->clientId,
             'system_id' => $this->systemId,
+            'api_key' => $this->apiKey,
         ];
     }
 }

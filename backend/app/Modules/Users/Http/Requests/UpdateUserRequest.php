@@ -28,6 +28,7 @@ class UpdateUserRequest extends BaseFormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:100'],
+            'phone' => ['sometimes', 'phone:BR', 'unique:users'],
             'role' => ['sometimes', 'string', 'in:' . ArrayHelper::arrayToFormRequestValidation(RoleUserEnum::cases())],
         ];
     }

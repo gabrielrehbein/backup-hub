@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
             PlanSeeder::class,
             RiskSeeder::class,
             ClientSeeder::class,
-            SystemInstanceSeeder::class,
             UserSeeder::class,
         ]);
     }

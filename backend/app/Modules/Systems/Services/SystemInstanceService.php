@@ -7,17 +7,39 @@ use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
 use App\Modules\Systems\DTOs\CreateSystemInstanceDTO;
 use App\Modules\Systems\DTOs\UpdateSystemInstanceDTO;
 use App\Modules\Systems\Models\SystemInstance;
-
+use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
 
 class SystemInstanceService implements SystemInstanceServiceInterface
 {
     public function __construct(
-        private readonly SystemInstanceRepositoryInterface $repository
+        private readonly SystemInstanceRepositoryInterface $repository,
+        private readonly ApiKeyGeneratorInterface $apiKeyGenerator
     ) {}
 
     public function create(CreateSystemInstanceDTO $payload): SystemInstance
     {
-        return $this->repository->create($payload);
+        $apiKeyDTO = $this->apiKeyGenerator->execute();
+
+
+        $payload->apiKey = $apiKeyDTO->hashedApiKey;
+        $instance = $this->repository->create($payload);
+
+        $instance->api_key = $apiKeyDTO->unhashedApiKey;
+        return $instance;
+    }
+
+    public function refreshApiKey(int $id): string
+    {
+        $instance = $this->findById($id);
+
+        $apiKeyDTO = $this->apiKeyGenerator->execute();
+
+        $this->repository->refreshApiKey(
+            $apiKeyDTO->hashedApiKey,
+            $instance
+        );
+
+        return $apiKeyDTO->unhashedApiKey;
     }
 
     public function findAll(): iterable

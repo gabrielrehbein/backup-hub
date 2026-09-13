@@ -10,6 +10,7 @@ class CreateUserDTO
     public function __construct(
         private readonly string $name,
         private readonly string $email,
+        private readonly string $phone,
         private readonly string $password,
         private readonly RoleUserEnum $role,
     ){}
@@ -19,6 +20,7 @@ class CreateUserDTO
         return new self(
             name: $data['name'],
             email: $data['email'],
+            phone: $data['phone'],
             password: $data['password'],
             role: RoleUserEnum::from($data['role'] ?? RoleUserEnum::DEFAULT->value),
         );
@@ -29,6 +31,7 @@ class CreateUserDTO
         return [
             'name' => $this->name,
             'email' => $this->email,
+            'phone' => $this->phone,
             'password' => $this->password,
             'role' => $this->role?->value,
         ];

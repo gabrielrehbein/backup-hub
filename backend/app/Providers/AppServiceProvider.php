@@ -43,6 +43,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Modules\Clients\Contracts\Services\ClientAuthenticationServiceInterface;
 use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Services\ClientAuthenticationService;
+use App\Modules\Clients\Services\SystemInstanceAuthenticationService;
 use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
 use App\Modules\Dashboard\Services\DashboardService;
 use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
@@ -51,6 +52,7 @@ use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
 use App\Modules\Notifications\Contracts\Strategies\Notifiable;
 use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
 use App\Modules\Notifications\Services\SendNotificationService;
+use App\Modules\Systems\Contracts\Services\SystemInstanceAuthenticationServiceInterface;
 use App\Modules\Systems\Models\SystemInstance;
 use App\Modules\Systems\Policies\SystemInstancePolicy;
 use App\Shared\Security\Actions\UuidApiKeyWithIdentifierGenerator;
@@ -143,8 +145,8 @@ class AppServiceProvider extends ServiceProvider
             BackupRiskEloquentRepository::class
         );
         $this->app->bind(
-            ClientAuthenticationServiceInterface::class,
-            ClientAuthenticationService::class
+            SystemInstanceAuthenticationServiceInterface::class,
+            SystemInstanceAuthenticationService::class
         );
 
         $this->app->bind(

@@ -77,7 +77,7 @@ export default function InstanciaForm() {
         };
         console.log("Dados da instância a serem enviados:", instanceData);
         try {
-            const response = await fetch("http://localhost:8000/api/system-instances", {
+            const response = await fetch("http://localhost:8000/api/instances", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

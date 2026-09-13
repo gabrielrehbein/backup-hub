@@ -13,4 +13,6 @@ interface SystemInstanceRepositoryInterface
     public function delete(SystemInstance $system): bool;
     public function update(UpdateSystemInstanceDTO $payload, SystemInstance $system): SystemInstance;
     public function findById(int $id): SystemInstance;
+    public function findByApiKeyIdentifier(string $apiKey): SystemInstance;
+    public function refreshApiKey(string $apiKey, SystemInstance $instance): SystemInstance;
 }

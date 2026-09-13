@@ -39,4 +39,14 @@ class SystemInstanceEloquentRepository implements SystemInstanceRepositoryInterf
     {
         return SystemInstance::findOrFail($id);
     }
+
+    public function findByApiKeyIdentifier(string $identifier): SystemInstance {
+        return SystemInstance::firstWhere("api_key", "like", $identifier . ".%");
+    }
+
+    public function refreshApiKey(string $apiKey, SystemInstance $instance): SystemInstance {
+        $instance->api_key = $apiKey;
+        $instance->save();
+        return $instance;
+    }
 }

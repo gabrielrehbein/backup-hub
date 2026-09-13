@@ -13,4 +13,5 @@ interface SystemInstanceServiceInterface
     public function delete(int $id): bool;
     public function update(UpdateSystemInstanceDTO $payload, int $id): SystemInstance;
     public function findById(int $id): SystemInstance;
+    public function refreshApiKey(int $id): string;
 }

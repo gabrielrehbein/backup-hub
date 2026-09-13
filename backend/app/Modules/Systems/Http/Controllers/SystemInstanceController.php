@@ -2,12 +2,14 @@
 
 namespace App\Modules\Systems\Http\Controllers;
 
+
 use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
 use App\Modules\Systems\Http\Requests\StoreSystemRequest;
 use App\Modules\Systems\DTOs\CreateSystemInstanceDTO;
 use App\Modules\Systems\DTOs\UpdateSystemInstanceDTO;
 use App\Modules\Systems\Http\Requests\StoreSystemInstanceRequest;
 use App\Modules\Systems\Http\Requests\UpdateSystemRequest;
+use App\Modules\Systems\Http\Resources\PublicInstanceResource;
 use App\Shared\Http\Controllers\Controller;
 use App\Shared\Http\Responses\JSONResponse;
 use App\Shared\Utils\BuildResponseMessage;
@@ -23,8 +25,19 @@ class SystemInstanceController extends Controller
 
     public function index()
     {
-        $systems = $this->systemInstanceService->findAll();
-        return JSONResponse::success($systems, BuildResponseMessage::findAll(ResourceEnum::SYSTEM_INSTANCE), 200);
+        $instances = $this->systemInstanceService->findAll();
+        return JSONResponse::success(
+            PublicInstanceResource::collection($instances),
+            BuildResponseMessage::findAll(ResourceEnum::SYSTEM_INSTANCE),
+            200);
+    }
+
+    public function refreshApiKey(int $id)
+    {
+        $apiKey = $this->systemInstanceService->refreshApiKey(
+            $id
+        );
+        return JSONResponse::success(["new_api_key" => $apiKey], 'Api Key atualizada com sucesso');
     }
 
     public function store(StoreSystemInstanceRequest $request)

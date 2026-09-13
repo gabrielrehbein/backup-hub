@@ -28,12 +28,6 @@ class ClientEloquentRepository implements ClientRepositoryInterface
         }
         return $client;
     }
-    public function refreshApiKey(string $apiKey, Client $client): Client
-    {
-        $client->api_key = $apiKey;
-        $client->save();
-        return $client;
-    }
     public function findById(int $id): Client {
         return Client::findOrFail($id);
     }
@@ -45,7 +39,4 @@ class ClientEloquentRepository implements ClientRepositoryInterface
         return Client::count();
     }
 
-    public function findByApiKeyIdentifier(string $identifier): Client {
-        return Client::firstWhere("api_key", "like", $identifier . ".%");
-    }
 }

@@ -23,23 +23,16 @@ class ClientController extends Controller
 
     public function store(StoreClientRequest $request)
     {
-        $clientWithUnhashedApiKeyDTO = $this->clientService->create(
+        $client = $this->clientService->create(
             $request->toDTO()
         );
         return JSONResponse::success(
-            $clientWithUnhashedApiKeyDTO,
+            $client,
             BuildResponseMessage::create(ResourceEnum::CLIENT),
             201
         );
     }
 
-    public function refreshApiKey(int $id)
-    {
-        $apiKey = $this->clientService->refreshApiKey(
-            $id
-        );
-        return JSONResponse::success(["new_api_key" => $apiKey], 'Api Key atualizada com sucesso');
-    }
 
     public function index()
     {
