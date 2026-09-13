@@ -17,33 +17,33 @@ export default function AdminPage() {
             <Header />
             <div className='flex flex-col gap-4'>
                 <div className='flex justify-between gap-4'>
-                    <Button size='large'>
+                    <Button size='large' onClick={() => redirect('/admin/users/criar')}>
                         Usuários
                         <CircleUserRoundIcon />
                     </Button>
-                    <Button size='large'>
+                    <Button size='large' onClick={() => redirect('/admin/clientes/criar')}>
                         Clientes
                         <UsersRoundIcon />
                     </Button>
-                    <Button size='large'>
+                    <Button size='large' onClick={() => redirect('/admin/sistemas/criar')}>
                         Sistemas
                         <MonitorCogIcon />
                     </Button>
                 </div>
 
                 <div className='flex justify-between gap-4'>
-                    <Button size='large'>
+                    <Button size='large' onClick={() => redirect('/admin/instancias/criar')}>
                         Instancias
                         <HardDriveIcon />
                     </Button>
 
-                    <Button size='large'>
+                    <Button size='large' onClick={() => redirect('/admin/planos/criar')}>
                         Plano
                         <SquareChartGanttIcon />
                     </Button>
                 </div>
                 <div className='flex justify-between gap-4'>
-                    <Button size='large'>
+                    <Button size='large' onClick={() => redirect('/admin/backups/criar')}>
                         Backup
                         <DatabaseBackupIcon />
                     </Button>
