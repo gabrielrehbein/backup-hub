@@ -7,12 +7,12 @@ use Carbon\CarbonImmutable;
 
 class CreateBackupRequestDTO
 {
+    public int $systemInstanceId;
 
     public function __construct(
         public readonly int $fileSize,
         public readonly CarbonImmutable $generatedAt,
         public readonly bool $isLocal,
-        public readonly int $systemInstanceId,
         public readonly string $sourceIp,
         public readonly string $filePath,
         public readonly string $version,
@@ -38,7 +38,6 @@ class CreateBackupRequestDTO
             $data['file_size'],
             CarbonImmutable::parse($data['generated_at']),
             $data['is_local'],
-            $data['system_instance_id'],
             $data['source_ip'],
             $data['file_path'],
             $data['version'],

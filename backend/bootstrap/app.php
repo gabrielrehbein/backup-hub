@@ -4,6 +4,7 @@ use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Modules\Backups\Errors\RiskTypeIsUniqueByBackupHttpException;
 use App\Modules\Backups\Errors\InstanceNotBelongsToClientHttpException;
 use App\Modules\Risks\Models\Risk;
+use App\Shared\Http\Middleware\CheckInstanceAPIKey;
 use App\Shared\Http\Responses\JSONResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Shared\Http\Middleware\CheckClientAPIKey;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'client.auth' => CheckClientAPIKey::class,
+            'instance.auth' => CheckInstanceAPIKey::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

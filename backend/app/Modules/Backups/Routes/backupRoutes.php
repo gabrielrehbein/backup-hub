@@ -3,7 +3,7 @@
 use App\Modules\Backups\Http\Controllers\BackupController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/backups', [BackupController::class, 'store'])->middleware('client.auth');
+Route::post('/backups', [BackupController::class, 'store'])->middleware('instance.auth');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/backups', [BackupController::class, 'index']);

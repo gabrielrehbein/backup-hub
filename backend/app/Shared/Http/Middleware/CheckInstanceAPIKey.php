@@ -2,11 +2,12 @@
 
 namespace App\Shared\Http\Middleware;
 
+use App\Modules\Systems\Contracts\Services\SystemInstanceAuthenticationServiceInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Shared\Http\Responses\JSONResponse;
-use App\Modules\Systems\Contracts\Services\SystemInstanceAuthenticationServiceInterface;
+
 
 
 class CheckInstanceAPIKey

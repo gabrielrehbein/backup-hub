@@ -33,7 +33,6 @@ class StoreBackupRequest extends BaseFormRequest
             'generated_at' => ['required', 'date'],
             'source_ip' => ['required', 'ip'],
             'is_local' => ['required', 'boolean'],
-            'system_instance_id' => ['required', 'integer'],
             'version' => ['required', 'string', 'max:30'],
             'file_path' => ['required', 'string', 'max:255'],
         ];
@@ -45,7 +44,6 @@ class StoreBackupRequest extends BaseFormRequest
             fileSize: $this->validated('size'),
             generatedAt: CarbonImmutable::parse($this->validated('generated_at')),
             isLocal: $this->validated('is_local'),
-            systemInstanceId: $this->validated('system_instance_id'),
             sourceIp: $this->validated('source_ip'),
             filePath: $this->validated('file_path'),
             version: $this->validated('version'),

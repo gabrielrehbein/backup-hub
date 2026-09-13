@@ -3,6 +3,7 @@
 namespace App\Modules\Backups\Http\Controllers;
 
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
+use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\Errors\InstanceNotBelongsToClientHttpException;
 use App\Modules\Backups\Http\Requests\StoreBackupRequest;
@@ -58,7 +59,7 @@ class BackupController extends Controller
 
     public function index(FilterBackupRequest $request)
     {
-        
+
         $filters = $request->toDTO();
         $backups = $this->backupService->list($filters);
 
@@ -66,7 +67,7 @@ class BackupController extends Controller
             fn ($backup) => new BackupResource($backup)
         );
 
-        
+
         return JSONResponse::success(
             $backups,
             BuildResponseMessage::findAll(ResourceEnum::BACKUP),
@@ -77,16 +78,12 @@ class BackupController extends Controller
 
     public function store(StoreBackupRequest $request)
     {
-        $createBackupDTO = $request->toDTO();
-        $client = $request->attributes->get('client');
-        
-        $systemInstance = $this->systemInstanceService->findById($createBackupDTO->systemInstanceId);
+        $createBackupRequestDTO = $request->toDTO();
+        $instance = $request->attributes->get('instance');
 
-        if ($client->id !== $systemInstance->client_id) {
-            throw new InstanceNotBelongsToClientHttpException();
-        }
+        $createBackupRequestDTO->systemInstanceId = $instance->id;
 
-        $backup = $this->backupService->create($request->toDTO());
+        $backup = $this->backupService->create($createBackupRequestDTO);
         return JSONResponse::success(
             $backup,
             BuildResponseMessage::create(ResourceEnum::BACKUP),

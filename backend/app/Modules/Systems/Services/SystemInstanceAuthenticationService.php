@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Clients\Services;
+namespace App\Modules\Systems\Services;
 
 
 use App\Modules\Clients\Errors\InvalidApiKeyHttpException;
