@@ -32,7 +32,6 @@ class CreateClientDTO
             'name' => $this->name,
             'external_id' => $this->external_id,
             'plan_id' => $this->plan_id,
-            'api_key' => $this->api_key,
             'is_active' => $this->is_active,
             'description' => $this->description,
         ];

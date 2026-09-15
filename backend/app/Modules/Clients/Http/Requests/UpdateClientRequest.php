@@ -29,6 +29,7 @@ class UpdateClientRequest extends BaseFormRequest
             'plan_id' => ['sometimes', 'integer', 'exists:plans,id'],
             'external_id' => ['sometimes', 'string', 'max:255', 'unique:clients,external_id'],
             'description' => ['nullable', 'string'],
+            'is_active' => ['sometimes', 'boolean'],
         ];
     }
 

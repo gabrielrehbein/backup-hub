@@ -32,7 +32,7 @@ class RiskSeeder extends Seeder
 
         Risk::create([
             'name' => 'Alto',
-            'level' => 1,
+            'level' => 10,
             'notifiable' => true,
             'description' => 'Risco alto, com impacto significativo e alta probabilidade de ocorrência.',
             'max_delay_limit_in_minutes' => '1000',

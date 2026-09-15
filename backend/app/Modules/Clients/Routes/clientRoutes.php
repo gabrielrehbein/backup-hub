@@ -9,5 +9,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('clients/', [ClientController::class, 'index']);
     Route::delete('clients/{id}', [ClientController::class, 'destroy']);
     Route::get('clients/{id}', [ClientController::class, 'show']);
-    Route::patch('clients/{id}', [ClientController::class, 'update']);
+    Route::put('clients/{id}', [ClientController::class, 'update']);
 });

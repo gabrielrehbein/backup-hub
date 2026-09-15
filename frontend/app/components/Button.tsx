@@ -21,6 +21,7 @@ export function Button({ children, className, variant = "primary", size = "mediu
             break;
         case "danger":
             variantClasses = "bg-red-500 hover:bg-red-700";
+            break;
         case "ghost":
             variantClasses = "bg-gray-200 text-gray-800";
             break;

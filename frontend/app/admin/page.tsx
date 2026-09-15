@@ -21,7 +21,7 @@ export default function AdminPage() {
                         Usuários
                         <CircleUserRoundIcon />
                     </Button>
-                    <Button size='large' onClick={() => redirect('/admin/clientes/criar')}>
+                    <Button size='large' onClick={() => redirect('/admin/clientes')}>
                         Clientes
                         <UsersRoundIcon />
                     </Button>
