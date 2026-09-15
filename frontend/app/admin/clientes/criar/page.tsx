@@ -2,9 +2,12 @@
 
 import { Button } from "@/app/components/Button";
 import { Container } from "@/app/components/Container";
+import { Input } from "@/app/components/Input";
+import { Select } from "@/app/components/Select";
 import { set } from "date-fns";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ClientForm() {
     const [plans, setPlans] = useState<any[]>([]);
@@ -31,13 +34,30 @@ export default function ClientForm() {
                 body: JSON.stringify(clientData),
             });
 
+            if(response.status === 422) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Erro de validação.";
+                toast.error(errorMessage);
+                console.error("Erro de validação:", errorData);
+                return;
+            }
+            if(response.status === 400) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Erro de requisição.";
+                toast.error(errorMessage);
+                console.error("Erro de requisição:", errorData);
+                return;
+            }
+
             if (!response.ok) {
                 throw new Error("Erro ao criar o cliente");
             }
 
             const data = await response.json();
+            toast.success("Cliente criado com sucesso!");
             console.log("Cliente criado com sucesso:", data);
         } catch (error) {
+            toast.error("Algo deu errado.");
             console.error("Erro ao criar o cliente:", error);
         }
     }
@@ -74,45 +94,41 @@ export default function ClientForm() {
 
     return (
         <Container>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 align-center justify-center w-full p-8  mx-auto mt-8  bg-white rounded-lg shadow-md">
                 <h1 className="text-2xl font-bold text-slate-900">Criar Cliente</h1>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+
+                    <Input
+                        label="Nome"
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Nome do cliente"
+                        onChange={(e) => setName(e.target.value)}
+                        className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+
+                    <Input
+                        label="ID Externo"
+                        type="text"
+                        id="external_id"
+                        name="external_id"
+                        placeholder="ID Externo do cliente"
+                        onChange={(e) => setExternalId(e.target.value)}
+                        className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="name" className="text-sm font-semibold text-slate-700">
-                            Nome
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            placeholder="Nome do cliente"
-                            onChange={(e) => setName(e.target.value)}
-                            className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="external_id" className="text-sm font-semibold text-slate-700">
-                            ID Externo
-                        </label>
-                        <input
-                            type="text"
-                            id="external_id"
-                            name="external_id"
-                            placeholder="ID Externo do cliente"
-                            onChange={(e) => setExternalId(e.target.value)}
-                            className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="plan" className="text-sm font-semibold text-slate-700">
-                            Plano
-                        </label>
-                        <select
+
+                        <Select
+                        required
+                            label="Plano"
                             value={planId}
                             onChange={(e) => setPlanId(e.target.value)}
                             name="plan"
                             id="plan"
-                            className="border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full"
+                            
                         >
                             <option value="">Selecione um plano</option>
 
@@ -121,7 +137,7 @@ export default function ClientForm() {
                                     {plan.name}
                                 </option>
                             ))}
-                        </select>
+                        </Select>
                     </div>
 
                     <Button

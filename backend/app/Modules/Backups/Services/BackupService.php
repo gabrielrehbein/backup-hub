@@ -127,4 +127,8 @@ class BackupService implements BackupServiceInterface
     {
         return $this->backupRepository->findLastBackups($limit, $isLocal);
     }
+
+    public function findLastBackupByInstances(){
+        return $this->backupRepository->listLastBackupsGroupedBySystemInstance();
+    }
 }
