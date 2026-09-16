@@ -8,6 +8,7 @@ Route::post('/backups', [BackupController::class, 'store'])->middleware('instanc
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/backups', [BackupController::class, 'index']);
     Route::get('/backups/{id}', [BackupController::class, 'show']);
+    Route::get('/backups/instances/latest', [BackupController::class, 'lastBackupsByInstances']);
 });
 
 Route::post('/backups/test-risk', [BackupController::class, 'testRisk']);

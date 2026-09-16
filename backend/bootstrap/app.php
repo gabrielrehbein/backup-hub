@@ -3,6 +3,7 @@
 use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Modules\Backups\Errors\RiskTypeIsUniqueByBackupHttpException;
 use App\Modules\Backups\Errors\InstanceNotBelongsToClientHttpException;
+use App\Modules\Systems\NotUniqueClientSystemHttpException;
 use App\Modules\Risks\Models\Risk;
 use App\Shared\Http\Middleware\CheckInstanceAPIKey;
 use App\Shared\Http\Responses\JSONResponse;
@@ -52,6 +53,9 @@ return Application::configure(basePath: dirname(__DIR__))
             return JSONResponse::error($e->getMessage(), $e->getStatusCode());
         });
         $exceptions->render(function (InstanceNotBelongsToClientHttpException $e) {
+            return JSONResponse::error($e->getMessage(), $e->getStatusCode());
+        });
+        $exceptions->render(function (NotUniqueClientSystemHttpException $e) {
             return JSONResponse::error($e->getMessage(), $e->getStatusCode());
         });
 

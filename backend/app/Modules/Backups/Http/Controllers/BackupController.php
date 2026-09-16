@@ -101,4 +101,14 @@ class BackupController extends Controller
         );
     }
 
+    public function lastBackupsByInstances()
+    {
+        $backups = $this->backupService->findLastBackupByInstances();
+        return JSONResponse::success(
+            $backups,
+            BuildResponseMessage::findAll(ResourceEnum::BACKUP),
+            200
+        );
+    }
+
 }

@@ -13,5 +13,5 @@ interface SystemServiceInterface
     public function delete(int $id): bool;
     public function update(UpdateSystemDTO $payload, int $id): System;
     public function findById(int $id): System;
-    public function findByCategory(SystemCategoryEnum $category): iterable;
+    public function findByCategory(int $categoryId): iterable;
 }

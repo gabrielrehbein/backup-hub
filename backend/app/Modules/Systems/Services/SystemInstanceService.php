@@ -2,10 +2,12 @@
 
 namespace App\Modules\Systems\Services;
 
+
 use App\Modules\Systems\Contracts\Repositories\SystemInstanceRepositoryInterface;
 use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
 use App\Modules\Systems\DTOs\CreateSystemInstanceDTO;
 use App\Modules\Systems\DTOs\UpdateSystemInstanceDTO;
+use App\Modules\Systems\Errors\NotUniqueClientSystemHttpException;
 use App\Modules\Systems\Models\SystemInstance;
 use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
 
@@ -16,8 +18,16 @@ class SystemInstanceService implements SystemInstanceServiceInterface
         private readonly ApiKeyGeneratorInterface $apiKeyGenerator
     ) {}
 
+    private function verifyUniqueClientSystem(int $clientId, int $systemId): void
+    {
+        $existingInstance = $this->repository->findByClientAndSystem($clientId, $systemId);
+        if($existingInstance !== null) {
+            throw new NotUniqueClientSystemHttpException();
+        }
+    }
     public function create(CreateSystemInstanceDTO $payload): SystemInstance
     {
+        $this->verifyUniqueClientSystem($payload->clientId, $payload->systemId);
         $apiKeyDTO = $this->apiKeyGenerator->execute();
 
 
@@ -55,6 +65,7 @@ class SystemInstanceService implements SystemInstanceServiceInterface
 
     public function update(UpdateSystemInstanceDTO $payload, int $id): SystemInstance
     {
+        $this->verifyUniqueClientSystem($payload->clientId, $payload->systemId);
         $system = $this->repository->findById($id);
         return $this->repository->update($payload, $system);
     }

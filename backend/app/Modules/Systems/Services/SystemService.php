@@ -43,8 +43,8 @@ class SystemService implements SystemServiceInterface
         return $this->systemRepository->findById($id);
     }
 
-    public function findByCategory(SystemCategoryEnum $category): iterable
+    public function findByCategory(int $categoryId): iterable
     {
-        return $this->systemRepository->findByCategory($category);
+        return $this->systemRepository->findByCategory($categoryId);
     }
 }

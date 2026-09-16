@@ -49,4 +49,10 @@ class SystemInstanceEloquentRepository implements SystemInstanceRepositoryInterf
         $instance->save();
         return $instance;
     }
+
+    public function findByClientAndSystem(int $clientId, int $systemId): ?SystemInstance {
+        return SystemInstance::where('client_id', $clientId)
+            ->where('system_id', $systemId)
+            ->first();
+    }
 }
