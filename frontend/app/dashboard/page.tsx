@@ -40,6 +40,14 @@ export default function DashboardPage() {
     }, []);
 
 
+    function getQuantityByRisk(name: string) {
+        if (!dashboard) return 0
+        if (!dashboard.riskDistribution) return 0
+    
+        return dashboard.riskDistribution.find(
+            risk => risk.name.toLowerCase() === name.toLowerCase()
+        )?.quantity ?? 0
+    }
 
     return (
         <Container>
@@ -76,7 +84,9 @@ export default function DashboardPage() {
 
                     <SummaryCard
                         title="Sem risco"
-                        value={600}
+                        value={
+                            getQuantityByRisk("sem risco")
+                        }
                         description="Backups sem risco"
                         size="large"
                         type="success"
@@ -85,9 +95,7 @@ export default function DashboardPage() {
                     <SummaryCard
                         title="Risco baixo"
                         value={
-                            dashboard?.riskDistribution.find(
-                                risk => risk.name.toLowerCase() === "low"
-                            )?.quantity || 0
+                            getQuantityByRisk("baixo")
                         }
                         description="Backups com baixo risco"
                         size="large"
@@ -97,9 +105,7 @@ export default function DashboardPage() {
                     <SummaryCard
                         title="Risco médio"
                         value={
-                            dashboard?.riskDistribution.find(
-                                risk => risk.name.toLowerCase() === "medium"
-                            )?.quantity || 0
+                            getQuantityByRisk("medio")
                         }
                         description="Backups com médio risco"
                         size="large"
@@ -109,9 +115,7 @@ export default function DashboardPage() {
                     <SummaryCard
                         title="Risco alto"
                         value={
-                            dashboard?.riskDistribution.find(
-                                risk => risk.name.toLowerCase() === "high"
-                            )?.quantity || 0
+                            getQuantityByRisk("alto")
                         }
                         description="Backups com alto risco"
                         size="large"

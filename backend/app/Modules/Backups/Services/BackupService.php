@@ -132,4 +132,9 @@ class BackupService implements BackupServiceInterface
     {
         return $this->backupRepository->listLastBackupsGroupedBySystemInstance($filters);
     }
+
+    public function countBackupWithoutRisk(): int
+    {
+        return Backup::where('risks', 0)->count();
+    }
 }

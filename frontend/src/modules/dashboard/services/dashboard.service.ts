@@ -12,6 +12,7 @@ export class DashboardService extends BaseBackupHubApiService {
                 "Authorization": `Bearer ${localStorage.getItem('backup-hub-token') || ''}`,
             },
         });
+        console.log('Dashboard metrics response status:', response);
         const data = await response.json();
         console.log('Dashboard metrics response:', data.data);
         return data;

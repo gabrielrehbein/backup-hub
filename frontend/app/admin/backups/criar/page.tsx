@@ -4,6 +4,7 @@ import { Button } from "@/app/components/Button";
 import { Container } from "@/app/components/Container";
 import Header from "@/app/components/Header";
 import { set } from "date-fns";
+import { is } from "date-fns/locale";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,7 +16,7 @@ export default function BackupForm() {
     const [sizeType, setSizeType] = useState("kb");
     const [generatedAt, setGeneratedAt] = useState("");
     const [sourceIp, setSourceIp] = useState("");
-    const [isLocal, setIsLocal] = useState(false);
+    const [isLocal, setIsLocal] = useState(true);
     const [filePath, setFilePath] = useState("");
     const [visible, setVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,22 +49,27 @@ export default function BackupForm() {
                 body: JSON.stringify(backupData),
             });
             setIsSubmitting(false);
-
+            const data = await response.json();
             if (!response.ok) {
-                throw new Error(response.statusText);
+                setIsSubmitting(false);
+                toast.error(data.message);
+                console.error("Erro ao enviar o backup:", data.message);
+                return;
             }
 
-            const data = await response.json();
+            
             toast.success("Backup enviado com sucesso!");
             console.log("Backup enviado com sucesso:", data);
         } catch (error) {
             setIsSubmitting(false);
-            toast.error("Algo deu errado ao enviar o backup.");
-            console.error("Erro ao enviar o backup:", error);
         }
     }
 
-        
+    function handleOnChangeIsLocal(e: React.ChangeEvent<HTMLSelectElement>) {
+        const value = e.target.value;
+        setIsLocal(value === "local");
+        console.log("isLocal:",isLocal);
+    }
 
     return (
         <div>
@@ -160,7 +166,7 @@ export default function BackupForm() {
                                 name="is_local"
                                 required
                                 id="is_local_type"
-                                onChange={(e) => setIsLocal(e.target.value === "local")}
+                                onChange={(e) => handleOnChangeIsLocal(e)}
                                 className="border h-10  border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="local">Local</option>

@@ -9,11 +9,12 @@ use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
 use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
 use App\Modules\Backups\Errors\RiskTypeIsUniqueByBackupHttpException;
+use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
 use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
 use App\Modules\Risks\Enums\RiskTypeEnum;
-
+use Illuminate\Support\Facades\DB;
 
 class BackupRiskService implements BackupRiskServiceInterface
 {
@@ -89,5 +90,37 @@ class BackupRiskService implements BackupRiskServiceInterface
     public function getTotalBackupRisksByType(?int $backupId = null): array
     {
         return $this->backupRiskRepository->getTotalBackupRisksByType($backupId);
+    }
+
+    public function getTotalRisk(?string $name = null){
+        if(!$name){
+            return [
+                'name' => 'Sem risco',
+                'level' => 0,
+                'quantity' => Backup::whereDoesntHave('risks', function ($query) {
+                    $query->where('is_active', true);
+                })
+                ->count()
+            ];
+        }
+        $risks = BackupRisk::query()
+            ->join('risks', 'risks.id', '=', 'backup_risks.risk_id')
+            ->select(
+                'risks.name',
+                'risks.level',
+                DB::raw('COUNT(*) as quantity')
+            )
+            ->where('risks.name', $name)
+            ->where('backup_risks.is_active', true)
+            ->groupBy('risks.name', 'risks.level')
+            ->get()
+            ->keyBy('name');
+
+        return [
+            'name' => $name,
+            'level' => $risks->get($name)?->level ?? 0,
+            'quantity' => $risks->get($name)?->quantity ?? 0
+        ];
+
     }
 }

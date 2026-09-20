@@ -43,21 +43,10 @@ class DashboardService implements DashboardServiceInterface {
     private function getRiskDistribution(): array
     {
         return [
-            [
-                'name' => 'Low',
-                'level' => 1,
-                'quantity' => 20,
-            ],
-            [
-                'name' => 'Medium',
-                'level' => 2,
-                'quantity' => 15,
-            ],
-            [
-                'name' => 'High',
-                'level' => 3,
-                'quantity' => 10,
-            ],
+            $this->backupRiskService->getTotalRisk(),
+            $this->backupRiskService->getTotalRisk('Baixo'),
+            $this->backupRiskService->getTotalRisk('Medio'),
+            $this->backupRiskService->getTotalRisk('Alto'),
         ];
     }
 

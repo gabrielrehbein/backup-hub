@@ -1,4 +1,4 @@
 export class DashboardRoutes {
-  static readonly LIST = '/admin/dashboard';
+  static readonly LIST = '/dashboard';
 }
 
