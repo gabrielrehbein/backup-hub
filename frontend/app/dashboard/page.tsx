@@ -124,20 +124,17 @@ export default function DashboardPage() {
             <section className="w-full flex flex-col gap-6">
                 <h2 className="text-2xl text-slate-900 ml-2">Risco por tipo</h2>
                 <div className="flex gap-6 w-full justify-between">
-                    <SummaryCard
-                        title={dashboard?.riskByType[0].type.toUpperCase() === "SIZE" ? "Tamanho" : "N/A"}
-                        value={dashboard?.riskByType[0].quantity ?? 0}
-                        description="Riscos por tamanho"
-                        size="large"
-                        icon={<DatabaseXIcon size={"80px"} opacity={0.2} />}
-                    />
-                    <SummaryCard
-                        title={dashboard?.riskByType[1].type.toUpperCase() === "TIME" ? "Tempo" : "N/A"}
-                        value={dashboard?.riskByType[1].quantity ?? 0}
-                        description="Riscos por tempo"
-                        size="large"
-                        icon={<TimerIcon size={"80px"} opacity={0.2} />}
-                    />
+                    {dashboard?.riskByType.map((risk, index) => (
+                        <SummaryCard
+                            key={index}
+                            title={risk.type.toUpperCase() === "TIME" ? "Tempo" : risk.type.toUpperCase() === "SIZE" ? "Tamanho" : "Tempo"}
+                            value={risk.quantity ?? 0}
+                            description={`Riscos por ${risk.type.toUpperCase() === "TIME" ? "tempo" : risk.type.toUpperCase() === "SIZE" ? "tamanho" : "Tempo"}`}
+                            size="large"
+                            icon={risk.type.toUpperCase() === "TIME" ? <TimerIcon size={"80px"} opacity={0.2} /> : 
+                            risk.type.toUpperCase() === "SIZE" ? <DatabaseXIcon size={"80px"} opacity={0.2} /> : null}
+                        />
+                    ))}
                 </div>
             </section>
 

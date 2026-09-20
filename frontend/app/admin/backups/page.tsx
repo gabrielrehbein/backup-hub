@@ -4,6 +4,7 @@ import { Button } from "@/app/components/Button"
 import { Container } from "@/app/components/Container"
 import Header from "@/app/components/Header"
 import { Input } from "@/app/components/Input"
+import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
 import { CircleCheckIcon, CircleXIcon, PlusIcon, SearchIcon } from "lucide-react"
 import { redirect, useRouter } from "next/navigation"
 
@@ -65,7 +66,7 @@ export default function ListBackups() {
                         <SearchIcon />
                     </Button>
                 </form>
-                <Button variant="primary" onClick={() => { redirect("/admin/backups/criar") }}> <PlusIcon /></Button>
+                <Button variant="primary" onClick={() => { redirect(BackupRoutes.CREATE) }}> <PlusIcon /></Button>
             </div>
             <div>
                 <table className="w-full text-sm text-left">

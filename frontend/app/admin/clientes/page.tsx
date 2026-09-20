@@ -4,6 +4,7 @@ import { Button } from "@/app/components/Button";
 import { Container } from "@/app/components/Container";
 import Header from "@/app/components/Header";
 import { Input } from "@/app/components/Input";
+import { ClientRoutes } from "@/src/modules/client/routes/client-routes";
 import { CircleCheckIcon, CircleXIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 
@@ -49,7 +50,7 @@ export default function ListClients() {
                         <SearchIcon />
                     </Button>
                 </form>
-                <Button variant="primary" onClick={() => { redirect("/admin/clientes/criar") }}> <PlusIcon /></Button>
+                <Button variant="primary" onClick={() => { redirect(ClientRoutes.CREATE) }}> <PlusIcon /></Button>
             </div>
             <div>
                 <table className="w-full text-sm text-left">
@@ -67,7 +68,7 @@ export default function ListClients() {
                         {clients.map((client) => (
                             <tr
                                 key={client.id}
-                                onClick={() => router.push(`/admin/clientes/${client.id}`)}
+                                onClick={() => router.push(ClientRoutes.DETAIL.replace("{id}", client.id))}
                                 className="cursor-pointer border-b border-gray-100 hover:bg-gray-200"
                             >
                                 <td className="px-4 py-3">{client.id}</td>
