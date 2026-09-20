@@ -13,6 +13,7 @@ use App\Shared\Utils\BuildResponseMessage;
 use App\Shared\Utils\ResourceEnum;
 use App\Modules\Backups\Http\Requests\FilterBackupRequest;
 use App\Modules\Backups\Http\Resources\BackupResource;
+use App\Modules\Backups\Http\Resources\LastBackupsResource;
 use App\Modules\Backups\Repositories\BackupEloquentRepository;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Backups\Services\BackupRiskService;
@@ -101,11 +102,13 @@ class BackupController extends Controller
         );
     }
 
-    public function lastBackupsByInstances()
+    public function lastBackupsByInstances(FilterBackupRequest $request)
     {
-        $backups = $this->backupService->findLastBackupByInstances();
+        $filters = $request->toDTO();
+
+        $backups = $this->backupService->findLastBackupByInstances($filters);
         return JSONResponse::success(
-            $backups,
+            LastBackupsResource::collection($backups),
             BuildResponseMessage::findAll(ResourceEnum::BACKUP),
             200
         );

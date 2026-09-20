@@ -144,8 +144,8 @@ export default function InstanciaForm() {
                     id="client"
                     name="client"
                     placeholder="Versão do Sistema"
-                    value={version}
-                    onChange={(e) => setVersion(e.target.value)}
+                    value={clientId}
+                    onChange={(e) => setClientId(e.target.value)}
                 >
                         {clients.map((client: any) => (
                             <option key={client.id} value={client.id}>

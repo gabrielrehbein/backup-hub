@@ -8,6 +8,7 @@ use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
 
+
 interface BackupServiceInterface
 {
     public function list(BackupFilterDTO $filters): iterable;
@@ -18,5 +19,5 @@ interface BackupServiceInterface
     public function findBackupsGeneratedToday(): iterable;
     public function getTotalBackupsGeneratedToday(): int;
     public function findLastBackups(int $limit, ?bool $isLocal): iterable;
-    public function findLastBackupByInstances();
+    public function findLastBackupByInstances(BackupFilterDTO $filters);
 }

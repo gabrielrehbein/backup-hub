@@ -2,10 +2,10 @@
 
 import { Button } from "@/app/components/Button";
 import { Container } from "@/app/components/Container";
-import { set } from "date-fns";
-import { is } from "date-fns/locale";
+
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 type Plan = {
     id: number;
@@ -116,7 +116,7 @@ export default function ClientDetailsPage() {
         setSaving(true);
 
         const clientData = {
-            name,
+            name: name !== client?.name ? name : undefined,
             external_id: externalId,
             plan_id: Number(planId),
             is_active: isActive,
@@ -136,6 +136,21 @@ export default function ClientDetailsPage() {
                 }
             );
 
+            if(response.status === 422) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Erro de validação.";
+                toast.error(errorMessage);
+                console.error("Erro de validação:", errorData);
+                return;
+            }
+            if(response.status === 400) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || "Erro de requisição.";
+                toast.error(errorMessage);
+                console.error("Erro de requisição:", errorData);
+                return;
+            }
+
             if (!response.ok) {
                 throw new Error("Erro ao editar o cliente");
             }
@@ -143,7 +158,7 @@ export default function ClientDetailsPage() {
             const data = await response.json();
 
             setClient(data.data);
-
+            toast.success(data.message || "Cliente editado com sucesso!");
             console.log("Cliente editado com sucesso:", data);
         } catch (error) {
             console.error("Erro ao editar o cliente:", error);
@@ -214,7 +229,7 @@ export default function ClientDetailsPage() {
 
     return (
         <Container>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 align-center justify-center w-full p-8  mx-auto mt-8  bg-white rounded-lg shadow-md">
                 <h1 className="text-2xl font-bold text-slate-900">
                     Detalhes do Cliente
                 </h1>
@@ -323,12 +338,13 @@ export default function ClientDetailsPage() {
                         type="submit"
                         variant="primary"
                         size="large"
+                        disabled={saving}
                     >
-                        {saving ? "Salvando..." : "Editar Cliente"}
+                        Editar Cliente
                     </Button>
                 </form>
 
-                <div className="flex flex-col gap-3">
+
                     <Button
                         type="button"
                         variant="danger"
@@ -338,7 +354,10 @@ export default function ClientDetailsPage() {
                         Deletar Cliente
                     </Button>
 
-                    <Button
+
+
+            </div>
+            <Button
                         type="button"
                         variant="secondary"
                         size="large"
@@ -346,8 +365,6 @@ export default function ClientDetailsPage() {
                     >
                         Voltar
                     </Button>
-                </div>
-            </div>
         </Container>
     );
 }
