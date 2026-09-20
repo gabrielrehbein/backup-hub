@@ -3,8 +3,8 @@
 import { LogOutIcon } from "lucide-react";
 import { Button } from "./Button";
 import { redirect } from "next/navigation";
-import { AuthService } from "@/modules/auth/services/auth.service";
-import { useAuth } from "@/modules/auth/providers/AuthProvider";
+import { AuthService } from "@/src/modules/auth/services/auth.service";
+import { useAuth } from "@/src/modules/auth/providers/AuthProvider";
 
 type HeaderProps = {
     username?: string;
@@ -43,14 +43,14 @@ export default function Header({ username }: HeaderProps) {
             </div>
             <div className="flex items-center gap-6">
                 {isAdmin && (
-                    
-                <Button
+
+                    <Button
                         variant="primary"
                         size="medium"
                         onClick={handleAdmin}
                     >
                         Admin
-                </Button>
+                    </Button>
                 )}
                 <Button
                     variant="danger"
@@ -58,7 +58,7 @@ export default function Header({ username }: HeaderProps) {
                     onClick={handleLogout}
                 >
                     Sair
-                    <LogOutIcon size={20}/>
+                    <LogOutIcon size={20} />
                 </Button>
             </div>
         </header>

@@ -1,18 +1,18 @@
 "use client";
 
-import { getMockDashboardData } from "@/modules/dashboard/mocks/dashboard.mock";
-import { Dashboard } from "@/modules/dashboard/types/metrics.types";
+import { getMockDashboardData } from "@/src/modules/dashboard/mocks/dashboard.mock";
+import { Dashboard } from "@/src/modules/dashboard/types/metrics.types";
 import { Container } from "../components/Container";
 import Header from "../components/Header";
-import { SummaryCard } from "@/modules/dashboard/components/SummaryCard";
-import { BackupsTodayChart } from "@/modules/dashboard/components/BackupsTodayChart";
-import { ClientsRiskByPlan } from "@/modules/dashboard/components/ClientsRiskByPlan";
-import { RecentBackups } from "@/modules/dashboard/components/RecentBackups";
+import { SummaryCard } from "@/src/modules/dashboard/components/SummaryCard";
+import { BackupsTodayChart } from "@/src/modules/dashboard/components/BackupsTodayChart";
+import { ClientsRiskByPlan } from "@/src/modules/dashboard/components/ClientsRiskByPlan";
+import { RecentBackups } from "@/src/modules/dashboard/components/RecentBackups";
 import { useEffect, useState } from "react";
-import { AuthService } from "@/modules/auth/services/auth.service";
-import { PublicUserType } from "@/modules/user/types/public-user-type";
+import { AuthService } from "@/src/modules/auth/services/auth.service";
+import { PublicUserType } from "@/src/modules/user/types/public-user-type";
 import { redirect } from "next/navigation";
-import { DashboardService } from "@/modules/dashboard/services/dashboard.service";
+import { DashboardService } from "@/src/modules/dashboard/services/dashboard.service";
 import { DatabaseXIcon, TimerIcon } from "lucide-react";
 
 
@@ -73,7 +73,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex gap-6">
-                    
+
                     <SummaryCard
                         title="Sem risco"
                         value={600}
@@ -117,29 +117,29 @@ export default function DashboardPage() {
                         size="large"
                         type="danger"
                     />
-                </div>                
+                </div>
 
             </section>
 
-           <section className="w-full flex flex-col gap-6">
+            <section className="w-full flex flex-col gap-6">
                 <h2 className="text-2xl text-slate-900 ml-2">Risco por tipo</h2>
                 <div className="flex gap-6 w-full justify-between">
-                    <SummaryCard 
+                    <SummaryCard
                         title={dashboard?.riskByType[0].type.toUpperCase() === "SIZE" ? "Tamanho" : "N/A"}
                         value={dashboard?.riskByType[0].quantity ?? 0}
                         description="Riscos por tamanho"
                         size="large"
-                        icon={<DatabaseXIcon size={"80px"} opacity={0.2}/>}
+                        icon={<DatabaseXIcon size={"80px"} opacity={0.2} />}
                     />
-                    <SummaryCard 
+                    <SummaryCard
                         title={dashboard?.riskByType[1].type.toUpperCase() === "TIME" ? "Tempo" : "N/A"}
                         value={dashboard?.riskByType[1].quantity ?? 0}
                         description="Riscos por tempo"
                         size="large"
-                        icon={<TimerIcon size={"80px"} opacity={0.2}/>}
+                        icon={<TimerIcon size={"80px"} opacity={0.2} />}
                     />
                 </div>
-           </section>
+            </section>
 
             <section className="w-full flex flex-col gap-6">
                 {dashboard && (

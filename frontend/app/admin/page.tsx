@@ -4,12 +4,12 @@ import Header from '../components/Header';
 import { Container } from '../components/Container';
 import { Button } from '../components/Button';
 import { CircleUserRoundIcon, DatabaseBackupIcon, HardDriveIcon, MonitorCogIcon, SquareChartGanttIcon, UsersRoundIcon } from 'lucide-react';
-import { useAuth } from '@/modules/auth/providers/AuthProvider';
+import { useAuth } from '@/src/modules/auth/providers/AuthProvider';
 import { redirect } from 'next/navigation';
 
 export default function AdminPage() {
     const isAdmin = useAuth().isAdmin;
-    if(!isAdmin) {
+    if (!isAdmin) {
         redirect('/dashboard');
     }
     return (

@@ -1,8 +1,11 @@
-export class DashboardService {
+import { BaseBackupHubApiService } from "@/src/utils/api/base-backup-hub-api-service";
+
+export class DashboardService extends BaseBackupHubApiService {
+
     public async getMetrics() {
         const sizeType = "mb";
 
-        const response = await fetch(`http://localhost:8000/api/dashboard/metrics?return_in_size_type=${sizeType}`, {
+        const response = await fetch(`${this.getBaseUrl()}/dashboard/metrics?return_in_size_type=${sizeType}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -10,7 +13,7 @@ export class DashboardService {
             },
         });
         const data = await response.json();
-        console.log('Dashboard metrics response:', data);
+        console.log('Dashboard metrics response:', data.data);
         return data;
     }
 }
