@@ -102,6 +102,17 @@ class BackupController extends Controller
         );
     }
 
+    public function findByIdWithClientAndSystem(int $id)
+    {
+        $backup = $this->backupService->findByIdWithRelations($id);
+
+        return JSONResponse::success(
+            new LastBackupsResource($backup),
+            BuildResponseMessage::findOne(ResourceEnum::BACKUP),
+            200
+        );
+    }
+
     public function lastBackupsByInstances(FilterBackupRequest $request)
     {
         $filters = $request->toDTO();
@@ -110,6 +121,15 @@ class BackupController extends Controller
         return JSONResponse::success(
             LastBackupsResource::collection($backups),
             BuildResponseMessage::findAll(ResourceEnum::BACKUP),
+            200
+        );
+    }
+    public function findByInstanceId(int $id){
+        $backup = $this->backupService->findByInstanceId($id);
+
+        return JSONResponse::success(
+            LastBackupsResource::collection($backup),
+            BuildResponseMessage::findOne(ResourceEnum::BACKUP),
             200
         );
     }

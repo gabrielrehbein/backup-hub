@@ -4,6 +4,7 @@ import { Button } from "@/app/components/Button"
 import { Container } from "@/app/components/Container"
 import Header from "@/app/components/Header"
 import { Input } from "@/app/components/Input"
+import { Select } from "@/app/components/Select";
 import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
 import { CircleCheckIcon, CircleXIcon, PlusIcon, SearchIcon } from "lucide-react"
 import { redirect, useRouter } from "next/navigation"
@@ -12,6 +13,8 @@ import { useEffect, useState } from "react"
 
 export default function ListBackups() {
     const [backups, setBackups] = useState<any[]>([]);
+    const [clients, setClients] = useState<any[]>([]);
+    const [clientId, setClientId] = useState<number | null>(null);
 
     const router = useRouter();
 
@@ -26,8 +29,8 @@ export default function ListBackups() {
                         "Accept": "application/json",
                     },
                 });
-
                 if (!response.ok) {
+                    console.log("FQDWQDWQDQ", await response.json());
                     throw new Error("Erro ao carregar os backups");
                 }
 
@@ -39,6 +42,35 @@ export default function ListBackups() {
         };
 
         fetchBackups();
+    }, []);
+
+    const loadClients = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/clients", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("backup-hub-token") || ""}`,
+                    "Accept": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao carregar os clientes");
+            }
+
+            const data = await response.json();
+            setClients(data.data || []);
+
+            // Define o primeiro cliente como padrão se existir
+
+        } catch (error) {
+            console.error("Erro ao carregar os clientes:", error);
+        }
+    };
+
+    useEffect(() => {
+        loadClients();
     }, []);
 
 
@@ -61,6 +93,16 @@ export default function ListBackups() {
                     <div className="flex gap-2">
                         <Input label="Tamanho mínimo" required={false} type="number"/>
                         <Input label="Tamanho máximo" required={false} type="number"/>
+                    </div>
+                    <div className="flex gap-2">
+                        <Select label="Cliente" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
+                        <option value="">Todos</option>
+                            {
+                                clients.map((client) => (
+                                    <option key={client.id} value={client.id}>{client.name}</option>
+                                ))
+                            }
+                        </Select>
                     </div>
                     <Button size="small">
                         <SearchIcon />
@@ -123,6 +165,7 @@ export default function ListBackups() {
                                 <tr
                                     key={`${backup.client_name}-${index}`}
                                     className="cursor-pointer border-b border-gray-100 hover:bg-gray-200"
+                                    onClick={() => router.push(`/admin/backups/${backup.id}`)}
                                 >
                                     <td className="px-6 py-4 font-medium text-slate-800">
                                         {backup.id}

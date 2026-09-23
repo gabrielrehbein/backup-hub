@@ -137,4 +137,18 @@ class BackupService implements BackupServiceInterface
     {
         return Backup::where('risks', 0)->count();
     }
+
+    public function findByIdWithRelations(int $id): ?Backup
+    {
+        return Backup::with([
+            'instances.client',
+            'instances.system',
+        ])->orderByDesc("generated_at")->find($id);
+    }
+    public function findByInstanceId(int $id) {
+        return Backup::with([
+            'instances.client',
+            'instances.system',
+        ])->where("system_instance_id", $id)->get();
+    }
 }

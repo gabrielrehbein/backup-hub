@@ -22,7 +22,8 @@ export function Select({ children, label, value, onChange, ...props }: InputProp
                         name={props.name}
                         id={props.id}
                         className="border border-slate-300 w-full rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
+                        {...props}
+                   >
                         {children}
                     </select>
                 </div>

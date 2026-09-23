@@ -20,4 +20,6 @@ interface BackupServiceInterface
     public function getTotalBackupsGeneratedToday(): int;
     public function findLastBackups(int $limit, ?bool $isLocal): iterable;
     public function findLastBackupByInstances(BackupFilterDTO $filters);
+    public function findByIdWithRelations(int $id): ?Backup;
+    public function findByInstanceId(int $id);
 }

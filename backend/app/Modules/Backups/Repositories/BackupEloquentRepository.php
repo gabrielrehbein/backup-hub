@@ -214,7 +214,8 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         })
         ->when($filters?->systemInstanceId !== null, function ($query) use ($filters) {
             $query->where('system_instance_id', $filters->systemInstanceId);
-        });
+        })
+        ->sortByDesc('generated_at');
     }
 
 }

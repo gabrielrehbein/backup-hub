@@ -7,7 +7,10 @@ Route::post('/backups', [BackupController::class, 'store'])->middleware('instanc
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/backups', [BackupController::class, 'index']);
+    Route::get('/backups/by-instance/{id}', [BackupController::class, 'findByInstanceId']);
+
     Route::get('/backups/{id}', [BackupController::class, 'show']);
+    Route::get('/backups/instance/{id}', [BackupController::class, 'findByIdWithClientAndSystem']);
     Route::get('/backups/instances/latest', [BackupController::class, 'lastBackupsByInstances']);
 });
 
