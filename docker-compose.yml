@@ -71,6 +71,46 @@ services:
       retries: 5
       start_period: 10s
 
+  sgb-1:
+    build:
+      context: ./sgb
+      dockerfile: Dockerfile
+    container_name: sgb-1
+    command: npm run dev -- -p 3010
+    ports:
+      - "3010:3010"
+    env_file:
+      - ./sgb/.env.sgb1
+    volumes:
+      - ./sgb:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - backup-hub
+
+  sgb-2:
+    build:
+      context: ./sgb
+      dockerfile: Dockerfile
+    container_name: sgb-2
+    command: npm run dev -- -p 3020
+    ports:
+      - "3020:3020"
+    env_file:
+      - ./sgb/.env.sgb2
+    volumes:
+      - ./sgb:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - backup-hub
+
 volumes:
   postgres_data:
 
