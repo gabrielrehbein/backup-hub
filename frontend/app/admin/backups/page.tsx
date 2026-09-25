@@ -6,7 +6,7 @@ import Header from "@/app/components/Header"
 import { Input } from "@/app/components/Input"
 import { Select } from "@/app/components/Select";
 import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
-import { CircleCheckIcon, CircleXIcon, PlusIcon, SearchIcon } from "lucide-react"
+import { CircleCheckIcon, CircleXIcon, FunnelIcon, PlusIcon, SearchIcon } from "lucide-react"
 import { redirect, useRouter } from "next/navigation"
 
 import { useEffect, useState } from "react"
@@ -84,35 +84,48 @@ export default function ListBackups() {
     return (
         <Container>
             <Header />
-            <div className="flex gap-8 items-center">
-                <form className="flex gap-4 items-end w-full">
-                    <div className="flex gap-2">
-                        <Input label="Inicio" required={false} type="datetime-local"/>
-                        <Input label="Fim" required={false} type="datetime-local"/>
+            <h1 className="text-2xl font-bold">Backups</h1>
+            <div className="flex-col gap-4">
+                <form className="w-full flex flex-col gap-4">
+                    <div className="flex w-full gap-4 items-end justify-between">
+
+                        <Input label="Inicio" required={false} type="datetime-local" />
+                        <Input label="Fim" required={false} type="datetime-local" />
+
+
+                        <Input label="Tamanho mínimo (MB)" required={false} type="number" />
+                        <Input label="Tamanho máximo (MB)" required={false} type="number" />
                     </div>
-                    <div className="flex gap-2">
-                        <Input label="Tamanho mínimo" required={false} type="number"/>
-                        <Input label="Tamanho máximo" required={false} type="number"/>
-                    </div>
-                    <div className="flex gap-2">
+
+                    <div className="flex w-full gap-4 items-end justify-between">
+
+                        <Select label="Plano" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
+                            <option value="">Todos</option>
+                        </Select>
                         <Select label="Cliente" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
-                        <option value="">Todos</option>
+                            <option value="">Todos</option>
                             {
                                 clients.map((client) => (
                                     <option key={client.id} value={client.id}>{client.name}</option>
                                 ))
                             }
                         </Select>
+                        <Select label="Risco" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
+                            <option value="">Todos</option>
+                        </Select>
+                        <Select label="Tipo do Risco" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
+                            <option value="">Todos</option>
+                        </Select>
                     </div>
-                    <Button size="small">
-                        <SearchIcon />
+                    <Button variant="primary" size="large" className="my-4">
+                        <FunnelIcon />
                     </Button>
                 </form>
-                <Button variant="primary" onClick={() => { redirect(BackupRoutes.CREATE) }}> <PlusIcon /></Button>
+
             </div>
             <div>
                 <table className="w-full text-sm text-left">
-                <thead className="border-b border-gray-200 text-gray-500">
+                    <thead className="border-b border-gray-200 text-gray-500">
 
                         <tr>
                             <th className="px-4 py-3 font-medium">
