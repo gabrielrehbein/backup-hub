@@ -1,4 +1,3 @@
-"use client";
 
 import { Button } from "@/app/components/Button";
 import { Container } from "@/app/components/Container";
@@ -19,13 +18,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold text-slate-100">Enviar Backup Teste</h1>
           <BackupForm apiKey={process.env.BACKUP_HUB_API_KEY!}/>
         </div>
-        <Button
-          onClick={() => { redirect('/admin') }}
-          variant="secondary"
-          size="large"
-        >
-          Voltar
-        </Button>
+
       </Container>
     </div>
   );

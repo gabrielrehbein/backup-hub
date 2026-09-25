@@ -9,7 +9,7 @@ export default function Header() {
         <header className="flex items-center justify-between mb-6 ">
             <div>
                 <h1 className="text-4xl text-slate-100 font-bold">
-                    Sistema Gerador de Backup (SGB)
+                    Sistema Gerador de Backup (SGB) - Simulador
                 </h1>
 
 

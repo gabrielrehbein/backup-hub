@@ -3,7 +3,7 @@
 import { Button } from "@/app/components/Button";
 
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type BackupFormProps = {
@@ -13,7 +13,14 @@ type BackupFormProps = {
 export function BackupForm({ apiKey }: BackupFormProps) {
     const [size, setSize] = useState("");
     const [sizeType, setSizeType] = useState("kb");
-    const [generatedAt, setGeneratedAt] = useState("");
+    const [generatedAt, setGeneratedAt] = useState(() => {
+        const now = new Date();
+    
+        const offset = now.getTimezoneOffset();
+        const localDate = new Date(now.getTime() - offset * 60000);
+    
+        return localDate.toISOString().slice(0, 16);
+    });
     const [sourceIp, setSourceIp] = useState("");
     const [isLocal, setIsLocal] = useState(true);
     const [filePath, setFilePath] = useState("");
@@ -59,6 +66,15 @@ export function BackupForm({ apiKey }: BackupFormProps) {
             toast.success("Backup enviado com sucesso!");
             console.log("Backup enviado com sucesso:", data);
         } catch (error) {
+            console.error("Erro ao enviar o backup:", error);
+        } finally {
+            setSize("");
+            setSizeType("kb");
+            setGeneratedAt("");
+            setSourceIp("");
+            setIsLocal(true);
+            setFilePath("");
+            setVisible(false);
             setIsSubmitting(false);
         }
     }
@@ -76,6 +92,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                 </label>
                 <div className="flex gap-2 w-full">
                     <input type={visible ? "text" : "password"}
+                        autoComplete="off"
                         value={apiKey}
                         name="api_key"
                         id="api_key"
@@ -97,6 +114,8 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                     id="generated_at"
                     name="generated_at"
                     required
+                    autoComplete="off"
+                    value={generatedAt}
                     onChange={(e) => setGeneratedAt(e.target.value)}
                     className="border text-slate-100 border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
@@ -111,6 +130,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                         type="text"
                         id="size"
                         required
+                        autoComplete="off"
                         placeholder="100000"
                         name="size"
                         onChange={(e) => setSize(e.target.value)}
@@ -125,6 +145,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                         name="size_type"
                         id="size_type"
                         required
+                        autoComplete="off"
                         onChange={(e) => setSizeType(e.target.value)}
                         className="border h-10 text-slate-100 border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     >
@@ -144,6 +165,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                         type="text"
                         id="source_ip"
                         required
+                        autoComplete="off"
                         placeholder="192.168.0.10"
                         name="source_ip"
                         onChange={(e) => setSourceIp(e.target.value)}
@@ -157,6 +179,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                     <select
                         name="is_local"
                         required
+                        autoComplete="off"
                         id="is_local_type"
                         onChange={(e) => handleOnChangeIsLocal(e)}
                         className="border h-10 text-slate-100 border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -173,6 +196,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                 </label>
                 <input
                     type="text"
+                    autoComplete="off"
                     id="file_path"
                     name="file_path"
                     required
