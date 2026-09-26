@@ -77,6 +77,7 @@ class VerifyBackupTimeAction
 
         $hasActiveTimeRisk = $backup->risks
             ->where('type', RiskTypeEnum::TIME->value)
+            ->where("is_active", true)
             ->isNotEmpty();
 
         if ($hasActiveTimeRisk) {

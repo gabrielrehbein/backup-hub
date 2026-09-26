@@ -6,6 +6,7 @@ use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\Models\Backup;
+use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Modules\Risks\Models\Risk;
 use App\Modules\Systems\Contracts\Repositories\SystemInstanceRepositoryInterface;
@@ -44,7 +45,7 @@ class VerifyBackupSizeAction
         return ($sizeDifference / $lastSizeValidBackup->file_size_kb) * 100;
     }
 
-    public function execute(Backup $backup)
+    public function execute(Backup $backup): ?BackupRisk
     {
 
         // Pega último backup válido sem risco de tamanho para o mesmo sistema
@@ -55,14 +56,14 @@ class VerifyBackupSizeAction
         );
 
         if($lastSizeValidBackup === null){
-            return;
+            return null;
         }
 
         // Calcula o tamanho perdido desde o último backup válido para o mesmo sistema
         $sizeLossPercentage = $this->calculateSizeLossPercentage($backup, $lastSizeValidBackup);
 
         if($sizeLossPercentage === 0){
-            return;
+            return null;
         }
 
         $risks = $this->systemInstanceRepository
@@ -73,24 +74,42 @@ class VerifyBackupSizeAction
             ->orderByDesc('max_size_loss_in_percent')
             ->get();
 
+        $createBackupRiskDTO = null;
+
         // Avalia os riscos de tamanho do backup e cria um novo risco se necessário
         foreach ($risks as $risk) {
+            $excedeuLimite = $sizeLossPercentage > $risk->max_size_loss_in_percent;
 
-            if($sizeLossPercentage > $risk->max_size_loss_in_percent){
-                $createBackupRiskDTO = new CreateBackupRiskDTO(
-                    backupId: $backup->id,
-                    riskId: $risk->id,
-                    type: RiskTypeEnum::SIZE,
-                    isActive: true,
-                    delayInMinutes: 0,
-                    sizeLossPercent: $sizeLossPercentage,
-                    description: $this->buildRiskMessage($backup, RiskTypeEnum::SIZE, $lastSizeValidBackup->file_size_kb)
-                );
-                $this->backupRiskService->create($createBackupRiskDTO);
-
-                break;
+            if($excedeuLimite){
+                continue;
             }
+
+            $createBackupRiskDTO = new CreateBackupRiskDTO(
+                backupId: $backup->id,
+                riskId: $risk->id,
+                type: RiskTypeEnum::SIZE,
+                isActive: true,
+                delayInMinutes: 0,
+                sizeLossPercent: $sizeLossPercentage,
+                description: $this->buildRiskMessage($backup, RiskTypeEnum::SIZE, $lastSizeValidBackup->file_size_kb)
+            );
         }
+
+        if(!$createBackupRiskDTO){
+            return null;
+        }
+
+        $hasActiveSizeRisk = $backup->risks
+            ->where('type', RiskTypeEnum::SIZE->value)
+            ->where("is_active", true)
+            ->isNotEmpty();
+
+        if($hasActiveSizeRisk){
+            return $this->backupRiskService->replaceToBiggestRisk($createBackupRiskDTO);
+        }
+
+        return $this->backupRiskService->create($createBackupRiskDTO);
+
 
     }
 }
