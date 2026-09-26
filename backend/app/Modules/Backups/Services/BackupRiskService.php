@@ -14,7 +14,9 @@ use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
 use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
 use App\Modules\Risks\Enums\RiskTypeEnum;
+use App\Modules\Risks\Models\Risk;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 class BackupRiskService implements BackupRiskServiceInterface
 {
@@ -59,6 +61,27 @@ class BackupRiskService implements BackupRiskServiceInterface
     public function findById(int $id): BackupRisk
     {
         return $this->backupRiskRepository->findById($id);
+    }
+
+
+    public function replaceToBiggestRisk(CreateBackupRiskDTO $payload): BackupRisk
+    {
+        $backup = $this->backupRepository->findById($payload->backupId);
+        $risk = Risk::findOrFail($payload->riskId);
+
+        $currentTimeRisk = $backup->risks()
+            ->where('type', '=', $payload->type)
+            ->where('is_active', true)
+            ->first();
+
+
+        if ($currentTimeRisk && !($currentTimeRisk->risk()->level <= $risk->level)) {
+            return $currentTimeRisk;
+        }
+
+        $currentTimeRisk->is_active = false;
+        $currentTimeRisk->save();
+        return $this->create($payload);
     }
 
     public function update(UpdateBackupRiskDTO $payload, int $id): BackupRisk

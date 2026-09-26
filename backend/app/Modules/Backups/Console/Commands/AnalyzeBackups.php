@@ -51,16 +51,16 @@ class AnalyzeBackups extends Command
             $lastBackupByInstance = $this->backupRepository->listLastBackupsGroupedBySystemInstance();
             foreach ($lastBackupByInstance as $backup) {
                 if($backup->risks->where('type', 'time')->first()) {
-                    $this->alert("Backup ID: {$backup->id} já possui risco de tempo associado. Pulando análise.");
+                    $this->alert("Backup ID: {$backup->id} já possui risco de tempo associado. Vou analisar se o novo risco é maior.");
                     $this->logMonitoring(
-                        'Backup já possui risco de tempo associado. Pulando análise.',
+                        'Backup já possui risco de tempo associado. Vou analisar se o novo risco é maior.',
                         ['backup_id' => $backup->id],
                         'warning'
                     );
-                    continue;
+
                 }
-                $result = $this->verifyBackupTimeAction->execute($backup);
-                if (!$result) {
+                $backupRisk = $this->verifyBackupTimeAction->execute($backup);
+                if ($backupRisk) {
                     $this->error("Risco de tempo identificado no backup ID: {$backup->id}");
                     $this->logMonitoring(
                         'Risco de tempo identificado no backup.',

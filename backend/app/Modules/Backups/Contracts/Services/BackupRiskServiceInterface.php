@@ -13,6 +13,7 @@ interface BackupRiskServiceInterface
 {
     public function list(FilterBackupRiskDTO $filters): iterable;
     public function create(CreateBackupRiskDTO $payload): BackupRisk;
+    public function replaceToBiggestRisk(CreateBackupRiskDTO $payload): BackupRisk;
     public function findById(int $id): BackupRisk;
     public function update(UpdateBackupRiskDTO $payload, int $id): BackupRisk;
     public function toggleIsActive(int $id): BackupRisk;

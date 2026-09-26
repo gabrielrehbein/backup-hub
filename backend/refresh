@@ -1,0 +1,35 @@
+
+   INFO  Nothing to migrate.  
+
+   INFO  Seeding database.  
+
+  App\Modules\Systems\Seeders\CategorySeeder ............................................................................................ RUNNING  
+  App\Modules\Systems\Seeders\CategorySeeder ......................................................................................... 28 ms DONE  
+
+  App\Modules\Systems\Seeders\SystemSeeder .............................................................................................. RUNNING  
+
+   Illuminate\Database\UniqueConstraintViolationException 
+
+  SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "systems_name_unique"
+DETAIL:  Key (name)=(Sistema A) already exists. (Connection: pgsql, Host: backup-hub-postgres, Port: 5432, Database: backup_hub_db, SQL: insert into "systems" ("name", "category_id", "updated_at", "created_at") values (Sistema A, 1, 2026-09-26 15:26:53, 2026-09-26 15:26:53) returning "id")
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:838
+    834▕             $exceptionType = $this->isUniqueConstraintError($e)
+    835▕                 ? UniqueConstraintViolationException::class
+    836▕                 : QueryException::class;
+    837▕ 
+  ➜ 838▕             throw new $exceptionType(
+    839▕                 $this->getNameWithReadWriteType(),
+    840▕                 $query,
+    841▕                 $this->prepareBindings($bindings),
+    842▕                 $e,
+
+      [2m+18 vendor frames [22m
+
+  19  app/Modules/Systems/Seeders/SystemSeeder.php:12
+      Illuminate\Database\Eloquent\Model::__callStatic("create")
+      [2m+8 vendor frames [22m
+
+  28  database/seeders/DatabaseSeeder.php:25
+      Illuminate\Database\Seeder::call("App\Modules\Systems\Seeders\SystemSeeder")
+

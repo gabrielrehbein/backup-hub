@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type BackupFormProps = {
-    apiKey: string
+    _apiKey: string
 }
 
-export function BackupForm({ apiKey }: BackupFormProps) {
+export function BackupForm({ _apiKey }: BackupFormProps) {
     const [size, setSize] = useState("");
     const [sizeType, setSizeType] = useState("kb");
     const [generatedAt, setGeneratedAt] = useState(() => {
@@ -26,6 +26,7 @@ export function BackupForm({ apiKey }: BackupFormProps) {
     const [filePath, setFilePath] = useState("");
     const [visible, setVisible] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [apiKey, setApiKey] = useState<string>("");
 
 
     const handleSubmit = async (e: React.SubmitEvent) => {
@@ -96,8 +97,8 @@ export function BackupForm({ apiKey }: BackupFormProps) {
                         value={apiKey}
                         name="api_key"
                         id="api_key"
+                        onChange={(e) => (setApiKey(e.target.value))}
                         required
-                        disabled
                         placeholder="Insira sua chave de API"
                         className="border w-full text-slate-100 border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                     <Button size="small" type="button" onClick={() => setVisible(!visible)}>

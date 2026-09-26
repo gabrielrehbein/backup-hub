@@ -6,10 +6,11 @@ use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\Models\Backup;
+use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Modules\Systems\Contracts\Repositories\SystemInstanceRepositoryInterface;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class VerifyBackupTimeAction
 {
@@ -32,38 +33,56 @@ class VerifyBackupTimeAction
         return (float) $backup->generated_at->diffInMinutes(Carbon::now());
     }
 
-    public function execute(Backup $backup): bool
+    public function execute(Backup $backup): ?BackupRisk
     {
-
         // Calcula o tempo em minutos perdido desde o último backup para o mesmo sistema
         $timeDifferenceInMinutes = $this->calculateTimeDifferenceInMinutes($backup);
-
 
         $risks = $this->systemInstanceRepository
             ->findById($backup->system_instance_id)
             ->client
             ->plan
             ->risks()
-            ->orderByDesc('level')
+            ->orderBy('max_delay_limit_in_minutes')
             ->get();
 
-        // Avalia os riscos de tempo do backup e cria um novo risco se necessário
+        $biggestRiskDTO = null;
+
         foreach ($risks as $risk) {
-            if($timeDifferenceInMinutes > $risk->max_delay_limit_in_minutes){
-                $createBackupRiskDTO = new CreateBackupRiskDTO(
-                    backupId: $backup->id,
-                    riskId: $risk->id,
-                    type: RiskTypeEnum::TIME,
-                    isActive: true,
-                    delayInMinutes: $timeDifferenceInMinutes,
-                    sizeLossPercent: 0,
-                    description: $this->buildRiskMessage($backup, RiskTypeEnum::TIME, $timeDifferenceInMinutes)
-                );
-                $this->backupRiskService->create($createBackupRiskDTO);
-                return false;
+            $excedeuLimite = $timeDifferenceInMinutes > $risk->max_delay_limit_in_minutes;
+            $excedeuMensagem = $excedeuLimite ? "SIM" : "NÃO";
+
+            Log::channel('daily')->info(
+                "Diferença em minutos do backup ($timeDifferenceInMinutes) é maior que o limite máximo ($risk->max_delay_limit_in_minutes) do risco {$risk->name} = {$excedeuMensagem}"
+            );
+
+            if (!$excedeuLimite) {
+                continue;
             }
+
+            $biggestRiskDTO = new CreateBackupRiskDTO(
+                backupId: $backup->id,
+                riskId: $risk->id,
+                type: RiskTypeEnum::TIME,
+                isActive: true,
+                delayInMinutes: $timeDifferenceInMinutes,
+                sizeLossPercent: 0,
+                description: $this->buildRiskMessage($backup, RiskTypeEnum::TIME, $timeDifferenceInMinutes),
+            );
         }
 
-        return true;
+        if (!$biggestRiskDTO) {
+            return null;
+        }
+
+        $hasActiveTimeRisk = $backup->risks
+            ->where('type', RiskTypeEnum::TIME->value)
+            ->isNotEmpty();
+
+        if ($hasActiveTimeRisk) {
+            return $this->backupRiskService->replaceToBiggestRisk($biggestRiskDTO);
+        }
+
+        return $this->backupRiskService->create($biggestRiskDTO);
     }
 }

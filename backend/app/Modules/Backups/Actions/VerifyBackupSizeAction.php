@@ -7,6 +7,7 @@ use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
+use App\Modules\Risks\Models\Risk;
 use App\Modules\Systems\Contracts\Repositories\SystemInstanceRepositoryInterface;
 
 
@@ -69,11 +70,12 @@ class VerifyBackupSizeAction
             ->client
             ->plan
             ->risks()
-            ->orderByDesc('level')
+            ->orderByDesc('max_size_loss_in_percent')
             ->get();
 
         // Avalia os riscos de tamanho do backup e cria um novo risco se necessário
         foreach ($risks as $risk) {
+
             if($sizeLossPercentage > $risk->max_size_loss_in_percent){
                 $createBackupRiskDTO = new CreateBackupRiskDTO(
                     backupId: $backup->id,
