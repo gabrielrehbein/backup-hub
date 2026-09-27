@@ -40,7 +40,7 @@ export default function AdminPage() {
                 </div>
 
                 <div className='flex justify-between gap-4'>
-                    <Button size='large' onClick={() => redirect(InstanceRoutes.CREATE)}>
+                    <Button size='large' onClick={() => redirect(InstanceRoutes.LIST)}>
                         Instancias
                         <HardDriveIcon />
                     </Button>

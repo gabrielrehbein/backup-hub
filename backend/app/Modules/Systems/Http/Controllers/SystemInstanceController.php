@@ -51,7 +51,7 @@ class SystemInstanceController extends Controller
     public function show(string $id)
     {
         $system = $this->systemInstanceService->findById($id);
-        return JSONResponse::success($system, BuildResponseMessage::findOne(ResourceEnum::SYSTEM_INSTANCE), 200);
+        return JSONResponse::success(new PublicInstanceResource($system), BuildResponseMessage::findOne(ResourceEnum::SYSTEM_INSTANCE), 200);
     }
 
 
