@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('type', 50);
             $table->string('title', 150);
             $table->text('content');
+            $table->foreignId('notification_config_id')->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

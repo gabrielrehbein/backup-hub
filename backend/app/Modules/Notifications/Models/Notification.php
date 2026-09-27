@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    /** @use HasFactory<\Database\Factories\NotificationFactory> */
-    use HasFactory;
+    protected $fillable = [
+        "type",
+        "title",
+        "content",
+        "notification_config_id",
+    ];
+
+    public function notificationConfig()
+    {
+        return $this->belongsTo(NotificationConfig::class);
+    }
 }
