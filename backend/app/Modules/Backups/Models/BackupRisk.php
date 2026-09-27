@@ -2,11 +2,14 @@
 
 namespace App\Modules\Backups\Models;
 
+use App\Modules\Backups\Observers\BackupRiskObserver;
 use App\Modules\Risks\Models\Risk;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy(BackupRiskObserver::class)]
 class BackupRisk extends Model
 {
     /** @use HasFactory<\Database\Factories\BackupErrorFactory> */

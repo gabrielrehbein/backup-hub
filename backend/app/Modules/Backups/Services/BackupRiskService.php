@@ -13,6 +13,7 @@ use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Actions\NotifyBackupRiskByMail;
 use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
+use App\Modules\Notifications\Models\NotificationConfig;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Modules\Risks\Models\Risk;
 use Illuminate\Support\Facades\DB;
@@ -26,17 +27,25 @@ class BackupRiskService implements BackupRiskServiceInterface
         private readonly NotificationServiceInterface $notify,
     ) {}
 
-    private function notifyIfNeeded(BackupRisk $backupRisk): void
+    public function notifyIfNeeded(BackupRisk $backupRisk): void
     {
-        if($backupRisk->risk->notifiable && $backupRisk->is_active){
-            $this->notify->addNotificationMethod(
-                new NotifyBackupRiskByMail(
-                    $backupRisk,
-                    "gabadev63@gmail.com"
-                )
-            );
-            $this->notify->sendNotifications();
+        if(!$backupRisk->risk->notifiable || !$backupRisk->is_active){
+            return;
         }
+
+        $notifyTo = NotificationConfig::first()?->email;
+
+        if(!$notifyTo){
+            return;
+        }
+
+        $this->notify->addNotificationMethod(
+            new NotifyBackupRiskByMail(
+                $backupRisk,
+                NotificationConfig::first()?->email ?? ''
+            )
+        );
+        $this->notify->sendNotifications();
     }
 
     private function backupWithRiskAlreadyExists(int $backupId, RiskTypeEnum $riskType): bool {
@@ -54,7 +63,6 @@ class BackupRiskService implements BackupRiskServiceInterface
             throw new RiskTypeIsUniqueByBackupHttpException();
         }
         $backupRisk = $this->backupRiskRepository->create($payload);
-        $this->notifyIfNeeded($backupRisk);
         return $backupRisk;
     }
 
@@ -91,7 +99,6 @@ class BackupRiskService implements BackupRiskServiceInterface
             throw new RiskTypeIsUniqueByBackupHttpException();
         }
         $updatedBackupRisk = $this->backupRiskRepository->update($payload, $backupRisk);
-        $this->notifyIfNeeded($updatedBackupRisk);
         return $updatedBackupRisk;
     }
 
@@ -100,7 +107,6 @@ class BackupRiskService implements BackupRiskServiceInterface
         $backupRisk = $this->findById($id);
         $backupRisk->is_active = ! $backupRisk->is_active;
         $backupRisk->save();
-        $this->notifyIfNeeded($backupRisk);
 
         return $backupRisk;
     }

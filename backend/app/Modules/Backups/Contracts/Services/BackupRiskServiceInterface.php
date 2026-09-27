@@ -20,4 +20,5 @@ interface BackupRiskServiceInterface
     public function getTotalBackupRisks(?int $backupId = null, ?int $riskTypeId = null): int;
     public function getTotalBackupRisksByType(?int $backupId = null): array;
     public function getTotalRisk(?string $name = null);
+    public function notifyIfNeeded(BackupRisk $backupRisk): void;
 }

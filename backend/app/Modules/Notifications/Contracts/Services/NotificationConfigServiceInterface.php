@@ -9,4 +9,5 @@ use App\Modules\Notifications\Models\NotificationConfig;
 
 interface NotificationConfigServiceInterface {
     public function save(CreateNotificationConfigDTO $dto): NotificationConfig;
+    public function getConfig(): NotificationConfig;
 }

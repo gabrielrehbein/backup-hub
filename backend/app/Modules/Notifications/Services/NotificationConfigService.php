@@ -20,4 +20,8 @@ class NotificationConfigService implements NotificationConfigServiceInterface {
 
         return $notificationConfig;
     }
+
+    public function getConfig(): NotificationConfig {
+        return NotificationConfig::first();
+    }
 }
