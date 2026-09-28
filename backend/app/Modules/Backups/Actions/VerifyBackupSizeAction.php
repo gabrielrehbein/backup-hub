@@ -74,13 +74,15 @@ class VerifyBackupSizeAction
             ->orderByDesc('max_size_loss_in_percent')
             ->get();
 
+
+
         $createBackupRiskDTO = null;
 
         // Avalia os riscos de tamanho do backup e cria um novo risco se necessário
         foreach ($risks as $risk) {
             $excedeuLimite = $sizeLossPercentage > $risk->max_size_loss_in_percent;
 
-            if($excedeuLimite){
+            if(!$excedeuLimite){
                 continue;
             }
 

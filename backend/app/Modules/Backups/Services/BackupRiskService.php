@@ -83,7 +83,7 @@ class BackupRiskService implements BackupRiskServiceInterface
             ->first();
 
 
-        if ($currentTimeRisk && !($currentTimeRisk->risk()->level <= $risk->level)) {
+        if ($currentTimeRisk && $currentTimeRisk->risk->level >= $risk->level) {
             return $currentTimeRisk;
         }
 
