@@ -7,5 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::put('/notification-config', [NotificationConfigController::class, 'save']);
+    Route::put('/notifications/config', [NotificationConfigController::class, 'save']);
+    Route::get('/notifications/config', [NotificationConfigController::class, 'getConfig']);
 });

@@ -25,7 +25,7 @@ class StoreNotificationConfigRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            "email" => ["required", "string"],
+            "email" => ["required", "string", 'email',],
         ];
     }
 

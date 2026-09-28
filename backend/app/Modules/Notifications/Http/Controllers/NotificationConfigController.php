@@ -19,6 +19,11 @@ class NotificationConfigController
     public function save(StoreNotificationConfigRequest $request){
         $dto = $request->toDTO();
         $notificationConfig = $this->notificationConfigService->save($dto);
-        return JSONResponse::success($notificationConfig, "Configuração de notificação salvada com sucesso");
+        return JSONResponse::success($notificationConfig, "Configuração de notificação salvada com sucesso.");
+    }
+
+    public function getConfig(){
+        $notificationConfig = $this->notificationConfigService->getConfig();
+        return JSONResponse::success($notificationConfig, "Configuração de notificação obtida com sucesso.");
     }
 }
