@@ -31,6 +31,22 @@ services:
         condition: service_healthy
     networks:
       - backup-hub
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backup-hub-worker
+    command: php artisan queue:work --queue=notifications,default
+    restart: always
+    volumes:
+      - ./backend:/var/www
+    depends_on:
+      backend:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    networks:
+      - backup-hub
 
   frontend:
     build:

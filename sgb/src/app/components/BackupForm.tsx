@@ -83,7 +83,6 @@ export function BackupForm({ _apiKey }: BackupFormProps) {
     function handleOnChangeIsLocal(e: React.ChangeEvent<HTMLSelectElement>) {
         const value = e.target.value;
         setIsLocal(value === "local");
-        console.log("isLocal:", isLocal);
     }
     return (
         <form className="flex flex-col gap-4" onSubmit={handleSubmit} method="POST">

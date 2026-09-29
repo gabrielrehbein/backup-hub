@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 class VerifyBackupTimeAction
 {
     public function __construct(
-        private readonly BackupRepositoryInterface $backupRepository,
         private readonly BackupRiskServiceInterface $backupRiskService,
         private readonly SystemInstanceRepositoryInterface $systemInstanceRepository,
     ){}
