@@ -4,7 +4,9 @@ namespace App\Modules\Clients\Http\Controllers;
 
 use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use App\Modules\Clients\DTOs\CreateClientDTO;
+use App\Modules\Clients\DTOs\FilterClientDTO;
 use App\Modules\Clients\DTOs\UpdateClientDTO;
+use App\Modules\Clients\Http\Requests\FilterClientRequest;
 use App\Modules\Clients\Http\Requests\StoreClientRequest;
 use App\Modules\Clients\Http\Requests\UpdateClientRequest;
 use App\Modules\Clients\Http\Resources\PublicClientResource;
@@ -34,9 +36,9 @@ class ClientController extends Controller
     }
 
 
-    public function index()
+    public function index(FilterClientRequest $request)
     {
-        $clients = $this->clientService->findAll();
+        $clients = $this->clientService->list($request->toDTO());
         return JSONResponse::success(
             PublicClientResource::collection($clients),
             BuildResponseMessage::findAll(ResourceEnum::CLIENT),

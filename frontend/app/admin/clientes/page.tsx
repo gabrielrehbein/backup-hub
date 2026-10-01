@@ -12,11 +12,17 @@ import { useEffect, useState } from "react";
 
 export default function ListClients() {
     const [clients, setClients] = useState<any[]>([]);
+    const [searchName, setSearchName] = useState<string>("");
+
+
     const router = useRouter();
     useEffect(() => {
         const fetchClients = async () => {
+            let params = "";
+            params = searchName ? params + `?name=${searchName}` : params;
+
             try {
-                const response = await fetch("http://localhost:8000/api/clients", {
+                const response = await fetch(`http://localhost:8000/api/clients`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -39,12 +45,38 @@ export default function ListClients() {
         fetchClients();
     }, []);
 
+    async function handleOnSearch(e: React.SubmitEvent){
+        e.preventDefault();
+        let params = "";
+        params = searchName ? params + `?name=${searchName}` : params;
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/clients${params}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("backup-hub-token") || ""}`,
+                    "Accept": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao filtrar os clientes");
+            }
+
+            const data = await response.json();
+            setClients(data.data);
+        } catch (error) {
+            console.error("Erro ao filtrar os clientes:", error);
+        }
+    }
+
     return (
         <Container>
             <Header />
             <div className="flex gap-8 items-center">
-                <form className="flex gap-2 items-center w-full">
-                    <Input label="" className="w-full" type="text" placeholder="Busque o nome do cliente" />
+                <form className="flex gap-2 items-center w-full" onSubmit={handleOnSearch}>
+                    <Input label="" className="w-full" type="text" placeholder="Busque o nome do cliente" value={searchName} onChange={(e) => (setSearchName(e.target.value))} />
 
                     <Button size="small">
                         <SearchIcon />

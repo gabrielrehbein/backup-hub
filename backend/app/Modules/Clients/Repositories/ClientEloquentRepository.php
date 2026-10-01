@@ -4,6 +4,7 @@ namespace App\Modules\Clients\Repositories;
 
 use App\Modules\Clients\Contracts\Repositories\ClientRepositoryInterface;
 use App\Modules\Clients\DTOs\CreateClientDTO;
+use App\Modules\Clients\DTOs\FilterClientDTO;
 use App\Modules\Clients\DTOs\UpdateClientDTO;
 use App\Modules\Clients\Models\Client;
 
@@ -13,6 +14,30 @@ class ClientEloquentRepository implements ClientRepositoryInterface
     public function create(CreateClientDTO $payload): Client {
         return Client::create($payload->toArray());
     }
+
+    public function list(FilterClientDTO $dto): iterable {
+        return Client::query()
+            ->when(
+                $dto->name != null,
+                function ($query) use($dto){
+                    $query->where("name", "LIKE", "%{$dto->name}%");
+                }
+            )
+            ->when(
+                $dto->isActive != null,
+                function($query) use($dto){
+                    $query->where("is_active", $dto->isActive);
+                }
+            )
+            ->when(
+                $dto->planId != null,
+                function($query) use($dto){
+                    $query->where("plan_id", "=", $dto->planId);
+                }
+            )
+            ->get();
+    }
+
     public function findAll(): iterable {
         return Client::all();
     }

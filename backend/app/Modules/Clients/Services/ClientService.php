@@ -5,6 +5,7 @@ namespace App\Modules\Clients\Services;
 use App\Modules\Clients\Contracts\Repositories\ClientRepositoryInterface;
 use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use App\Modules\Clients\DTOs\CreateClientDTO;
+use App\Modules\Clients\DTOs\FilterClientDTO;
 use App\Modules\Clients\DTOs\UpdateClientDTO;
 use App\Modules\Clients\Models\Client;
 
@@ -22,6 +23,12 @@ class ClientService implements ClientServiceInterface
     public function create(CreateClientDTO $payload): Client {
         $client = $this->clientRepository->create($payload);
         return $client;
+    }
+
+    #[Override]
+    public function list(FilterClientDTO $dto): iterable
+    {
+        return $this->clientRepository->list($dto);
     }
 
     public function findAll(): iterable {
