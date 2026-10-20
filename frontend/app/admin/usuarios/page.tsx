@@ -20,7 +20,6 @@ export default function UserPage(){
                 const userService = new UserService();
                 const users = await userService.getUsers();
                 setUsers(users);
-                console.log("USERS: ", users);
             }
             fetchUsers();
         }, 

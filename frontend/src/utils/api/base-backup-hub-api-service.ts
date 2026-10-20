@@ -16,4 +16,10 @@ export abstract class BaseBackupHubApiService {
     
         return url.endsWith("/") ? url.slice(0, -1) : url;
     }
+
+    protected getMessageError(errorData: Promise<any>): string {
+        return Object.values(errorData.errors ?? {})[0]?.[0]
+            ?? errorData.message
+            ?? response.statusText;
+    }
 }

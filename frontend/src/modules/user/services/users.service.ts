@@ -19,15 +19,26 @@ export class UserService extends BaseBackupHubApiService {
     }
 
     public async createUser(user: CreateUserType): Promise<PublicUserType> {
-        const response = await fetch(`${this.getBaseUrl()}/users`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem('backup-hub-token') || ''}`,
-            },
-            body: JSON.stringify(user),
-        });
-        const data = await response.json();
-        return data.data;
+        try {
+            const response = await fetch(`${this.getBaseUrl()}/users`, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('backup-hub-token') || ''}`,
+                },
+                body: JSON.stringify(user),
+            });
+            console.log('Create user response:', await response.status);
+            if (!response.ok) {
+                const errorData = await response.json();
+                const message = this.getMessageError(errorData);
+                throw new Error(message);
+            }
+            const data = await response.json();
+            return data.data;
+        } catch (error) {
+            throw error;
+        }
     }
 }

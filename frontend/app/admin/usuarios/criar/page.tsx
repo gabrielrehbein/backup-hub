@@ -39,11 +39,16 @@ export default function CreateUserPage() {
                 phone,
                 role
             };
-            const data = await userService.createUser(user);
-            if (data) {
-                toast.success("User created successfully:", data);
-            } else {
-                toast.error("Failed to create user");
+            try{
+                const data = await userService.createUser(user);
+                if (data) {
+                    toast.success("Usuário criado com sucesso:", data);
+                } else {
+                    toast.error("Failed to create user");
+                }
+            }
+            catch (error) {
+                toast.error("Erro ao criar usuário: " + error.message);
             }
                 
         }
