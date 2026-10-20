@@ -16,7 +16,7 @@ class RiskSeeder extends Seeder
             'description' => 'Risco baixo, com impacto mínimo e baixa probabilidade de ocorrência.',
             'notifiable' => true,
             'max_delay_limit_in_minutes' => 1,
-            'max_size_loss_in_percent' => 20,
+            'max_size_loss_in_percent' => 5,
             'plan_id' => 1
         ]);
 
@@ -36,7 +36,7 @@ class RiskSeeder extends Seeder
             'notifiable' => true,
             'description' => 'Risco alto, com impacto significativo e alta probabilidade de ocorrência.',
             'max_delay_limit_in_minutes' => 3,
-            'max_size_loss_in_percent' => 5,
+            'max_size_loss_in_percent' => 20,
             'plan_id' => 1
         ]);
 
@@ -47,7 +47,7 @@ class RiskSeeder extends Seeder
             'notifiable' => true,
             'description' => 'Risco baixo, com impacto mínimo e baixa probabilidade de ocorrência.',
             'max_delay_limit_in_minutes' => 1,
-            'max_size_loss_in_percent' => 20,
+            'max_size_loss_in_percent' => 5,
             'plan_id' => 2
         ]);
 
@@ -67,7 +67,7 @@ class RiskSeeder extends Seeder
             'notifiable' => true,
             'description' => 'Risco alto, com impacto significativo e alta probabilidade de ocorrência.',
             'max_delay_limit_in_minutes' => 3,
-            'max_size_loss_in_percent' => 5,
+            'max_size_loss_in_percent' => 20,
             'plan_id' => 2
         ]);
     }

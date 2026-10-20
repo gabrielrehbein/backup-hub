@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SGB - SIMULADOR",
   description: "Simulador de sistema de geração de backup",
+  
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
