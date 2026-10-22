@@ -5,6 +5,7 @@ type InputProps = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function Select({ children, label, value, onChange, ...props }: InputProps) {
+    const disabledClasses = props.disabled ? 'bg-gray-200 cursor-not-allowed' : '';
     return (
         <div className="flex w-full gap-2 justify-center items-center">
             <div className="w-full flex flex-col gap-2">
@@ -21,7 +22,7 @@ export function Select({ children, label, value, onChange, ...props }: InputProp
                         onChange={onChange}
                         name={props.name}
                         id={props.id}
-                        className="border border-slate-300 w-full rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className={`border border-slate-300 w-full rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${disabledClasses}`}
                         {...props}
                    >
                         {children}
