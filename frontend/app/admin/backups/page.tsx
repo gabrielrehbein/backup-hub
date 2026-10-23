@@ -6,15 +6,23 @@ import Header from "@/app/components/Header"
 import { Input } from "@/app/components/Input"
 import { Select } from "@/app/components/Select";
 import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
+import { ClientService } from "@/src/modules/client/services/clients.service";
+import { PlanService } from "@/src/modules/client/services/plans.service";
+import { PlanType } from "@/src/modules/client/types/plan-type";
+import { RiskService } from "@/src/modules/risk/services/risks.service";
+import { RiskType } from "@/src/modules/risk/types/risk-type";
 import { CircleCheckIcon, CircleXIcon, FunnelIcon, PlusIcon, SearchIcon } from "lucide-react"
 import { redirect, useRouter } from "next/navigation"
 
 import { useEffect, useState } from "react"
+import { toast } from "react-toastify";
 
 export default function ListBackups() {
     const [backups, setBackups] = useState<any[]>([]);
     const [clients, setClients] = useState<any[]>([]);
     const [clientId, setClientId] = useState<number | null>(null);
+    const [plans, setPlans] = useState<PlanType[]>([]);
+    const [risks, setRisks] = useState<RiskType[]>([]);
 
     const router = useRouter();
 
@@ -44,33 +52,44 @@ export default function ListBackups() {
         fetchBackups();
     }, []);
 
-    const loadClients = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/clients", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("backup-hub-token") || ""}`,
-                    "Accept": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Erro ao carregar os clientes");
+    useEffect(() => {
+        const fetchRisks = async () => {
+            const riskService = new RiskService();
+            try {
+                const risksData = await riskService.getRisks();
+                setRisks(risksData);
+            } catch (error) {
+                toast.error("Erro ao carregar os riscos: " + error);
             }
-
-            const data = await response.json();
-            setClients(data.data || []);
-
-            // Define o primeiro cliente como padrão se existir
-
-        } catch (error) {
-            console.error("Erro ao carregar os clientes:", error);
         }
-    };
+        fetchRisks();
+    }, [])
 
     useEffect(() => {
-        loadClients();
+        const fetchPlans = async () => {
+            const planService = new PlanService();
+            try {
+                const plansData = await planService.getPlans();
+                setPlans(plansData);
+            } catch (error) {
+                toast.error("Erro ao carregar os planos: " + error);
+            }
+        }
+        fetchPlans();
+    }, [])
+
+
+    useEffect(() => {
+        const fetchClients = async () => {
+            const clientService = new ClientService();
+            try {
+                const clientsData = await clientService.getClients();
+                setClients(clientsData);
+            } catch (error) {
+                toast.error("Erro ao carregar os clientes: " + error);
+            }
+        }
+        fetchClients();
     }, []);
 
 
@@ -101,6 +120,11 @@ export default function ListBackups() {
 
                         <Select label="Plano" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
                             <option value="">Todos</option>
+                            {
+                                plans.map((plan) => (
+                                    <option key={plan.id} value={plan.id}>{plan.name}</option>
+                                ))
+                            }
                         </Select>
                         <Select label="Cliente" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
                             <option value="">Todos</option>
@@ -112,9 +136,14 @@ export default function ListBackups() {
                         </Select>
                         <Select label="Risco" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
                             <option value="">Todos</option>
+                            <option value="Baixo">Baixo</option>
+                            <option value="Medio">Médio</option>
+                            <option value="Alto">Alto</option>
                         </Select>
                         <Select label="Tipo do Risco" value={""} onChange={(e) => setClientId(Number(e.target.value))}>
                             <option value="">Todos</option>
+                            <option value="time">Tempo</option>
+                            <option value="size">Tamanho</option>
                         </Select>
                     </div>
                     <Button variant="primary" size="large" className="my-4">
