@@ -12,6 +12,7 @@ enum ResourceEnum: string
     case RISK = 'Risco';
     case PLAN = 'Plano';
     case BACKUP = 'Backup';
+    case BACKUP_RISK = 'Risco de Backup';
     case NOTIFICATION = 'Notificação';
     case NOTIFICATION_DELIVERY = 'Entrega de Notificação';
     case NOTIFICATION_CHANNEL = 'Canal de Notificação';

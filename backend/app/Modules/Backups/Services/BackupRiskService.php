@@ -27,6 +27,11 @@ class BackupRiskService implements BackupRiskServiceInterface
         private readonly NotificationServiceInterface $notify,
     ) {}
 
+    public function findByBackupId(int $backupId): iterable
+    {
+        return $this->backupRiskRepository->findByBackupId($backupId);
+    }
+
     public function notifyIfNeeded(BackupRisk $backupRisk): void
     {
         if(!$backupRisk->risk->notifiable || !$backupRisk->is_active){

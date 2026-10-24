@@ -105,4 +105,13 @@ class BackupRiskEloquentRepository implements BackupRiskRepositoryInterface
             ),
         ];
     }
+
+    public function findByBackupId(int $backupId): iterable
+    {
+        return BackupRisk::query()
+            ->where('backup_id', $backupId)
+            ->with('risk')
+            ->orderBy("is_active", "desc")
+            ->get();
+    }
 }

@@ -9,6 +9,7 @@ use App\Modules\Backups\Models\BackupRisk;
 
 interface BackupRiskRepositoryInterface
 {
+    public function findByBackupId(int $backupId): iterable;
     public function list(FilterBackupRiskDTO $filters): iterable;
     public function create(CreateBackupRiskDTO $payload): BackupRisk;
     public function findById(int $id): BackupRisk;

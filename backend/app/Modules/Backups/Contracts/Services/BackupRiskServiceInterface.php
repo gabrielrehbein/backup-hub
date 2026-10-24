@@ -11,6 +11,7 @@ use App\Modules\Backups\Models\BackupRisk;
 
 interface BackupRiskServiceInterface
 {
+    public function findByBackupId(int $backupId): iterable;
     public function list(FilterBackupRiskDTO $filters): iterable;
     public function create(CreateBackupRiskDTO $payload): BackupRisk;
     public function replaceToBiggestRisk(CreateBackupRiskDTO $payload): BackupRisk;
