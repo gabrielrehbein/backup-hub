@@ -120,6 +120,7 @@ export default function BackupDetailsPage() {
                         <p><strong>Tamanho:</strong> {backup.size} {backup.size_type.toUpperCase()}</p>
                         <p><strong>IP de origem:</strong> {backup.source_ip}</p>
                         <p><strong>Risco:</strong> {backup.risk}</p>
+                        <p><strong>Gerado em:</strong> {new Date(backup.generated_at).toLocaleString()}</p>
                         <p><strong>Criado em:</strong> {new Date(backup.created_at).toLocaleString()}</p>
                         <p><strong>Última atualização:</strong> {new Date(backup.updated_at).toLocaleString()}</p>
                     </div>
