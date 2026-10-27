@@ -5,7 +5,9 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
-    && docker-php-ext-install pdo_pgsql \
+    && docker-php-ext-install \
+        pdo_pgsql \
+        bcmath \
     && rm -rf /var/lib/apt/lists/*
 
 # Composer
@@ -27,4 +29,3 @@ COPY . .
 RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8000
-
