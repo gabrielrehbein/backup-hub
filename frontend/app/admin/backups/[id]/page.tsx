@@ -6,7 +6,7 @@ import { Title } from "@/app/components/Title";
 import { BackupRiskService } from "@/src/modules/backup/services/backup-risk.service";
 import { BackupRiskType } from "@/src/modules/backup/types/backup-risk-type";
 import { CircleCheckIcon, CircleXIcon } from "lucide-react";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -103,6 +103,10 @@ export default function BackupDetailsPage() {
 
     if (!backup) {
         return <div>Backup não encontrado.</div>;
+    }
+
+    function handleOnClick(backup){
+        redirect(`/admin/backups/${backup.id}`)
     }
 
     return (
@@ -207,7 +211,8 @@ export default function BackupDetailsPage() {
                             ) : (
                                 backupsByInstance!.map((backup, index) => (
                                     <tr
-                                        key={`${backup.client_name}-${index}`}
+                                        key={backup.id}
+                                        onClick={() => handleOnClick(backup)}
                                         className="cursor-pointer border-b border-gray-100 hover:bg-gray-200"
 
                                     >
