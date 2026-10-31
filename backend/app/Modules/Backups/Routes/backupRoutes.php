@@ -13,5 +13,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/backups/instance/{id}', [BackupController::class, 'findByIdWithClientAndSystem']);
     Route::get('/backups/instances/latest', [BackupController::class, 'lastBackupsByInstances']);
 });
-
-Route::post('/backups/test-risk', [BackupController::class, 'testRisk']);

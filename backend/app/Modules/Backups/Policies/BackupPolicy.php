@@ -30,6 +30,7 @@ class BackupPolicy
      */
     public function create(User $user): bool
     {
+        //Somente por API Key
         return false;
     }
 

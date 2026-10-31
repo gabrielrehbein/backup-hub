@@ -15,6 +15,7 @@ use App\Modules\Backups\Http\Requests\FilterBackupRequest;
 use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Http\Resources\BackupResource;
 use App\Modules\Backups\Http\Resources\LastBackupsResource;
+use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\Repositories\BackupEloquentRepository;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Backups\Services\BackupRiskService;
@@ -29,39 +30,12 @@ class BackupController extends Controller
 {
     public function __construct(
         private readonly BackupServiceInterface $backupService,
-        private readonly SystemInstanceServiceInterface $systemInstanceService
     ) {}
 
-    public function testRisk()
-    {
-        $backupRiskService = new BackupRiskService(
-            new BackupRiskEloquentRepository(),
-            new BackupEloquentRepository(),
-            new SendNotificationService()
-        );
-
-        $br = $backupRiskService->create(
-            new CreateBackupRiskDTO(
-                6,
-                3,
-                RiskTypeEnum::SIZE,
-                true,
-                0,
-                13240,
-                ""
-            )
-        );
-
-        return JSONResponse::success(
-            null,
-            "teste",
-            200
-        );
-    }
 
     public function index(FilterBackupRequest $request)
     {
-
+        Gate::authorize('viewAny', Backup::class);
         $filters = $request->toDTO();
         $backups = $this->backupService->list($filters);
 
