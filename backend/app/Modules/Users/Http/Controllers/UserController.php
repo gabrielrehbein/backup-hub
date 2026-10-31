@@ -2,6 +2,8 @@
 
 namespace App\Modules\Users\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
+use App\Modules\Users\Models\User;
 use App\Modules\Users\Contracts\Services\UserServiceInterface;
 use App\Modules\Users\Http\Requests\StoreUserRequest;
 use App\Modules\Users\Http\Requests\UpdateUserRequest;
@@ -20,6 +22,7 @@ class UserController
 
     public function index()
     {
+        Gate::authorize('viewAny', User::class);
         $users = $this->userService->findAll();
         return JSONResponse::success($users, BuildResponseMessage::findAll(ResourceEnum::USER), 200);
     }
@@ -32,6 +35,7 @@ class UserController
 
     public function store(StoreUserRequest $request)
     {
+        Gate::authorize('create', User::class);
         $user = $this->userService->create(
             $request->toDTO()
         );
@@ -40,12 +44,14 @@ class UserController
 
     public function show(string $id)
     {
+        Gate::authorize('view', User::class);
         $user = $this->userService->findById($id);
         return JSONResponse::success($user, BuildResponseMessage::findOne(ResourceEnum::USER), 200);
     }
 
     public function update(UpdateUserRequest $request, int $id)
     {
+        Gate::authorize('update', User::class);
         $user = $this->userService->update(
             $request->toDTO(),
             $id
@@ -55,6 +61,7 @@ class UserController
 
     public function destroy(string $id)
     {
+        Gate::authorize('delete', User::class);
         $this->userService->delete($id);
         return JSONResponse::success(null, BuildResponseMessage::delete(ResourceEnum::USER), 204);
     }

@@ -2,6 +2,8 @@
 
 namespace App\Modules\Systems\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
+use App\Modules\Systems\Models\SystemInstance;
 
 use App\Modules\Systems\Contracts\Services\SystemInstanceServiceInterface;
 use App\Modules\Systems\Http\Requests\StoreSystemRequest;
@@ -25,6 +27,7 @@ class SystemInstanceController extends Controller
 
     public function index()
     {
+        Gate::authorize('viewAny', SystemInstance::class);
         $instances = $this->systemInstanceService->findAll();
         return JSONResponse::success(
             PublicInstanceResource::collection($instances),
@@ -34,6 +37,7 @@ class SystemInstanceController extends Controller
 
     public function refreshApiKey(int $id)
     {
+        Gate::authorize('update', SystemInstance::class);
         $apiKey = $this->systemInstanceService->refreshApiKey(
             $id
         );
@@ -42,6 +46,7 @@ class SystemInstanceController extends Controller
 
     public function store(StoreSystemInstanceRequest $request)
     {
+        Gate::authorize('create', SystemInstance::class);
         $system = $this->systemInstanceService->create(
             $request->toDTO()
         );
@@ -50,6 +55,7 @@ class SystemInstanceController extends Controller
 
     public function show(string $id)
     {
+        Gate::authorize('view', SystemInstance::class);
         $system = $this->systemInstanceService->findById($id);
         return JSONResponse::success(new PublicInstanceResource($system), BuildResponseMessage::findOne(ResourceEnum::SYSTEM_INSTANCE), 200);
     }
@@ -57,12 +63,14 @@ class SystemInstanceController extends Controller
 
     public function update(UpdateSystemRequest $request, string $id)
     {
+        Gate::authorize('update', SystemInstance::class);
         $system = $this->systemInstanceService->update($request->toDTO(), $id);
         return JSONResponse::success($system, BuildResponseMessage::update(ResourceEnum::SYSTEM_INSTANCE), 200);
     }
 
     public function destroy(string $id)
     {
+        Gate::authorize('delete', SystemInstance::class);
         $this->systemInstanceService->delete($id);
         return JSONResponse::success(null, BuildResponseMessage::delete(ResourceEnum::SYSTEM_INSTANCE), 204);
     }

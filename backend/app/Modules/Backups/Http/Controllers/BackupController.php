@@ -2,6 +2,7 @@
 
 namespace App\Modules\Backups\Http\Controllers;
 
+use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
@@ -61,6 +62,7 @@ class BackupController extends Controller
 
     public function index(FilterBackupRequest $request)
     {
+        Gate::authorize('viewAny', Backup::class);
 
         $filters = $request->toDTO();
         $backups = $this->backupService->list($filters);
@@ -95,6 +97,7 @@ class BackupController extends Controller
 
     public function show(int $id)
     {
+        Gate::authorize('view', Backup::class);
         $backup = $this->backupService->findById($id);
         return JSONResponse::success(
             $backup,
@@ -105,6 +108,7 @@ class BackupController extends Controller
 
     public function findByIdWithClientAndSystem(int $id)
     {
+        Gate::authorize('view', Backup::class);
         $backup = $this->backupService->findByIdWithRelations($id);
 
         return JSONResponse::success(
@@ -116,6 +120,7 @@ class BackupController extends Controller
 
     public function lastBackupsByInstances(FilterLastBackupByIntenceRequest $request)
     {
+        Gate::authorize('viewAny', Backup::class);
         $filters = $request->toDTO();
 
         $backups = $this->backupService->findLastBackupByInstances($filters);
@@ -126,6 +131,7 @@ class BackupController extends Controller
         );
     }
     public function findByInstanceId(int $id){
+        Gate::authorize('viewAny', Backup::class);
         $backup = $this->backupService->findByInstanceId($id);
 
         return JSONResponse::success(

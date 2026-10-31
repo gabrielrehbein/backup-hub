@@ -2,6 +2,8 @@
 
 namespace App\Modules\Clients\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
+use App\Modules\Clients\Models\Plan;
 use App\Modules\Clients\Contracts\Services\PlanServiceInterface;
 use App\Modules\Clients\DTOs\CreatePlanDTO;
 use App\Modules\Clients\DTOs\UpdatePlanDTO;
@@ -21,6 +23,7 @@ class PlanController extends Controller
 
     public function store(StorePlanRequest $request)
     {
+        Gate::authorize('create', Plan::class);
         $plan = $this->planService->create(
             $request->toDTO()
         );
@@ -33,6 +36,7 @@ class PlanController extends Controller
 
     public function index()
     {
+        Gate::authorize('viewAny', Plan::class);
         $plans = $this->planService->findAll();
         return JSONResponse::success(
             $plans,
@@ -43,6 +47,7 @@ class PlanController extends Controller
 
     public function show(int $id)
     {
+        Gate::authorize('view', Plan::class);
         $plan = $this->planService->findById($id);
         return JSONResponse::success(
             $plan,
@@ -53,6 +58,7 @@ class PlanController extends Controller
 
     public function destroy(int $id)
     {
+        Gate::authorize('delete', Plan::class);
         $this->planService->delete($id);
         return JSONResponse::success(
             null,
@@ -62,6 +68,7 @@ class PlanController extends Controller
     }
 
     public function update(UpdatePlanRequest $request, int $id){
+        Gate::authorize('update', Plan::class);
         $planDTO = $request->toDTO();
         $plan = $this->planService->update($planDTO, $id);
         return JSONResponse::success(

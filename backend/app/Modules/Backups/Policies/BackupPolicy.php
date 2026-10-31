@@ -3,65 +3,46 @@
 namespace App\Modules\Backups\Policies;
 
 use App\Modules\Backups\Models\Backup;
-use App\Modules\Clients\Models\Client;
-use App\Modules\Systems\Models\SystemInstance;
 use App\Modules\Users\Models\User;
 
+/**
+ * Os controllers autorizam pela classe (Backup::class), por isso o
+ * parâmetro do model é opcional: as regras dependem só do papel do usuário.
+ */
 class BackupPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        return True;
+        return true;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Backup $backup): bool
+    public function view(User $user, ?Backup $backup = null): bool
     {
-        return True;
+        return true;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Backup $backup): bool
+    public function update(User $user, ?Backup $backup = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Backup $backup): bool
+    public function delete(User $user, ?Backup $backup = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Backup $backup): bool
+    public function restore(User $user, ?Backup $backup = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Backup $backup): bool
+    public function forceDelete(User $user, ?Backup $backup = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 }
