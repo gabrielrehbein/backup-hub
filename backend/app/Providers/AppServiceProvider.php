@@ -8,6 +8,10 @@ use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
+use App\Modules\Backups\Models\Backup;
+use App\Modules\Backups\Models\BackupRisk;
+use App\Modules\Backups\Policies\BackupPolicy;
+use App\Modules\Backups\Policies\BackupRiskPolicy;
 use App\Modules\Backups\Repositories\BackupEloquentRepository;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Backups\Services\BackupService;
@@ -42,6 +46,10 @@ use App\Shared\Security\Contracts\ApiKeyGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Modules\Clients\Contracts\Services\ClientAuthenticationServiceInterface;
 use App\Modules\Clients\Models\Client;
+use App\Modules\Clients\Models\Plan;
+use App\Modules\Clients\Policies\ClientPolicy;
+use App\Modules\Clients\Policies\PlanPolicy;
+use App\Modules\Clients\Policies\SystemPolicy;
 use App\Modules\Clients\Services\ClientAuthenticationService;
 
 use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
@@ -52,12 +60,21 @@ use App\Modules\Notifications\Contracts\Services\NotificationConfigServiceInterf
 use App\Modules\Notifications\Contracts\Services\NotificationServiceInterface;
 use App\Modules\Notifications\Contracts\Strategies\Notifiable;
 use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
+use App\Modules\Notifications\Models\Notification;
+use App\Modules\Notifications\Models\NotificationConfig;
+use App\Modules\Notifications\Policies\NotificationConfigPolicy;
+use App\Modules\Notifications\Policies\NotificationPolicy;
 use App\Modules\Notifications\Services\NotificationConfigService;
 use App\Modules\Notifications\Services\SendNotificationService;
+use App\Modules\Risks\Models\Risk;
+use App\Modules\Risks\Policies\RiskPolicy;
 use App\Modules\Systems\Contracts\Services\SystemInstanceAuthenticationServiceInterface;
+use App\Modules\Systems\Models\System;
 use App\Modules\Systems\Models\SystemInstance;
 use App\Modules\Systems\Policies\SystemInstancePolicy;
 use App\Modules\Systems\Services\SystemInstanceAuthenticationService;
+use App\Modules\Users\Models\User;
+use App\Modules\Users\Policies\UserPolicy;
 use App\Shared\Security\Actions\UuidApiKeyWithIdentifierGenerator;
 
 use Illuminate\Support\Facades\Gate;
@@ -181,6 +198,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(Backup::class, BackupPolicy::class);
+        Gate::policy(BackupRisk::class, BackupRiskPolicy::class);
+        Gate::policy(SystemInstance::class, SystemInstancePolicy::class);
+        Gate::policy(System::class, SystemPolicy::class);
+        Gate::policy(Client::class, ClientPolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Notification::class, NotificationPolicy::class);
+        Gate::policy(NotificationConfig::class, NotificationConfigPolicy::class);
+        Gate::policy(Risk::class, RiskPolicy::class);
+        Gate::policy(Plan::class, PlanPolicy::class);
+
+
+
         Gate::define('uploadBackup', function (
             Client $client,
             SystemInstance $instance

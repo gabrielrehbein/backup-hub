@@ -4,8 +4,8 @@ namespace App\Modules\Notifications\Policies;
 
 
 use App\Modules\Users\Models\User;
-use App\Notification;
-use Illuminate\Auth\Access\Response;
+use App\Modules\Notifications\Models\Notification;
+
 
 class NotificationPolicy
 {
@@ -14,7 +14,7 @@ class NotificationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -22,7 +22,7 @@ class NotificationPolicy
      */
     public function view(User $user, Notification $notification): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -30,7 +30,7 @@ class NotificationPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -38,30 +38,6 @@ class NotificationPolicy
      */
     public function update(User $user, Notification $notification): bool
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Notification $notification): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Notification $notification): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Notification $notification): bool
-    {
-        return false;
+        return $user->isAdmin();
     }
 }

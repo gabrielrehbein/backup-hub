@@ -4,6 +4,7 @@ namespace App\Modules\Clients\Policies;
 
 use App\Modules\Users\Models\User;
 use App\Modules\Clients\Models\System;
+use App\Modules\Systems\Models\System as ModelsSystem;
 use Illuminate\Auth\Access\Response;
 
 class SystemPolicy
@@ -13,15 +14,15 @@ class SystemPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, System $system): bool
+    public function view(User $user, ModelsSystem $system): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,38 +30,38 @@ class SystemPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, System $system): bool
+    public function update(User $user, ModelsSystem $system): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, System $system): bool
+    public function delete(User $user, ModelsSystem $system): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, System $system): bool
+    public function restore(User $user, ModelsSystem $system): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, System $system): bool
+    public function forceDelete(User $user, ModelsSystem $system): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 }

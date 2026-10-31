@@ -14,7 +14,7 @@ class RiskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -22,7 +22,7 @@ class RiskPolicy
      */
     public function view(User $user, Risk $risk): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -30,7 +30,7 @@ class RiskPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
     /**
@@ -38,7 +38,7 @@ class RiskPolicy
      */
     public function update(User $user, Risk $risk): bool
     {
-        return false;
+        return $user->isAdmin();;
     }
 
     /**
