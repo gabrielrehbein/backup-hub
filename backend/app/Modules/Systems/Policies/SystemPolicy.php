@@ -1,66 +1,47 @@
 <?php
 
-namespace App\Modules\Clients\Policies;
+namespace App\Modules\Systems\Policies;
 
+use App\Modules\Systems\Models\System;
 use App\Modules\Users\Models\User;
-use App\Modules\Clients\Models\System;
-use App\Modules\Systems\Models\System as ModelsSystem;
-use Illuminate\Auth\Access\Response;
 
+/**
+ * Os controllers autorizam pela classe (System::class), por isso o
+ * parâmetro do model é opcional: as regras dependem só do papel do usuário.
+ */
 class SystemPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, ModelsSystem $system): bool
+    public function view(User $user, ?System $system = null): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
         return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, ModelsSystem $system): bool
+    public function update(User $user, ?System $system = null): bool
     {
         return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, ModelsSystem $system): bool
+    public function delete(User $user, ?System $system = null): bool
     {
         return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, ModelsSystem $system): bool
+    public function restore(User $user, ?System $system = null): bool
     {
         return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, ModelsSystem $system): bool
+    public function forceDelete(User $user, ?System $system = null): bool
     {
         return $user->isAdmin();
     }

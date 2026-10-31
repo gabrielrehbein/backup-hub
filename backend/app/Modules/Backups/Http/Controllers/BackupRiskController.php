@@ -2,6 +2,8 @@
 
 namespace App\Modules\Backups\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
+use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
 use App\Modules\Backups\Http\Resources\BackupRiskByBackupResource;
 use App\Shared\Http\Controllers\Controller;
@@ -18,6 +20,7 @@ class BackupRiskController extends Controller
         private readonly BackupRiskServiceInterface $backupRiskService,
     ) {}
     public function findByBackupId(int $id){
+        Gate::authorize('viewAny', BackupRisk::class);
         $backupRisks = $this->backupRiskService->findByBackupId($id);
 
         return JSONResponse::success(

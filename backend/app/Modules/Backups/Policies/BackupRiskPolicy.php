@@ -2,66 +2,47 @@
 
 namespace App\Modules\Backups\Policies;
 
-use App\Modules\Backups\Models\BackupError;
 use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Users\Models\User;
-use Illuminate\Auth\Access\Response;
 
+/**
+ * Os controllers autorizam pela classe (BackupRisk::class), por isso o
+ * parâmetro do model é opcional: as regras dependem só do papel do usuário.
+ */
 class BackupRiskPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        return True;
+        return true;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, BackupRisk $backupError): bool
+    public function view(User $user, ?BackupRisk $backupRisk = null): bool
     {
-        return True;
+        return true;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, BackupRisk $backupError): bool
+    public function update(User $user, ?BackupRisk $backupRisk = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, BackupRisk $backupError): bool
+    public function delete(User $user, ?BackupRisk $backupRisk = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, BackupRisk $backupError): bool
+    public function restore(User $user, ?BackupRisk $backupRisk = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, BackupRisk $backupError): bool
+    public function forceDelete(User $user, ?BackupRisk $backupRisk = null): bool
     {
-        return false;
+        return $user->isAdmin();
     }
 }

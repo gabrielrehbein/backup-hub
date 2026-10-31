@@ -2,6 +2,8 @@
 
 namespace App\Modules\Clients\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
+use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Contracts\Services\ClientServiceInterface;
 use App\Modules\Clients\DTOs\CreateClientDTO;
 use App\Modules\Clients\DTOs\FilterClientDTO;
@@ -25,6 +27,7 @@ class ClientController extends Controller
 
     public function store(StoreClientRequest $request)
     {
+        Gate::authorize('create', Client::class);
         $client = $this->clientService->create(
             $request->toDTO()
         );
@@ -38,6 +41,7 @@ class ClientController extends Controller
 
     public function index(FilterClientRequest $request)
     {
+        Gate::authorize('viewAny', Client::class);
         $clients = $this->clientService->list($request->toDTO());
         return JSONResponse::success(
             PublicClientResource::collection($clients),
@@ -48,6 +52,7 @@ class ClientController extends Controller
 
     public function show(int $id)
     {
+        Gate::authorize('view', Client::class);
         $client = $this->clientService->findById($id);
         return JSONResponse::success(
             new PublicClientResource($client),
@@ -58,6 +63,7 @@ class ClientController extends Controller
 
     public function destroy(int $id)
     {
+        Gate::authorize('delete', Client::class);
         $this->clientService->delete($id);
         return JSONResponse::success(
             null,
@@ -67,6 +73,7 @@ class ClientController extends Controller
     }
 
     public function update(UpdateClientRequest $request, int $id){
+        Gate::authorize('update', Client::class);
         $client = $this->clientService->update($request->toDTO(), $id);
         return JSONResponse::success(
             new PublicClientResource($client),

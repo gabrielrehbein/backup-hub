@@ -12,7 +12,7 @@ class SystemInstancePolicy
     {
         return true;
     }
-    public function view(User $user, SystemInstance $instance): bool
+    public function view(User $user, ?SystemInstance $instance = null): bool
     {
         return true;
     }
@@ -20,11 +20,11 @@ class SystemInstancePolicy
     {
         return $user->isAdmin();
     }
-    public function update(User $user, SystemInstance $instance): bool
+    public function update(User $user, ?SystemInstance $instance = null): bool
     {
         return $user->isAdmin();
     }
-    public function delete(User $user, SystemInstance $instance): bool
+    public function delete(User $user, ?SystemInstance $instance = null): bool
     {
         return $user->isAdmin();
     }

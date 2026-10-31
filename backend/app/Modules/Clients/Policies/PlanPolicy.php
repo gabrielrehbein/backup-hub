@@ -5,63 +5,44 @@ namespace App\Modules\Clients\Policies;
 use App\Modules\Clients\Models\Plan;
 use App\Modules\Users\Models\User;
 
-use Illuminate\Auth\Access\Response;
-
+/**
+ * Os controllers autorizam pela classe (Plan::class), por isso o
+ * parâmetro do model é opcional: as regras dependem só do papel do usuário.
+ */
 class PlanPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Plan $plan): bool
+    public function view(User $user, ?Plan $plan = null): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Plan $plan): bool
+    public function update(User $user, ?Plan $plan = null): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Plan $plan): bool
+    public function delete(User $user, ?Plan $plan = null): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Plan $plan): bool
+    public function restore(User $user, ?Plan $plan = null): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Plan $plan): bool
+    public function forceDelete(User $user, ?Plan $plan = null): bool
     {
-        return $user->isAdmin();;
+        return $user->isAdmin();
     }
 }

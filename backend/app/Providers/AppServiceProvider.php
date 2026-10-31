@@ -49,7 +49,7 @@ use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\Plan;
 use App\Modules\Clients\Policies\ClientPolicy;
 use App\Modules\Clients\Policies\PlanPolicy;
-use App\Modules\Clients\Policies\SystemPolicy;
+use App\Modules\Systems\Policies\SystemPolicy;
 use App\Modules\Clients\Services\ClientAuthenticationService;
 
 use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
@@ -81,10 +81,6 @@ use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
-    protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        'App\Modules\Backups\Models\Backup' => 'App\Modules\Backups\Policies\BackupPolicy',
-    ];
     /**
      * Register any application services.
      */

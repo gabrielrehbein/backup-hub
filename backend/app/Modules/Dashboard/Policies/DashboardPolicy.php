@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Modules\Clients\Policies;
+namespace App\Modules\Dashboard\Policies;
 
-use App\Modules\Clients\Models\Plan;
 use App\Modules\Users\Models\User;
 
 use Illuminate\Auth\Access\Response;
