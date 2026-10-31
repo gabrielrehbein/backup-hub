@@ -2,13 +2,12 @@
 
 namespace App\Modules\Backups\Http\Requests;
 
-use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
 use App\Modules\Backups\Enums\SizeTypeEnum;
+use App\Modules\Risks\Enums\RiskTypeEnum;
 use App\Shared\Http\Request\BaseFormRequest;
-use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FilterLastBackupByIntenceRequest extends BaseFormRequest
 {
@@ -23,35 +22,27 @@ class FilterLastBackupByIntenceRequest extends BaseFormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * Os tamanhos (min_size / max_size) são sempre em KB.
+     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'plan_id' => ['sometimes', 'string'],
-            'client_id' => ['sometimes', 'string'],
-            'risk_name' => ['sometimes', 'string'],
-            'risk_type' => ['sometimes', 'string'],
-            'generated_at_start' => ['sometimes', 'date'],
-            'generated_at_end' => ['sometimes', 'date'],
-            'min_size' => ['sometimes', 'integer', 'min:0'],
-            'max_size' => ['sometimes', 'integer', 'min:0']
+            'plan_id' => ['sometimes', 'nullable', 'integer'],
+            'client_id' => ['sometimes', 'nullable', 'integer'],
+            'risk_name' => ['sometimes', 'nullable', 'string', 'max:50'],
+            'risk_type' => ['sometimes', 'nullable', Rule::enum(RiskTypeEnum::class)],
+            'generated_at_start' => ['sometimes', 'nullable', 'date'],
+            'generated_at_end' => ['sometimes', 'nullable', 'date'],
+            'min_size' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'max_size' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'return_in_size_type' => ['sometimes', 'nullable', Rule::enum(SizeTypeEnum::class)],
         ];
     }
 
     public function toDTO(): FilterLastBackupByIntenceDTO
     {
-        return new FilterLastBackupByIntenceDTO(
-            plan_id: $this->validated('plan_id'),
-            client_id: $this->validated('client_id'),
-            riskName: $this->validated('risk_name'),
-            riskType: $this->validated('risk_type'),
-            generatedAtStart: $this->validated('generated_at_start'),
-            generatedAtEnd: $this->validated('generated_at_end'),
-            minSize: $this->validated('min_size'),
-            maxSize: $this->validated('max_size'),
-        );
+        return FilterLastBackupByIntenceDTO::fromArray($this->validated());
     }
-
-
 }

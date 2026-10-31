@@ -15,30 +15,36 @@ class SizeConveterAction
         };
     }
 
-    public static function fromKb(float $value, SizeTypeEnum $sizeType): int
+    public static function fromKb(float $value, SizeTypeEnum $sizeType): float
     {
-        return match ($sizeType) {
+        $result = match ($sizeType) {
             SizeTypeEnum::KB => (float) $value,
             SizeTypeEnum::MB => (float) ($value / 1024),
             SizeTypeEnum::GB => (float) ($value / 1024 / 1024),
         };
+
+        return round($result, 2);
     }
 
-    public static function toMB(float $value, SizeTypeEnum $sizeType): int
+    public static function toMB(float $value, SizeTypeEnum $sizeType): float
     {
-        return match ($sizeType) {
+        $result = match ($sizeType) {
             SizeTypeEnum::KB => (float) ($value / 1024),
             SizeTypeEnum::MB => (float) $value,
             SizeTypeEnum::GB => (float) ($value * 1024),
         };
+
+        return round($result, 2);
     }
 
-    public static function toGB(float $value, SizeTypeEnum $sizeType): int
+    public static function toGB(float $value, SizeTypeEnum $sizeType): float
     {
-        return match ($sizeType) {
+        $result = match ($sizeType) {
             SizeTypeEnum::KB => (float) ($value / 1024 / 1024),
             SizeTypeEnum::MB => (float) ($value / 1024),
             SizeTypeEnum::GB => (float) $value,
         };
+
+        return round($result, 2);
     }
 }

@@ -17,9 +17,12 @@ export abstract class BaseBackupHubApiService {
         return url.endsWith("/") ? url.slice(0, -1) : url;
     }
 
-    protected getMessageError(errorData: Promise<any>): string {
-        return Object.values(errorData.errors ?? {})[0]?.[0]
-            ?? errorData.message
-            ?? response.statusText;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protected getMessageError(errorData: any, response?: Response): string {
+        const firstValidationError = Object.values(errorData?.errors ?? {})[0] as string[] | undefined;
+        return firstValidationError?.[0]
+            ?? errorData?.message
+            ?? response?.statusText
+            ?? "Erro inesperado ao comunicar com a API";
     }
 }

@@ -1,5 +1,4 @@
-type SizeType = "mb" | "kb" | "gb"
-
+export type SizeType = "mb" | "kb" | "gb";
 
 export type BackupType = {
     id: number;

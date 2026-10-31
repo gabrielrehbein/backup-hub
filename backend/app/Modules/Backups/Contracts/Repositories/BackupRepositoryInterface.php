@@ -6,7 +6,6 @@ use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
-use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 

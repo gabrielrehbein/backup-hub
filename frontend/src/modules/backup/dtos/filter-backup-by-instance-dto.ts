@@ -3,32 +3,44 @@ export enum RiskTypeEnum {
     SIZE = "size"
 }
 
+/**
+ * Filtros do endpoint GET /backups/instances/latest.
+ * Tamanhos sempre em KB e datas em ISO 8601 (é o que a API espera).
+ */
 export class FilterLastBackupByInstanceDTO {
     constructor(
-        public readonly planId: string | null,
-        public readonly clientId: string | null,
-        public readonly riskName: string | null,
-        public readonly riskType: RiskTypeEnum | null,
-        public readonly generatedAtStart: number | null,
-        public readonly generatedAtEnd: number | null,
-        public readonly minSize: number | null,
-        public readonly maxSize: number | null
+        public readonly planId: number | null = null,
+        public readonly clientId: number | null = null,
+        public readonly riskName: string | null = null,
+        public readonly riskType: RiskTypeEnum | null = null,
+        public readonly generatedAtStart: string | null = null,
+        public readonly generatedAtEnd: string | null = null,
+        public readonly minSize: number | null = null,
+        public readonly maxSize: number | null = null
     ) {}
 
-    public static fromObject(data: Record<string, any>): FilterLastBackupByInstanceDTO {
+    public static fromObject(data: Record<string, unknown>): FilterLastBackupByInstanceDTO {
+        const toNumber = (value: unknown) =>
+            value === undefined || value === null || value === "" ? null : Number(value);
+        const toText = (value: unknown) =>
+            value === undefined || value === null || value === "" ? null : String(value);
+        const riskType = Object.values(RiskTypeEnum).includes(data.risk_type as RiskTypeEnum)
+            ? (data.risk_type as RiskTypeEnum)
+            : null;
+
         return new FilterLastBackupByInstanceDTO(
-            data.plan_id ?? null,
-            data.client_id ?? null,
-            data.risk_id ?? null,
-            data.type ? RiskTypeEnum[data.type as keyof typeof RiskTypeEnum] : null,
-            data.generated_at_start ?? null,
-            data.generated_at_end ?? null,
-            data.min_size ?? null,
-            data.max_size ?? null
+            toNumber(data.plan_id),
+            toNumber(data.client_id),
+            toText(data.risk_name),
+            riskType,
+            toText(data.generated_at_start),
+            toText(data.generated_at_end),
+            toNumber(data.min_size),
+            toNumber(data.max_size)
         );
     }
 
-    public toObject(): Record<string, any> {
+    public toObject(): Record<string, string | number | null> {
         return {
             plan_id: this.planId,
             client_id: this.clientId,
@@ -39,5 +51,16 @@ export class FilterLastBackupByInstanceDTO {
             min_size: this.minSize,
             max_size: this.maxSize,
         };
+    }
+
+    /** Monta a query string ignorando filtros vazios. */
+    public toQueryParams(): URLSearchParams {
+        const params = new URLSearchParams();
+        Object.entries(this.toObject()).forEach(([key, value]) => {
+            if (value !== null && value !== "" && !Number.isNaN(value)) {
+                params.append(key, String(value));
+            }
+        });
+        return params;
     }
 }

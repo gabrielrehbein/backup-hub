@@ -8,7 +8,6 @@ use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
 use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
-use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 
 interface BackupServiceInterface
 {

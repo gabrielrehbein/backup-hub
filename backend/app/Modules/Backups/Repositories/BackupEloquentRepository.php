@@ -7,7 +7,6 @@ use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
-use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use Illuminate\Support\Facades\DB;
@@ -191,33 +190,55 @@ class BackupEloquentRepository implements BackupRepositoryInterface
     }
     public function listLastBackupsGroupedBySystemInstance(?FilterLastBackupByIntenceDTO $filters = null): iterable
     {
-        $results = DB::select(
-            "SELECT DISTINCT ON (system_instance_id) *
-             FROM backups
-             ORDER BY system_instance_id, generated_at DESC"
-        );
+        // IDs do último backup de cada instância (PostgreSQL DISTINCT ON).
+        // Os filtros são aplicados depois, para que o resultado continue sendo
+        // "o último backup da instância" e não "o último backup que bate com o filtro".
+        $latestBackupIds = DB::table('backups')
+            ->selectRaw('DISTINCT ON (system_instance_id) id')
+            ->orderBy('system_instance_id')
+            ->orderByDesc('generated_at')
+            ->orderByDesc('id');
 
-        // Converte o array de stdClass em uma coleção de modelos Backup
-        return Backup::hydrate($results)->load('instances.client', 'instances.system')
-        ->when($filters?->minSize !== null, function ($query) use ($filters) {
-            $query->where('file_size_kb', '>=', $filters->minSize);
-        })
-        ->when($filters?->maxSize !== null, function ($query) use ($filters) {
-            $query->where('file_size_kb', '<=', $filters->maxSize);
-        })
-        ->when($filters?->generatedAtStart !== null, function ($query) use ($filters) {
-            $query->where('generated_at', '>=', $filters->generatedAtStart);
-        })
-        ->when($filters?->generatedAtEnd !== null, function ($query) use ($filters) {
-            $query->where('generated_at', '<=', $filters->generatedAtEnd);
-        })
-        ->when($filters?->client_id !== null, function ($query) use ($filters) {
-            $query->where('client.id', $filters->client_id);
-        })
-        ->when($filters?->plan_id !== null, function ($query) use ($filters) {
-            $query->where('plan.id', $filters->plan_id);
-        })
-        ->sortByDesc('generated_at');
+        return Backup::query()
+            ->whereIn('id', $latestBackupIds)
+            ->with(['instances.client', 'instances.system'])
+            ->when($filters?->minSize !== null, fn ($query) =>
+                $query->where('file_size_kb', '>=', $filters->minSize)
+            )
+            ->when($filters?->maxSize !== null, fn ($query) =>
+                $query->where('file_size_kb', '<=', $filters->maxSize)
+            )
+            ->when($filters?->generatedAtStart !== null, fn ($query) =>
+                $query->where('generated_at', '>=', $filters->generatedAtStart)
+            )
+            ->when($filters?->generatedAtEnd !== null, fn ($query) =>
+                $query->where('generated_at', '<=', $filters->generatedAtEnd)
+            )
+            ->when($filters?->clientId !== null, fn ($query) =>
+                $query->whereHas('instances', fn ($instance) =>
+                    $instance->where('client_id', $filters->clientId)
+                )
+            )
+            ->when($filters?->planId !== null, fn ($query) =>
+                $query->whereHas('instances.client', fn ($client) =>
+                    $client->where('plan_id', $filters->planId)
+                )
+            )
+            ->when($filters?->riskName !== null || $filters?->riskType !== null, fn ($query) =>
+                $query->whereHas('risks', function ($backupRisk) use ($filters) {
+                    $backupRisk->where('is_active', true)
+                        ->when($filters->riskType !== null, fn ($q) =>
+                            $q->where('type', $filters->riskType->value)
+                        )
+                        ->when($filters->riskName !== null, fn ($q) =>
+                            $q->whereHas('risk', fn ($risk) =>
+                                $risk->whereRaw('LOWER(name) = ?', [mb_strtolower($filters->riskName)])
+                            )
+                        );
+                })
+            )
+            ->orderByDesc('generated_at')
+            ->get();
     }
 
 }
