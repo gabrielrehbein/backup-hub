@@ -12,6 +12,7 @@ use App\Shared\Http\Responses\JSONResponse;
 use App\Shared\Utils\BuildResponseMessage;
 use App\Shared\Utils\ResourceEnum;
 use App\Modules\Backups\Http\Requests\FilterBackupRequest;
+use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Http\Resources\BackupResource;
 use App\Modules\Backups\Http\Resources\LastBackupsResource;
 use App\Modules\Backups\Repositories\BackupEloquentRepository;
@@ -113,7 +114,7 @@ class BackupController extends Controller
         );
     }
 
-    public function lastBackupsByInstances(FilterBackupRequest $request)
+    public function lastBackupsByInstances(FilterLastBackupByIntenceRequest $request)
     {
         $filters = $request->toDTO();
 

@@ -28,25 +28,7 @@ export default function ListBackups() {
 
     useEffect(() => {
         const fetchBackups = async () => {
-            try {
-                const response = await fetch("http://localhost:8000/api/backups/instances/latest?return_in_size_type=mb", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("backup-hub-token") || ""}`,
-                        "Accept": "application/json",
-                    },
-                });
-                if (!response.ok) {
-                    console.log("FQDWQDWQDQ", await response.json());
-                    throw new Error("Erro ao carregar os backups");
-                }
-
-                const data = await response.json();
-                setBackups(data.data);
-            } catch (error) {
-                console.error("Erro ao carregar os backups:", error);
-            }
+            const backupService = new BackupServ
         };
 
         fetchBackups();

@@ -4,7 +4,9 @@ namespace App\Modules\Backups\Contracts\Repositories;
 
 use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
+use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
+use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 
@@ -24,5 +26,5 @@ interface BackupRepositoryInterface
     public function findLastBackups(int $limit, ?bool $isLocal = null, ?int $excludeBackupId = null, ?int $systemInstanceId = null): iterable;
     public function findLastBackupsByClient(): iterable;
     public function existsByRiskType(?int $backupId, RiskTypeEnum $riskType, bool $onlyActive = true): bool;
-    public function listLastBackupsGroupedBySystemInstance(?BackupFilterDTO $filters = null): iterable;
+    public function listLastBackupsGroupedBySystemInstance(?FilterLastBackupByIntenceDTO $filters = null): iterable;
 }

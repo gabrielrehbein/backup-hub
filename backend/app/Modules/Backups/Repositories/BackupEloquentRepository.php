@@ -5,7 +5,9 @@ namespace App\Modules\Backups\Repositories;
 use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
+use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
+use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 use Illuminate\Support\Facades\DB;
@@ -187,7 +189,7 @@ class BackupEloquentRepository implements BackupRepositoryInterface
             })
             ->exists();
     }
-    public function listLastBackupsGroupedBySystemInstance(?BackupFilterDTO $filters = null): iterable
+    public function listLastBackupsGroupedBySystemInstance(?FilterLastBackupByIntenceDTO $filters = null): iterable
     {
         $results = DB::select(
             "SELECT DISTINCT ON (system_instance_id) *
@@ -197,23 +199,23 @@ class BackupEloquentRepository implements BackupRepositoryInterface
 
         // Converte o array de stdClass em uma coleção de modelos Backup
         return Backup::hydrate($results)->load('instances.client', 'instances.system')
-        ->when($filters?->startGeneratedAt !== null, function ($query) use ($filters) {
-            $query->where('generated_at', '>=', $filters->startGeneratedAt);
-        })
-        ->when($filters?->endGeneratedAt !== null, function ($query) use ($filters) {
-            $query->where('generated_at', '<=', $filters->endGeneratedAt);
-        })
-        ->when($filters?->isLocal !== null, function ($query) use ($filters) {
-            $query->where('is_local', $filters->isLocal);
-        })
         ->when($filters?->minSize !== null, function ($query) use ($filters) {
             $query->where('file_size_kb', '>=', $filters->minSize);
         })
         ->when($filters?->maxSize !== null, function ($query) use ($filters) {
             $query->where('file_size_kb', '<=', $filters->maxSize);
         })
-        ->when($filters?->systemInstanceId !== null, function ($query) use ($filters) {
-            $query->where('system_instance_id', $filters->systemInstanceId);
+        ->when($filters?->generatedAtStart !== null, function ($query) use ($filters) {
+            $query->where('generated_at', '>=', $filters->generatedAtStart);
+        })
+        ->when($filters?->generatedAtEnd !== null, function ($query) use ($filters) {
+            $query->where('generated_at', '<=', $filters->generatedAtEnd);
+        })
+        ->when($filters?->client_id !== null, function ($query) use ($filters) {
+            $query->where('client.id', $filters->client_id);
+        })
+        ->when($filters?->plan_id !== null, function ($query) use ($filters) {
+            $query->where('plan.id', $filters->plan_id);
         })
         ->sortByDesc('generated_at');
     }

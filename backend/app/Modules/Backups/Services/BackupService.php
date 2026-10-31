@@ -13,6 +13,7 @@ use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Errors\BackupSaveHttpException;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
+use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Notifications\Services\SendNotificationService;
 use App\Modules\Risks\Enums\RiskTypeEnum;
@@ -128,7 +129,7 @@ class BackupService implements BackupServiceInterface
         return $this->backupRepository->findLastBackups($limit, $isLocal);
     }
 
-    public function findLastBackupByInstances(BackupFilterDTO $filters)
+    public function findLastBackupByInstances(FilterLastBackupByIntenceDTO $filters)
     {
         return $this->backupRepository->listLastBackupsGroupedBySystemInstance($filters);
     }

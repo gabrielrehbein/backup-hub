@@ -7,7 +7,8 @@ use App\Modules\Backups\DTOs\CreateBackupDTO;
 use App\Modules\Backups\DTOs\UpdateBackupDTO;
 use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\DTOs\CreateBackupRequestDTO;
-
+use App\Modules\Backups\DTOs\FilterLastBackupByIntenceDTO;
+use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 
 interface BackupServiceInterface
 {
@@ -19,7 +20,7 @@ interface BackupServiceInterface
     public function findBackupsGeneratedToday(): iterable;
     public function getTotalBackupsGeneratedToday(): int;
     public function findLastBackups(int $limit, ?bool $isLocal): iterable;
-    public function findLastBackupByInstances(BackupFilterDTO $filters);
+    public function findLastBackupByInstances(FilterLastBackupByIntenceDTO $filters);
     public function findByIdWithRelations(int $id): ?Backup;
     public function findByInstanceId(int $id);
 }
