@@ -6,8 +6,10 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { AuthService } from "../services/auth.service";
+import { useAuth } from "../providers/AuthProvider";
 
 export function LoginForm() {
+    const { refresh } = useAuth();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -25,6 +27,7 @@ export function LoginForm() {
             toast.error("E-mail ou senha inválido(s)");
             return;
         }
+        await refresh();
         redirect("/dashboard");
     }
     

@@ -13,12 +13,12 @@ type HeaderProps = {
 
 export default function Header({ username }: HeaderProps) {
 
-    const { isAdmin } = useAuth();
-    console.log("isAdmin:", isAdmin);
+    const { isAdmin, refresh } = useAuth();
 
     async function handleLogout() {
         const authService = new AuthService();
         await authService.logout();
+        await refresh();
         redirect("/auth/login");
     }
 
