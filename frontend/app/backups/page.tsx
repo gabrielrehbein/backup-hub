@@ -14,11 +14,12 @@ import { PlanService } from "@/src/modules/client/services/plans.service";
 import { PlanType } from "@/src/modules/client/types/plan-type";
 import { RiskService } from "@/src/modules/risk/services/risks.service";
 import { RiskType } from "@/src/modules/risk/types/risk-type";
-import { CircleCheckIcon, CircleXIcon, FunnelIcon, XIcon } from "lucide-react"
+import { ChevronLeftIcon, CircleCheckIcon, CircleXIcon, FunnelIcon, XIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { FormEvent, useEffect, useMemo, useState } from "react"
 import { toast } from "react-toastify";
+import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
 
 type FilterForm = {
     planId: string;
@@ -174,7 +175,12 @@ export default function ListBackups() {
     return (
         <Container>
             <Header />
-            <h1 className="text-2xl font-bold">Backups</h1>
+            <div className="flex items-center justify-between mb-4">
+                <h1 className="text-2xl font-bold">Backups</h1>
+                <Button variant="secondary" size="small" onClick={() => history.back()}>
+                    <ChevronLeftIcon />
+                </Button>
+            </div>
             <div className="flex-col gap-4">
                 <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div className="flex w-full gap-4 items-end justify-between">
@@ -292,7 +298,7 @@ export default function ListBackups() {
                                 <tr
                                     key={`${backup.client_name}-${index}`}
                                     className="cursor-pointer border-b border-gray-100 hover:bg-gray-200"
-                                    onClick={() => router.push(`/admin/backups/${backup.id}`)}
+                                    onClick={() => router.push(BackupRoutes.DETAIL(backup.id))}
                                 >
                                     <td className="px-6 py-4 font-medium text-slate-800">
                                         {backup.id}

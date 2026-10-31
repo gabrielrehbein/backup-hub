@@ -57,10 +57,6 @@ export default function AdminPage() {
                     </Button>
                 </div>
                 <div className='flex justify-between gap-4'>
-                    <Button size='large' onClick={() => redirect(BackupRoutes.LIST)}>
-                        Backup
-                        <DatabaseBackupIcon />
-                    </Button>
                     <Button size='large' onClick={() => redirect(NotificationRoutes.CONFIGURATION)}>
                         Notificações
                         <BellRingIcon />

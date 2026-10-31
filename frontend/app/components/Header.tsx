@@ -1,10 +1,11 @@
 "use client";
 
-import { LogOutIcon } from "lucide-react";
+import { EyeIcon, LogOutIcon } from "lucide-react";
 import { Button } from "./Button";
 import { redirect } from "next/navigation";
 import { AuthService } from "@/src/modules/auth/services/auth.service";
 import { useAuth } from "@/src/modules/auth/providers/AuthProvider";
+import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
 
 type HeaderProps = {
     username?: string;
@@ -52,6 +53,13 @@ export default function Header({ username }: HeaderProps) {
                         Admin
                     </Button>
                 )}
+                <Button
+                    variant="primary"
+                    size="medium"
+                    onClick={() => redirect(BackupRoutes.LIST)}
+                >
+                    Backups
+                </Button>
                 <Button
                     variant="danger"
                     size="medium"

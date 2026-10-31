@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     public async logout(): Promise<boolean> {
-        const response = await fetch(`${this.baseUrl}/tokens/delete`, {
+        const response = await fetch(`${this.baseUrl}/tokens/logout`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('backup-hub-token') || ''}`,

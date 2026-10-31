@@ -13,4 +13,6 @@ export type BackupType = {
     system_name: string;
     version: string;
     file_path: string;
+    created_at: string;
+    updated_at: string;
 };

@@ -1,8 +1,17 @@
+"use client";
+
+import { redirect } from "next/navigation";
 import { Container } from "../../components/Container";
 import { LoginForm } from "@/src/modules/auth/components/LoginForm";
 
 
 export default function LoginPage() {
+    if (typeof window !== "undefined") {
+        const token = localStorage.getItem("backup-hub-token");
+        if (token) {
+            redirect("/dashboard");
+        }
+    }
     return (
         <Container className="flex items-center justify-center min-h-screen ">
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 w-150 ">

@@ -13,13 +13,46 @@ import { AuthService } from "@/src/modules/auth/services/auth.service";
 import { PublicUserType } from "@/src/modules/user/types/public-user-type";
 import { redirect } from "next/navigation";
 import { DashboardService } from "@/src/modules/dashboard/services/dashboard.service";
-import { DatabaseXIcon, TimerIcon } from "lucide-react";
+import { CircleCheckIcon, CircleXIcon, DatabaseXIcon, TimerIcon } from "lucide-react";
+import { PaginetedBackupType } from "@/src/modules/backup/types/paginated-backup-type";
+import { BackupService } from "@/src/modules/backup/services/backup.service";
 
 
 
 export default function DashboardPage() {
+    const INITIAL_PAGINATED_BACKUPS: PaginetedBackupType = {
+        message: "",
+        data: [],
+        first_page_url: "",
+        from: 0,
+        last_page: 0,
+        last_page_url: "",
+        links: [{
+            url: "",
+            label: "",
+            page: 0,
+            active: false
+        }],
+        next_page_url: "",
+        path: "",
+        per_page: 0,
+        prev_page_url: "",
+        to: 0,
+        total: 0,
+    };
     const [dashboard, setDashboard] = useState<Dashboard | null>(null);
     const [user, setUser] = useState<PublicUserType | null>(null);
+    const [paginetedBackups, setPaginetedBackups] = useState<PaginetedBackupType>(INITIAL_PAGINATED_BACKUPS);
+    const backups = paginetedBackups.data;
+    useEffect(() => {
+        const fetchBackups = async () => {
+            const backupService = new BackupService();
+            const backups = await backupService.getAllBackups();
+            setPaginetedBackups(backups);
+        }
+
+        fetchBackups();
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,12 +76,12 @@ export default function DashboardPage() {
     function getQuantityByRisk(name: string) {
         if (!dashboard) return 0
         if (!dashboard.riskDistribution) return 0
-    
+
         return dashboard.riskDistribution.find(
             risk => risk.name.toLowerCase() === name.toLowerCase()
         )?.quantity ?? 0
     }
-
+    { console.log("paginat_backups", paginetedBackups.data) }
     return (
         <Container>
 
@@ -135,8 +168,8 @@ export default function DashboardPage() {
                             value={risk.quantity ?? 0}
                             description={`Riscos por ${risk.type.toUpperCase() === "TIME" ? "tempo" : risk.type.toUpperCase() === "SIZE" ? "tamanho" : "Tempo"}`}
                             size="large"
-                            icon={risk.type.toUpperCase() === "TIME" ? <TimerIcon size={"80px"} opacity={0.2} /> : 
-                            risk.type.toUpperCase() === "SIZE" ? <DatabaseXIcon size={"80px"} opacity={0.2} /> : null}
+                            icon={risk.type.toUpperCase() === "TIME" ? <TimerIcon size={"80px"} opacity={0.2} /> :
+                                risk.type.toUpperCase() === "SIZE" ? <DatabaseXIcon size={"80px"} opacity={0.2} /> : null}
                         />
                     ))}
                 </div>
@@ -166,6 +199,109 @@ export default function DashboardPage() {
                 backups={dashboard?.recentBackups.remote || []}
                 backupsType="remote"
             />
+
+            {backups.length > 0 && (
+
+                <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+
+                    <div className="border-b border-slate-200 p-6">
+
+                        <h2 className="font-semibold text-slate-900">
+                            Backups
+                        </h2>
+
+
+                    </div>
+
+                    <div className="">
+
+                        <table className="w-full text-left text-sm">
+
+                            <thead className="bg-slate-50">
+
+                                <tr>
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        Cliente
+                                    </th>
+
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        Sistema
+                                    </th>
+
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        Gerado em
+                                    </th>
+
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        Tamanho
+                                    </th>
+
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        IP de origem
+                                    </th>
+
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        Caminho do arquivo
+                                    </th>
+
+                                    <th className="px-6 py-3 font-medium text-slate-500">
+                                        Remoto
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody className="divide-y divide-slate-100">
+                                {backups.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-4 text-slate-500">
+                                            Nenhum backup encontrado.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    backups.map((backup, index) => (
+                                        <tr
+                                            key={`${backup.client_name}-${index}`}
+                                            className="hover:bg-slate-50"
+                                        >
+                                            <td className="px-6 py-4 font-medium text-slate-800">
+                                                {backup.client_name}
+                                            </td>
+                                            <td className="px-6 py-4 font-medium text-slate-800">
+                                                {backup.system_name}
+                                            </td>
+
+                                            <td className="px-6 py-4 text-slate-500">
+                                                {backup.generated_at ? new Date(backup.generated_at).toLocaleString() : 'sem data'}
+                                            </td>
+
+                                            <td className="px-6 py-4 text-slate-700">
+                                                {backup.size} {backup.size_type.toUpperCase()}
+                                            </td>
+
+                                            <td className="px-6 py-4 font-mono text-xs text-slate-500">
+                                                {backup.source_ip}
+                                            </td>
+
+                                            <td className="px-6 py-4 font-mono text-xs text-slate-500">
+                                                {backup.file_path}
+                                            </td>
+
+                                            <td className="px-6 py-4 text-slate-700">
+                                                {backup.is_local ? <CircleXIcon color="#cb1a1a" size={"20px"} /> : <CircleCheckIcon color="#1ccc0f" size={"20px"} />}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+            )}
+
 
         </Container>
     );

@@ -3,8 +3,10 @@
 import { Container } from "@/app/components/Container";
 import Header from "@/app/components/Header";
 import { Title } from "@/app/components/Title";
+import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
 import { BackupRiskService } from "@/src/modules/backup/services/backup-risk.service";
 import { BackupRiskType } from "@/src/modules/backup/types/backup-risk-type";
+import { BackupType } from "@/src/modules/backup/types/backup-type";
 import { CircleCheckIcon, CircleXIcon } from "lucide-react";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,7 +15,7 @@ import { toast } from "react-toastify";
 export default function BackupDetailsPage() {
     const params = useParams<{ id: string }>();
     const id = params.id;
-    const [backup, setBackup] = useState<any | null>(null);
+    const [backup, setBackup] = useState<BackupType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [backupsByInstance, setBackupByInstance] = useState<[]>([]);
     const [backupRisks, setBackupRisks] = useState<BackupRiskType[]>([]);
@@ -106,7 +108,7 @@ export default function BackupDetailsPage() {
     }
 
     function handleOnClick(backup){
-        redirect(`/admin/backups/${backup.id}`)
+        redirect(BackupRoutes.DETAIL(backup.id));
     }
 
     return (
