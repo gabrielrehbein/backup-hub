@@ -7,10 +7,12 @@ use App\Modules\Systems\NotUniqueClientSystemHttpException;
 use App\Modules\Risks\Models\Risk;
 use App\Shared\Http\Middleware\CheckInstanceAPIKey;
 use App\Shared\Http\Responses\JSONResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -33,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'instance.auth' => CheckInstanceAPIKey::class,
         ]);
     })
+
     ->withExceptions(function (Exceptions $exceptions): void {
         // $exceptions->render(function (NotFoundHttpException $e) {
         //     return JSONResponse::error("Recurso não encontrado", 404);
@@ -55,8 +58,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (InstanceNotBelongsToClientHttpException $e) {
             return JSONResponse::error($e->getMessage(), $e->getStatusCode());
         });
-        $exceptions->render(function (NotUniqueClientSystemHttpException $e) {
-            return JSONResponse::error($e->getMessage(), $e->getStatusCode());
+        $exceptions->render(function (AccessDeniedHttpException $e) {
+            return JSONResponse::error('Você não tem permissão para realizar esta ação.', 403);
+        });
+
+        // sem token ou token inválido (auth:sanctum)
+        $exceptions->render(function (AuthenticationException $e) {
+            return JSONResponse::error('Não autenticado.', 401);
         });
 
     })->create();

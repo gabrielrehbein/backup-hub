@@ -224,6 +224,9 @@ class BackupEloquentRepository implements BackupRepositoryInterface
                     $client->where('plan_id', $filters->planId)
                 )
             )
+            ->when($filters?->version !== null, fn ($query) =>
+                $query->where('version', "LIKE", "%$filters->version%")
+            )
             ->when($filters?->riskName !== null || $filters?->riskType !== null, fn ($query) =>
                 $query->whereHas('risks', function ($backupRisk) use ($filters) {
                     $backupRisk->where('is_active', true)

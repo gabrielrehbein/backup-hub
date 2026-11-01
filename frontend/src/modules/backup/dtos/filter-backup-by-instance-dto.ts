@@ -16,7 +16,8 @@ export class FilterLastBackupByInstanceDTO {
         public readonly generatedAtStart: string | null = null,
         public readonly generatedAtEnd: string | null = null,
         public readonly minSize: number | null = null,
-        public readonly maxSize: number | null = null
+        public readonly maxSize: number | null = null,
+        public readonly version: string | null = null
     ) {}
 
     public static fromObject(data: Record<string, unknown>): FilterLastBackupByInstanceDTO {
@@ -36,7 +37,8 @@ export class FilterLastBackupByInstanceDTO {
             toText(data.generated_at_start),
             toText(data.generated_at_end),
             toNumber(data.min_size),
-            toNumber(data.max_size)
+            toNumber(data.max_size),
+            toText(data.version)
         );
     }
 
@@ -50,6 +52,7 @@ export class FilterLastBackupByInstanceDTO {
             generated_at_end: this.generatedAtEnd,
             min_size: this.minSize,
             max_size: this.maxSize,
+            version: this.version
         };
     }
 

@@ -30,6 +30,7 @@ type FilterForm = {
     generatedAtEnd: string;
     minSizeMb: string;
     maxSizeMb: string;
+    version: string;
 };
 
 const EMPTY_FILTERS: FilterForm = {
@@ -41,6 +42,7 @@ const EMPTY_FILTERS: FilterForm = {
     generatedAtEnd: "",
     minSizeMb: "",
     maxSizeMb: "",
+    version: ""
 };
 
 // A API trabalha com KB; o formulário, com MB.
@@ -59,6 +61,7 @@ function toFilterDTO(form: FilterForm): FilterLastBackupByInstanceDTO {
         generated_at_end: localDateToIso(form.generatedAtEnd),
         min_size: mbToKb(form.minSizeMb),
         max_size: mbToKb(form.maxSizeMb),
+        version: form.version
     });
 }
 
@@ -198,6 +201,9 @@ export default function ListBackups() {
                         <Input label="Tamanho máximo (MB)" required={false} type="number" min={0} step="any"
                             value={filters.maxSizeMb}
                             onChange={(e) => updateFilter("maxSizeMb", e.target.value)} />
+                        <Input label="Versão" required={false}
+                            value={filters.version}
+                            onChange={(e) => updateFilter("version", e.target.value)} />
                     </div>
 
                     <div className="flex w-full gap-4 items-end justify-between">

@@ -3,6 +3,7 @@ import { FilterLastBackupByInstanceDTO } from "../dtos/filter-backup-by-instance
 import { BackupType, SizeType } from "../types/backup-type";
 import { PaginetedBackupType } from "../types/paginated-backup-type";
 
+
 export class BackupService extends BaseBackupHubApiService {
     public async getAllBackups(): Promise<PaginetedBackupType>{
         const response = await fetch(`${this.getBaseUrl()}/backups`, {

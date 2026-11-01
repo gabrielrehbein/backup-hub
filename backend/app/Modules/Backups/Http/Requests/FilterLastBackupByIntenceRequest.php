@@ -38,6 +38,7 @@ class FilterLastBackupByIntenceRequest extends BaseFormRequest
             'min_size' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'max_size' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'return_in_size_type' => ['sometimes', 'nullable', Rule::enum(SizeTypeEnum::class)],
+            'version' => ['sometimes', 'nullable', 'string', 'max:20']
         ];
     }
 

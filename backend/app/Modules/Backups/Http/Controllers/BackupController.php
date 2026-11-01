@@ -16,7 +16,6 @@ use App\Modules\Backups\Http\Requests\FilterBackupRequest;
 use App\Modules\Backups\Http\Requests\FilterLastBackupByIntenceRequest;
 use App\Modules\Backups\Http\Resources\BackupResource;
 use App\Modules\Backups\Http\Resources\LastBackupsResource;
-use App\Modules\Backups\Models\Backup;
 use App\Modules\Backups\Repositories\BackupEloquentRepository;
 use App\Modules\Backups\Repositories\BackupRiskEloquentRepository;
 use App\Modules\Backups\Services\BackupRiskService;

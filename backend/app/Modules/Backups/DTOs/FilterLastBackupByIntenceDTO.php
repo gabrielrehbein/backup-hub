@@ -17,6 +17,7 @@ class FilterLastBackupByIntenceDTO
         public readonly ?CarbonImmutable $generatedAtEnd = null,
         public readonly ?int $minSize = null,
         public readonly ?int $maxSize = null,
+        public readonly ?string $version = null,
     ){}
 
     public static function fromArray(array $data): self
@@ -30,6 +31,7 @@ class FilterLastBackupByIntenceDTO
             generatedAtEnd: isset($data['generated_at_end']) ? CarbonImmutable::parse($data['generated_at_end']) : null,
             minSize: isset($data['min_size']) ? (int) $data['min_size'] : null,
             maxSize: isset($data['max_size']) ? (int) $data['max_size'] : null,
+            version: $data['version'] ?? null
         );
     }
 
@@ -44,6 +46,7 @@ class FilterLastBackupByIntenceDTO
             'generated_at_end' => $this->generatedAtEnd?->toIso8601String(),
             'min_size' => $this->minSize,
             'max_size' => $this->maxSize,
+            'version' => $this->version,
         ]);
     }
 }
