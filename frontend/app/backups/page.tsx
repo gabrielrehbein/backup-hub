@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation"
 import { FormEvent, useEffect, useMemo, useState } from "react"
 import { toast } from "react-toastify";
 import { BackupRoutes } from "@/src/modules/backup/routes/backup-routes";
+import { DashboardRoutes } from "@/src/modules/dashboard/routes/dashboard-routes";
 
 type FilterForm = {
     planId: string;
@@ -180,7 +181,7 @@ export default function ListBackups() {
             <Header />
             <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold">Backups</h1>
-                <Button variant="secondary" size="small" onClick={() => history.back()}>
+                <Button variant="secondary" size="small" onClick={() => router.push(DashboardRoutes.LIST)}>
                     <ChevronLeftIcon />
                 </Button>
             </div>
