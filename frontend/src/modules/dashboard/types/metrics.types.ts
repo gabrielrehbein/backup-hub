@@ -40,13 +40,15 @@ export interface RecentBackups {
 }
 
 export interface ClientRisk {
-    clientName: string;
-    riskQuantity: number;
+    client_name: string;
+    risk_quantity: number;
+    client_id: number;
+    planId: number;
 }
 
 export interface ClientsWithMostBackupRiskByPlan {
-    planName: string;
-    clients: ClientRisk[];
+    plan_name: string;
+    summary: ClientRisk[];
 }
 
 export interface Dashboard {

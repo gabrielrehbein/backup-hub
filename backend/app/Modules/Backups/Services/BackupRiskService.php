@@ -5,6 +5,10 @@ namespace App\Modules\Backups\Services;
 use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
 use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisks;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisksDTO;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisksResume;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisksResumeDTO;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
 use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
@@ -156,5 +160,19 @@ class BackupRiskService implements BackupRiskServiceInterface
             'quantity' => $risks->get($name)?->quantity ?? 0
         ];
 
+    }
+
+    public function getClientsWithMostRisks(int $planId, int $limit = 5): ClientsWithMostBackupRisksDTO
+    {
+        $result = $this->backupRiskRepository->getClientsWithMostRisks($planId, $limit);
+        $summary = [];
+        foreach ($result as $item) {
+            $dto = ClientsWithMostBackupRisksResumeDTO::fromArray($item->toArray());
+            $summary[] = $dto->toArray();
+        }
+        return new ClientsWithMostBackupRisksDTO(
+            planName: $result->first()?->plan_name ?? '',
+            summary: $summary
+        );
     }
 }

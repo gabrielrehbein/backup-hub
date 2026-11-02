@@ -2,7 +2,8 @@
 
 namespace App\Modules\Backups\Contracts\Services;
 
-
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisks;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisksDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
@@ -22,4 +23,5 @@ interface BackupRiskServiceInterface
     public function getTotalBackupRisksByType(?int $backupId = null): array;
     public function getTotalRisk(?string $name = null);
     public function notifyIfNeeded(BackupRisk $backupRisk): void;
+    public function getClientsWithMostRisks(int $planId, int $limit = 5): ClientsWithMostBackupRisksDTO;
 }

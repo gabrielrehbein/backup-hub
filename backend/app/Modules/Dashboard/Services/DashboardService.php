@@ -8,7 +8,10 @@ use App\Modules\Backups\Http\Resources\LastBackupsResource;
 use App\Modules\Dashboard\Contracts\Services\DashboardServiceInterface;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\Contracts\Services\BackupRiskServiceInterface;
+use App\Modules\Clients\Contracts\Repositories\PlanRepositoryInterface;
 use App\Modules\Dashboard\DTOs\MetricsDTO;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardService implements DashboardServiceInterface {
 
@@ -16,6 +19,7 @@ class DashboardService implements DashboardServiceInterface {
         private readonly ClientServiceInterface $clientService,
         private readonly BackupServiceInterface $backupService,
         private readonly BackupRiskServiceInterface $backupRiskService,
+        private readonly PlanRepositoryInterface $planRepository
     ) {}
 
 
@@ -97,34 +101,11 @@ class DashboardService implements DashboardServiceInterface {
 
     private function getClientsWithMostBackupRiskByPlan(): array
     {
-        return [
-                [
-                    'planName' => 'Platina',
-                    'clients' => [
-                        [
-                            'clientName' => 'Mercado Krolow',
-                            'riskQuantity' => 12,
-                        ],
-                        [
-                            'clientName' => 'Empel',
-                            'riskQuantity' => 9,
-                        ],
-                    ],
-                ],
-
-                [
-                    'planName' => 'Bronze',
-                    'clients' => [
-                        [
-                            'clientName' => 'Love Mackup',
-                            'riskQuantity' => 2,
-                        ],
-                        [
-                            'clientName' => 'Transportes Munchow',
-                            'riskQuantity' => 1,
-                        ],
-                    ],
-                ],
-            ];
+        $plans = $this->planRepository->findAll();
+        $res = [];
+        foreach ($plans as $plan) {
+            $res[] = $this->backupRiskService->getClientsWithMostRisks($plan->id, 5)->toArray();
+        }
+        return $res;
     }
 }

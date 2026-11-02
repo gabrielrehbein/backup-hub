@@ -6,6 +6,8 @@ use App\Modules\Backups\DTOs\ErrorTypeQuantityDTO;
 use App\Modules\Risks\Enums\RiskTypeEnum;
 
 use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisks;
+use App\Modules\Backups\DTOs\ClientsWithMostBackupRisksResume;
 use App\Modules\Backups\DTOs\CreateBackupRiskDTO;
 use App\Modules\Backups\DTOs\FilterBackupRiskDTO;
 use App\Modules\Backups\DTOs\UpdateBackupRiskDTO;
@@ -113,5 +115,26 @@ class BackupRiskEloquentRepository implements BackupRiskRepositoryInterface
             ->with('risk')
             ->orderBy("is_active", "desc")
             ->get();
+    }
+
+    public function getClientsWithMostRisks(int $planId, int $limit = 5): iterable
+    {
+        return BackupRisk::query()
+        ->selectRaw('
+            plans.id AS plan_id,
+            plans.name AS plan_name,
+            clients.id AS client_id,
+            clients.name AS client_name,
+            COUNT(*) AS risk_quantity
+        ')
+        ->join('backups', 'backups.id', '=', 'backup_risks.backup_id')
+        ->join('system_instances', 'system_instances.id', '=', 'backups.system_instance_id')
+        ->join('clients', 'clients.id', '=', 'system_instances.client_id')
+        ->join('plans', 'plans.id', '=', 'clients.plan_id')
+        ->where('plans.id', $planId)
+        ->groupBy('plans.id', 'plans.name', 'clients.id', 'clients.name')
+        ->orderByDesc('risk_quantity')
+        ->limit($limit)
+        ->get();
     }
 }

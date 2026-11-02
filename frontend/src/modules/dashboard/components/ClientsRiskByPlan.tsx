@@ -25,26 +25,26 @@ export function ClientsRiskByPlan({
 
                 {plans.map((plan) => (
 
-                    <div key={plan.planName}>
+                    <div key={plan.plan_name}>
 
                         <h3 className="mb-3 text-sm font-semibold text-slate-700">
-                            {plan.planName}
+                            {plan.plan_name}
                         </h3>
 
                         <div className="space-y-2">
 
-                            {plan.clients.map((client) => (
+                            {plan.summary.map((summary) => (
 
                                 <div
-                                    key={client.clientName}
+                                    key={`${summary.client_id}`}
                                     className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3"
                                 >
                                     <span className="text-sm text-slate-700">
-                                        {client.clientName}
+                                        {summary.client_name}
                                     </span>
 
                                     <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">
-                                        {client.riskQuantity} riscos
+                                        {summary.risk_quantity} riscos
                                     </span>
                                 </div>
 
