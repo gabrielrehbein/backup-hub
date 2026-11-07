@@ -74,7 +74,7 @@ class BackupService implements BackupServiceInterface
             }
 
 
-            return $backup;
+            return $backup->load('risks');
         });
     }
 
@@ -136,7 +136,11 @@ class BackupService implements BackupServiceInterface
 
     public function countBackupWithoutRisk(): int
     {
-        return Backup::where('risks', 0)->count();
+        return Backup::whereDoesntHave('risks', fn ($q) => $q->where('is_active', true))->count();
+    }
+
+    public function getGeneratedTodayByHour(){
+        return $this->backupRepository->getGeneratedTodayByHour();
     }
 
     public function getTotalBackupsWithRisk(): int {

@@ -46,6 +46,13 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         return Backup::create($payload->toArray());
     }
 
+    public function getGeneratedTodayByHour(){
+        return Backup::whereDate('generated_at', today())
+        ->selectRaw('EXTRACT(HOUR FROM generated_at)::int as hour, COUNT(*) as quantity')
+        ->groupBy('hour')
+        ->pluck('quantity', 'hour');
+    }
+
     public function findById(int $id): Backup
     {
         return Backup::findOrFail($id);

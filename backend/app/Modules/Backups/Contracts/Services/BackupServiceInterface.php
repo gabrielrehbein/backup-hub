@@ -18,6 +18,7 @@ interface BackupServiceInterface
     public function getTotalBackups(): int;
     public function findBackupsGeneratedToday(): iterable;
     public function getTotalBackupsWithRisk(): int;
+    public function getGeneratedTodayByHour();
     public function getTotalBackupsGeneratedToday(): int;
     public function findLastBackups(int $limit, ?bool $isLocal): iterable;
     public function findLastBackupByInstances(FilterLastBackupByIntenceDTO $filters);
