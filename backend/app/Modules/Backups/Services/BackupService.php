@@ -6,6 +6,7 @@ use App\Modules\Backups\Actions\SizeConveterAction;
 use App\Modules\Backups\Actions\VerifyBackupSizeAction;
 use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Modules\Backups\Contracts\Repositories\BackupRepositoryInterface;
+use App\Modules\Backups\Contracts\Repositories\BackupRiskRepositoryInterface;
 use App\Modules\Backups\Contracts\Services\BackupServiceInterface;
 use App\Modules\Backups\DTOs\BackupFilterDTO;
 use App\Modules\Backups\DTOs\CreateBackupDTO;
@@ -23,7 +24,8 @@ use Illuminate\Support\Facades\DB;
 class BackupService implements BackupServiceInterface
 {
     public function __construct(
-        private readonly BackupRepositoryInterface $backupRepository
+        private readonly BackupRepositoryInterface $backupRepository,
+        private readonly BackupRiskRepositoryInterface $backupRiskRepository,
     ) {}
 
     public function list(BackupFilterDTO $filters): iterable
@@ -59,7 +61,14 @@ class BackupService implements BackupServiceInterface
                 ),
                 new SystemInstanceEloquentRepository(),
             );
-            $verifyBackupSizeAction->execute($backup);
+            $sizeRisk = $verifyBackupSizeAction->execute($backup);
+            if (!$sizeRisk) {
+                $this->backupRiskRepository->deactivatePreviousRisksByInstance(
+                    $backup->system_instance_id,
+                    RiskTypeEnum::SIZE,
+                    $backup->id,
+                );
+            }
 
             $backupWithTimeRisk = $this->backupRepository->findLastBackupWithRiskByRiskType(
                 $backup->system_instance_id,

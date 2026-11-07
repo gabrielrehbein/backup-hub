@@ -84,6 +84,17 @@ class BackupRiskEloquentRepository implements BackupRiskRepositoryInterface
             ->count();
     }
 
+    public function deactivatePreviousRisksByInstance(int $systemInstanceId, RiskTypeEnum $riskType, int $exceptBackupId): int
+    {
+        return BackupRisk::query()
+            ->where('type', $riskType->value)
+            ->where('is_active', true)
+            ->whereHas('backup', fn ($q) => $q
+                ->where('system_instance_id', $systemInstanceId)
+                ->where('id', '<>', $exceptBackupId))
+            ->update(['is_active' => false]);
+    }
+
 
     public function getTotalBackupRisksByType(?int $backupId = null): array
     {
