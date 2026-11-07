@@ -140,7 +140,7 @@ class BackupService implements BackupServiceInterface
     }
 
     public function getTotalBackupsWithRisk(): int {
-        return $this->getTotalBackupsWithRisk();
+        return $this->backupRepository->getTotalBackupsWithRisk();
     }
 
     public function findByIdWithRelations(int $id): ?Backup
