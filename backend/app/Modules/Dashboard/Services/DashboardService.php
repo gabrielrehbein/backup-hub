@@ -40,7 +40,7 @@ class DashboardService implements DashboardServiceInterface {
         return [
             'total_clients' => $this->clientService->getTotalClients(),
             'total_backups' => $this->backupService->getTotalBackups(),
-            'risk_backups' => $this->backupRiskService->getTotalBackupRisks(),
+            'risk_backups' => $this->backupService->getTotalBackupsWithRisk(),
         ];
     }
 

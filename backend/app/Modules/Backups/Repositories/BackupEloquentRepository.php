@@ -136,6 +136,12 @@ class BackupEloquentRepository implements BackupRepositoryInterface
         return Backup::count();
     }
 
+    public function getTotalBackupsWithRisk(): int {
+        return Backup::whereHas("risks", function ($query) {
+            $query->where("is_active");
+        })->count();
+    }
+
     public function findBackupsGeneratedToday(): iterable
     {
         return Backup::query()

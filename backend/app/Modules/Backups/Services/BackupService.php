@@ -139,6 +139,10 @@ class BackupService implements BackupServiceInterface
         return Backup::where('risks', 0)->count();
     }
 
+    public function getTotalBackupsWithRisk(): int {
+        return $this->getTotalBackupsWithRisk();
+    }
+
     public function findByIdWithRelations(int $id): ?Backup
     {
         return Backup::with([
