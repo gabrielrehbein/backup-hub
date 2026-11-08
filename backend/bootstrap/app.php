@@ -3,6 +3,7 @@
 use App\Modules\Backups\Errors\BackupInFutureHttpException;
 use App\Modules\Backups\Errors\RiskTypeIsUniqueByBackupHttpException;
 use App\Modules\Backups\Errors\InstanceNotBelongsToClientHttpException;
+use App\Modules\Clients\Errors\InvalidApiKeyHttpException;
 use App\Modules\Systems\NotUniqueClientSystemHttpException;
 use App\Modules\Risks\Models\Risk;
 use App\Shared\Http\Middleware\CheckInstanceAPIKey;
@@ -50,6 +51,9 @@ return Application::configure(basePath: dirname(__DIR__))
         //     return JSONResponse::error("Algo deu errado");
         // });
         $exceptions->render(function (BackupInFutureHttpException $e) {
+            return JSONResponse::error($e->getMessage(), $e->getStatusCode());
+        });
+        $exceptions->render(function (InvalidApiKeyHttpException $e) {
             return JSONResponse::error($e->getMessage(), $e->getStatusCode());
         });
         $exceptions->render(function (RiskTypeIsUniqueByBackupHttpException $e) {

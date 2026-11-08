@@ -20,25 +20,28 @@ class SystemInstanceAuthenticationService implements SystemInstanceAuthenticatio
 
     public function isValidAPIKey(string $apiKey): SystemInstance
     {
-        try {
-            $identifier = explode('.', $apiKey, 2)[0];
-            $key = explode('.', $apiKey, 2)[1];
+        $parts = explode('.', $apiKey, 2);
 
-            $instance = $this->instanceRepository->findByApiKeyIdentifier($identifier);
-            $client = $instance->client;
-
-            $instanceIdentifier = explode('.', $instance->api_key, 2)[0];
-            $instanceKey = explode('.', $instance->api_key, 2)[1];
-        } catch (\Exception $e) {
+        if (count($parts) !== 2) {
             throw new InvalidApiKeyHttpException();
         }
 
+        [$identifier, $key] = $parts;
 
-        if(!$client->is_active){
+        $instance = $this->instanceRepository->findByApiKeyIdentifier($identifier);
+
+        if (!$instance) {
+            throw new InvalidApiKeyHttpException();
+        }
+
+        [$instanceIdentifier, $instanceKey] = array_pad(explode('.', $instance->api_key, 2), 2, null);
+
+        if ($identifier !== $instanceIdentifier || !$instanceKey || !Hash::check($key, $instanceKey)) {
+            throw new InvalidApiKeyHttpException();
+        }
+
+        if (!$instance->client->is_active) {
             throw new ClientInactiveHttpException();
-        }
-        if ($identifier !== $instanceIdentifier || !Hash::check($key, $instanceKey)) {
-            throw new InvalidApiKeyHttpException();
         }
 
         return $instance;

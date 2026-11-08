@@ -7,5 +7,5 @@ use App\Modules\Systems\Models\SystemInstance;
 
 interface SystemInstanceAuthenticationServiceInterface
 {
-    public function isValidAPIKey(string $apiKey): SystemInstance;
+    public function isValidAPIKey(string $apiKey): ?SystemInstance;
 }
