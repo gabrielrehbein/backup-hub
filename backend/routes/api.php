@@ -13,3 +13,4 @@ require base_path('app/Modules/Backups/Routes/backupRiskRoutes.php');
 require base_path('app/Modules/Auth/Routes/authRoutes.php');
 require base_path('app/Modules/Dashboard/Routes/dashboardRoutes.php');
 require base_path('app/Modules/Notifications/Routes/notificationConfigRoutes.php');
+require base_path('app/Modules/Notifications/Routes/notificationRoutes.php');
