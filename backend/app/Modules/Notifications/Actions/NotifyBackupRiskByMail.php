@@ -67,7 +67,6 @@ class NotifyBackupRiskByMail implements NotifyMethodStrategy
                 $this->content->description ?? ''
             ),
             'notification_config_id' => $this->config->id,
-            'backup_risk_id' => $this->content->id,
         ]);
     }
 }
