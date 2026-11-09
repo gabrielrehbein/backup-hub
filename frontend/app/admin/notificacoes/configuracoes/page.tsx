@@ -3,6 +3,7 @@
 import { Button } from "@/app/components/Button";
 import { Container } from "@/app/components/Container";
 import { Input } from "@/app/components/Input";
+import { NotificationRoutes } from "@/src/modules/notification/routes/notification-routes";
 import { NotificationService } from "@/src/modules/notification/services/notification.service";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -74,7 +75,7 @@ export default function NotificationPage() {
                     type="button"
                     variant="secondary"
                     size="large"
-                    onClick={() => redirect("/admin")}
+                    onClick={() => redirect(NotificationRoutes.LIST)}
                 >
                     Voltar
                 </Button>

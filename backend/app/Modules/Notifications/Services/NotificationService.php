@@ -6,6 +6,10 @@ use App\Modules\Notifications\Models\Notification;
 
 class NotificationService {
     public function list(): iterable {
-        return Notification::all();
+        return Notification::orderBy('created_at', 'desc')->get();
+    }
+
+    public function findById(int $id): Notification {
+        return Notification::findOrFail($id);
     }
 }

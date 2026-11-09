@@ -22,4 +22,9 @@ class NotificationController
         $notifications = $this->notificationService->list();
         return JSONResponse::success($notifications, "Notificações listadas com sucesso.");
     }
+
+    public function show($id){
+        $notification = $this->notificationService->findById($id);
+        return JSONResponse::success($notification, "Notificação encontrada com sucesso.");
+    }
 }

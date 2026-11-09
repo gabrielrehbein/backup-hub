@@ -52,7 +52,7 @@ export default function AdminPage() {
                     </Button>
                 </div>
                 <div className='flex justify-between gap-4'>
-                    <Button size='large' onClick={() => redirect(NotificationRoutes.CONFIGURATION)}>
+                    <Button size='large' onClick={() => redirect(NotificationRoutes.LIST)}>
                         Notificações
                         <BellRingIcon />
                     </Button>
