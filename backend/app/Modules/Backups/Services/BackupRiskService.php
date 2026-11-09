@@ -42,17 +42,14 @@ class BackupRiskService implements BackupRiskServiceInterface
             return false;
         }
 
-        $notifyTo = NotificationConfig::first()?->email;
+        $config = NotificationConfig::first();
 
-        if(!$notifyTo){
+        if(!$config?->email){
             return false;
         }
 
         $this->notify->addNotificationMethod(
-            new NotifyBackupRiskByMail(
-                $backupRisk,
-                NotificationConfig::first()?->email ?? ''
-            )
+            new NotifyBackupRiskByMail($backupRisk, $config)
         );
         $this->notify->sendNotifications();
         return true;
