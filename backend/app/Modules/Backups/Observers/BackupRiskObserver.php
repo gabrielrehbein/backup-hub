@@ -13,10 +13,7 @@ class BackupRiskObserver
 
     public function created(BackupRisk $backupRisk): void
     {
-        $nofied = $this->backupRiskService->notifyIfNeeded($backupRisk);
-        if ($nofied) {
-            
-        }
+        $this->backupRiskService->notifyIfNeeded($backupRisk);
     }
 
     public function updated(BackupRisk $backupRisk): void
