@@ -6,7 +6,7 @@ use App\Modules\Backups\Models\BackupRisk;
 use App\Modules\Notifications\Mail\BackupRiskMail;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Notifications\Contracts\Strategies\NotifyMethodStrategy;
-
+use App\Modules\Notifications\Models\Notification;
 
 class NotifyBackupRiskByMail implements NotifyMethodStrategy
 {

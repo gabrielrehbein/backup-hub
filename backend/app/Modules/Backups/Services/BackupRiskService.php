@@ -36,16 +36,16 @@ class BackupRiskService implements BackupRiskServiceInterface
         return $this->backupRiskRepository->findByBackupId($backupId);
     }
 
-    public function notifyIfNeeded(BackupRisk $backupRisk): void
+    public function notifyIfNeeded(BackupRisk $backupRisk): bool
     {
         if(!$backupRisk->risk->notifiable || !$backupRisk->is_active){
-            return;
+            return false;
         }
 
         $notifyTo = NotificationConfig::first()?->email;
 
         if(!$notifyTo){
-            return;
+            return false;
         }
 
         $this->notify->addNotificationMethod(
@@ -55,6 +55,7 @@ class BackupRiskService implements BackupRiskServiceInterface
             )
         );
         $this->notify->sendNotifications();
+        return true;
     }
 
     private function backupWithRiskAlreadyExists(int $backupId, RiskTypeEnum $riskType): bool {

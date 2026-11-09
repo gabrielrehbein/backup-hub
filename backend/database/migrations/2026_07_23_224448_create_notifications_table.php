@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('type', 50);
+            $table->string('to');
             $table->string('title', 150);
             $table->text('content');
             $table->foreignId('notification_config_id')->constrained()->restrictOnDelete();
