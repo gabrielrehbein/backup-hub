@@ -8,6 +8,7 @@ use App\Shared\Http\Request\BaseFormRequest;
 use App\Shared\Utils\ArrayHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use function Pest\version;
 
 class FilterBackupRequest extends BaseFormRequest
 {
@@ -35,6 +36,7 @@ class FilterBackupRequest extends BaseFormRequest
             'system_instance_id' => ['sometimes', 'integer'],
             'risk_id' => ['sometimes', 'integer'],
             'client_id' => ['sometimes', 'integer'],
+            'version' => ['sometimes', 'string'],
             'risk_type' => ['sometimes', 'string'],
             'per_page' => ['sometimes', 'integer', 'min:1'],
             'return_in_size_type' => ['sometimes', 'in:' . ArrayHelper::arrayToFormRequestValidation(SizeTypeEnum::cases())],
@@ -54,6 +56,7 @@ class FilterBackupRequest extends BaseFormRequest
             clientId: $this->validated('client_id'),
             riskType: $this->validated('risk_type'),
             perPage: $this->validated('per_page'),
+            version: $this->validated('version'),
             returnInSizeType: $this->validated('return_in_size_type') ? SizeTypeEnum::from($this->validated('return_in_size_type')) : null,
         );
     }

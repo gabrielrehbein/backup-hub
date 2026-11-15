@@ -3,10 +3,7 @@ export enum RiskTypeEnum {
     SIZE = "size"
 }
 
-/**
- * Filtros do endpoint GET /backups/instances/latest.
- * Tamanhos sempre em KB e datas em ISO 8601 (é o que a API espera).
- */
+
 export class FilterLastBackupByInstanceDTO {
     constructor(
         public readonly planId: number | null = null,
