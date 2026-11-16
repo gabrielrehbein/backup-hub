@@ -37,6 +37,7 @@ class FilterBackupRequest extends BaseFormRequest
             'risk_id' => ['sometimes', 'integer'],
             'client_id' => ['sometimes', 'integer'],
             'version' => ['sometimes', 'string'],
+            'risk_name' => ['sometimes', 'nullable', 'string', 'max:50'],
             'risk_type' => ['sometimes', 'string'],
             'per_page' => ['sometimes', 'integer', 'min:1'],
             'return_in_size_type' => ['sometimes', 'in:' . ArrayHelper::arrayToFormRequestValidation(SizeTypeEnum::cases())],
@@ -57,6 +58,7 @@ class FilterBackupRequest extends BaseFormRequest
             riskType: $this->validated('risk_type'),
             perPage: $this->validated('per_page'),
             version: $this->validated('version'),
+            riskName: $this->validated('risk_name'),
             returnInSizeType: $this->validated('return_in_size_type') ? SizeTypeEnum::from($this->validated('return_in_size_type')) : null,
         );
     }

@@ -22,7 +22,8 @@ class BackupFilterDTO
         public readonly ?RiskTypeEnum $riskType,
         public readonly ?int $perPage,
         public readonly ?SizeTypeEnum $returnInSizeType,
-        public readonly ?string $version
+        public readonly ?string $version,
+        public readonly ?string $riskName,
     ){}
 
     public function toArray(){
@@ -38,7 +39,8 @@ class BackupFilterDTO
             'risk_type' => $this->riskType?->value,
             'per_page' => $this->perPage,
             'return_in_size_type' => $this->returnInSizeType,
-            'version' => $this->version
+            'version' => $this->version,
+            'risk_name' => $this->riskName
         ]);
     }
 
@@ -56,7 +58,8 @@ class BackupFilterDTO
             isset($data['risk_type']) ? RiskTypeEnum::from($data['risk_type']) : null,
             $data['per_page'] ?? null,
             $data['return_in_size_type'] ?? null,
-            $data['version'] ?? null
+            $data['version'] ?? null,
+            $data['risk_name'] ?? null
         );
     }
 }

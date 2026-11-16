@@ -43,6 +43,14 @@ class BackupEloquentRepository implements BackupRepositoryInterface
                     $query->where('system_instances.client_id', "=", $filters->clientId);
                 });
             })
+            ->when($filters->riskName !== null, function ($query) use ($filters) {
+                $query->whereHas('risks', function ($query) use ($filters) {
+                    $query->where('is_active', true)
+                          ->whereHas('risk', function ($query) use ($filters) {
+                              $query->where('name', '=', $filters->riskName);
+                          });
+                });
+            })
             ->when($filters->version !== null, function ($query) use ($filters) {
                 $query->where('version',"like" ,"$filters->version%");
             })
